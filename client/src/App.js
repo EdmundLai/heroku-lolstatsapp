@@ -15,7 +15,8 @@ class App extends React.Component {
       summName: "",
       queueType: "",
       currentStats: [],
-      httpCode: 200
+      httpCode: 200,
+      dataReady: false
     };
 
     this.updateState = this.updateState.bind(this);
@@ -29,7 +30,8 @@ class App extends React.Component {
         summName: statsObj.summonerName,
         queueType: statsObj.queueType,
         currentStats: statsObj.statsArray,
-        httpCode: 200
+        httpCode: 200,
+        dataReady: true
       });
     } else {
       // console.log(`httpCode from updateState: ${httpCode}`);
@@ -44,7 +46,7 @@ class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          <AppHeader />
+          <AppHeader showStats={this.state.dataReady} />
           <div className="App-body">
             <Switch>
               <Route path="/stats" render={(props) => <LeagueStats {...props} dataState={this.state} />} />

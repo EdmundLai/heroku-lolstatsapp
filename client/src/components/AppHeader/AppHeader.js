@@ -4,6 +4,11 @@ import './AppHeader.css';
 
 class AppHeader extends React.Component {
   render() {
+    let statsLink = <></>;
+    if(this.props.showStats) {
+      statsLink = <Link to="/stats">Stats</Link>;
+    }
+
     return(
       <header className="App-header">
         <h1>League of Legends Stats App</h1>
@@ -13,7 +18,7 @@ class AppHeader extends React.Component {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/stats">Stats</Link>
+              {statsLink}
             </li>
           </ul>
         </nav>
