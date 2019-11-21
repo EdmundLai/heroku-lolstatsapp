@@ -1,0 +1,92 @@
+.InfoCard {
+  background-color: azure;
+  border: solid 0.1em;
+  margin: 1em 0 1em 0;
+}
+
+.InfoCard ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.InfoBar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1em 1em 1em 1em;
+}
+
+.ChampionBar {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.InfoBar #ChampionName {
+  font-size: 2rem;
+  margin-right: 0.5rem;
+}
+
+.InfoBar #ChampionImg {
+  align-self: center;
+  margin-left: 0.5rem;
+}
+
+.TabList ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.GraphContainer {
+  border: solid 0.1em;
+  margin: 1em 1em 1em 1em;
+  background-color: #ededed;
+}
+
+.StatsBox {
+  display: flex;
+  flex-direction: row;
+}
+
+.StatsBox ul {
+  margin: 0 1em 0 1em;
+}
+
+.StatsBox ul li {
+  font-size: 1rem;
+}
+
+.TabList ul li a {
+  display: block;
+  padding: 10px;
+  color: #282c34;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.TabList ul li a:hover {
+  text-decoration: none;
+  color: #282c34;
+  animation-duration: 1s;
+  animation-name: lighten;
+  animation-fill-mode: forwards;
+}
+
+@keyframes lighten {
+  from {
+    color: #282c34;
+  }
+
+  to {
+    color: lightseagreen;
+  }
+}
+
+.StatsHeader {
+  border-bottom: solid 1px lightseagreen;
+  margin-bottom: 0.25rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1.25rem;
+}

@@ -1,0 +1,19 @@
+.App-footer {
+  background-color: #282c34;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 0.25em 1em 0.25em 1em;
+}
+
+.Legal-footnote {
+  font-size: 0.5em;
+  margin-bottom: 1em;
+}
+
+.Creator-note {
+  font-size: 0.75em;
+}

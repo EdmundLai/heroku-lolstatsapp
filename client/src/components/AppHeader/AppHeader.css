@@ -1,0 +1,45 @@
+.App-header {
+  background-color: #282c34;
+  min-height: 20vh;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  float: left;
+}
+
+nav ul li a {
+  display: block;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+nav ul li a:hover {
+  text-decoration: none;
+  color: white;
+  animation-duration: 1s;
+  animation-name: darken;
+  animation-fill-mode: forwards;
+}
+
+@keyframes darken {
+  from {
+    color: white;
+  }
+
+  to {
+    color: black;
+  }
+}

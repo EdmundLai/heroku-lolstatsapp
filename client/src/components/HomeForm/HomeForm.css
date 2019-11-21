@@ -1,0 +1,46 @@
+.HomeForm {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+.InputBoxes {
+  display: flex;
+  flex-direction: column;
+  border: solid 0.1em;
+  margin: 0 1em 0 1em;
+  padding: 1em;
+}
+
+#NameBox {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1em;
+}
+
+#NameLabel {
+  margin-right: 1em;
+}
+
+.queue-selector {
+  display: flex;
+  margin: 0 1em 0 1em;
+}
+
+.queue-selector-title {
+  margin-right: 1em;
+}
+
+.queueOptions {
+  display: flex;
+  flex-direction: column;
+}
+
+.InputBoxes {
+  display: flex;
+}
+
+#DataSubmitButton {
+  margin: 1em 2em 0 0;
+  align-self: end;
+}
