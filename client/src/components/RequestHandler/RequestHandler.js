@@ -22,7 +22,7 @@ function handleRequest(reqObj) {
 
 // default number of games requested will be 10
 function makeStatsRequest(playerTag, gameTypeArr) {
-    return axios.get('http://localhost:5000/api/stats', {
+    return axios.get('api/stats', {
         params: {
             summonerName: playerTag,
             gameTypes: gameTypeArr,
