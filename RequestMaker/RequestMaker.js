@@ -25,7 +25,7 @@ class RequestMaker {
     }
 
     getDDragonChampKeys() {
-        return axios.get('http://ddragon.leagueoflegends.com/cdn/9.21.1/data/en_US/championFull.json')
+        return axios.get('http://ddragon.leagueoflegends.com/cdn/9.23.1/data/en_US/championFull.json')
         .then(res => {
             let champFullData = res.data;
             let keys = champFullData["keys"];
