@@ -2,7 +2,7 @@
   "name": "lolstatsapp",
   "version": "1.0.0",
   "engines": {
-    "node": "10.16.0"
+    "node": "12.13.1"
   },
   "description": "",
   "scripts": {
