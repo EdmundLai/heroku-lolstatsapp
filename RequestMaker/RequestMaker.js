@@ -194,9 +194,9 @@ class RequestMaker {
             return playerTimelineData;
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             // console.log(err.response.status);
-            // throw err;
+            throw err;
         });
     }
 

@@ -50,7 +50,7 @@ class App extends React.Component {
           <div className="App-body">
             <Switch>
               <Route path="/stats" render={(props) => <LeagueStats {...props} dataState={this.state} />} />
-              <Route path="/" render={(props) => <HomeForm {...props} callback={this.updateState} />} />
+              <Route exact path="/" render={(props) => <HomeForm {...props} callback={this.updateState} />} />
             </Switch>
   
           </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import RequestHandler from '../RequestHandler/RequestHandler';
+import LoadingAnimation from '../LoadingAnimation/LoadingAnimation';
 import './HomeForm.css';
 
 class HomeForm extends React.Component {
@@ -63,7 +64,7 @@ class HomeForm extends React.Component {
       );
     } else if(this.state.statsLoading) {
       return(
-        <p>Stats currently loading!</p>
+        <LoadingAnimation />
       );
     } else {
       return (
