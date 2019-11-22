@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node backend/index.js",
     "dev": "concurrently \"cd client && npm run dev\" \"cd backend && npm run nodemon\"",
-    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm audit fix && npm run build",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
