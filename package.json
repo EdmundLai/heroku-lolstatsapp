@@ -1,6 +1,9 @@
 {
   "name": "lolstatsapp",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.16.0"
+  },
   "description": "",
   "scripts": {
     "start": "node backend/index.js",
