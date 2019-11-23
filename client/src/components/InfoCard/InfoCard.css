@@ -16,20 +16,15 @@
   margin: 1em 1em 1em 1em;
 }
 
-.ChampionBar {
+.InfoBarMobile {
+  background-color: azure;
+  border: solid 0.1em;
   display: flex;
-  flex-direction: row;
-}
-
-
-.InfoBar #ChampionName {
-  font-size: 2rem;
-  margin-right: 0.5rem;
-}
-
-.InfoBar #ChampionImg {
-  align-self: center;
-  margin-left: 0.5rem;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1em 1em 1em 1em;
+  padding: 1rem;
 }
 
 .TabList ul {
@@ -42,19 +37,6 @@
   border: solid 0.1em;
   margin: 1em 1em 1em 1em;
   background-color: #ededed;
-}
-
-.StatsBox {
-  display: flex;
-  flex-direction: row;
-}
-
-.StatsBox ul {
-  margin: 0 1em 0 1em;
-}
-
-.StatsBox ul li {
-  font-size: 1rem;
 }
 
 .TabList ul li a {

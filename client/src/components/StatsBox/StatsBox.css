@@ -1,0 +1,26 @@
+.StatsBoxMobile {
+  display: flex;
+  flex-direction: column;
+}
+
+.StatsBox {
+  display: flex;
+  flex-direction: row;
+}
+
+.StatsBox ul {
+  margin: 0 1em 0 1em;
+}
+
+.StatsBox ul li {
+  font-size: 1rem;
+}
+
+.StatsBoxMobile ul {
+  margin: 1rem 0;
+  padding: 0;
+}
+
+.StatsBoxMobile ul li {
+  font-size: 1rem;
+}

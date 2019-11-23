@@ -1,0 +1,14 @@
+.ChampionBar {
+  display: flex;
+  flex-direction: row;
+}
+
+.ChampionBar #ChampionName {
+  font-size: 2rem;
+  margin-right: 1.5rem;
+}
+
+.Champion #ChampionImg {
+  align-self: center;
+  margin-left: 1.5rem;
+}
