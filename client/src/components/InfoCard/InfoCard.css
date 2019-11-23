@@ -4,7 +4,7 @@
   margin: 1em 0 1em 0;
 }
 
-.InfoCard ul {
+.InfoCard ul,.InfoBarMobile ul {
   list-style-type: none;
   padding-left: 0;
 }
