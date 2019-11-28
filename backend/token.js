@@ -1,4 +1,4 @@
 
-var API_TOKEN = "RGAPI-9f63eb98-664f-4d8d-97c6-c3d9e0c61dba";
+var API_TOKEN = "RGAPI-a433cb86-749e-4a6e-a8b1-772396bda2d7";
 
 module.exports = API_TOKEN;
