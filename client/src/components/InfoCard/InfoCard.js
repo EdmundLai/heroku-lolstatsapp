@@ -3,6 +3,7 @@ import ChampKeys from '../../resources/ChampKeys';
 import StatsGraph from '../StatsGraph/StatsGraph';
 import StatsBox from '../StatsBox/StatsBox';
 import ChampionBar from '../ChampionBar/ChampionBar';
+import TimeBox from '../TimeBox/TimeBox';
 import './InfoCard.css';
 
 class InfoCard extends React.Component {
@@ -60,12 +61,14 @@ class InfoCard extends React.Component {
     // console.log(statsObj);
 
     let champion = ChampKeys[statsObj.championID];
-
-    let isMobile = this.state.windowWidth < 500 ? true : false;
+    let isMobile = this.state.windowWidth < 900 ? true : false;
+    
     if(isMobile) {
       return (
         <div className="InfoBarMobile">
           <ChampionBar champion={champion} />
+
+          <TimeBox statsObj={statsObj} />
 
           <StatsBox stats={stats} isMobile={isMobile} />
         </div>
@@ -76,6 +79,8 @@ class InfoCard extends React.Component {
         <div className="InfoCard">
           <div className="InfoBar">
             <ChampionBar champion={champion} />
+
+            <TimeBox statsObj={statsObj} />
 
             <StatsBox stats={stats} />
 

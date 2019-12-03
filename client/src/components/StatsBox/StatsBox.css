@@ -9,7 +9,7 @@
 }
 
 .StatsBox ul {
-  margin: 0 1em 0 1em;
+  margin: 0 1rem;
 }
 
 .StatsBox ul li {
@@ -22,4 +22,11 @@
 
 .StatsBoxMobile ul li {
   font-size: 1rem;
+}
+
+.StatsHeader {
+  border-bottom: solid 1px lightseagreen;
+  margin-bottom: 0.25rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1.25rem;
 }

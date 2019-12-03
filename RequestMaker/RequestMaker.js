@@ -251,6 +251,7 @@ class RequestMaker {
         })
         .then(res => {
             let data = res.data;
+            let gameTime = data["gameCreation"];
             let playerDataArr = data["participants"];
             let gameLength = data["gameDuration"];
             let queueId = data["queueId"];
@@ -306,6 +307,7 @@ class RequestMaker {
                 gameID,
                 championID,
                 gameLength,
+                gameTime,
                 gameStats
             };
             return gameInfo;
