@@ -2,8 +2,6 @@ var RequestMaker = require('../../RequestMaker/RequestMaker');
 var API_Token = require('../token');
 
 
-var requestMaker = new RequestMaker(API_Token);
-
 // need to get query parameters from request and use them in 
 // requestMaker call
 module.exports.getStats = function(req, res) {
@@ -11,11 +9,15 @@ module.exports.getStats = function(req, res) {
     let gameTypes = req.query.gameTypes;
     let numGames = req.query.numRequested;
 
+    if(this.requestMaker == undefined) {
+        this.requestMaker = new RequestMaker(API_Token);
+    }
+
     // console.log(`tag: ${playerTag}`);
     // console.log(`types: ${gameTypes}`);
     // console.log(`number requested: ${numGames}`);
 
-    requestMaker.getStats(playerTag, gameTypes, numGames)
+    this.requestMaker.getStats(playerTag, gameTypes, numGames)
     .then(data => {
         // console.log(data);
         if(isNaN(data)) {
