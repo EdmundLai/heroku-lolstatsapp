@@ -5,8 +5,8 @@ var RateLimiter = require('limiter').RateLimiter;
 // DONE: Convert all axios requests to na1.api.riotgames.com to use RateLimiter
 class RequestMaker {
     constructor(apiToken) {
-        this.limiter = new RateLimiter(100, 120000);
-        this.limiter2 = new RateLimiter(20, 1000);
+        this.limiter = new RateLimiter(90, 120000);
+        this.limiter2 = new RateLimiter(18, 1000);
         this.apiToken = apiToken;
         this.gameType = {
             "400": "Draft Pick",

@@ -26,7 +26,7 @@ function makeStatsRequest(playerTag, gameTypeArr) {
         params: {
             summonerName: playerTag,
             gameTypes: gameTypeArr,
-            numRequested: 10
+            numRequested: 5
         }
     })
     .then(res => {
