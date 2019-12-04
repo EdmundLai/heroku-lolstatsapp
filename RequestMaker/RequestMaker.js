@@ -15,7 +15,11 @@ class RequestMaker {
             "440": "Ranked Flex",
             "450": "ARAM",
             "460": "Twisted Treeline 3v3"
-        }
+        };
+        this.errorLog = {
+            responseCode: undefined,
+            method: ""
+        };
     }
 
     // removing tokens from first limiter to adhere to 100 requests per 2 minutes
@@ -101,6 +105,8 @@ class RequestMaker {
         .catch(err => {
             // console.log(err);
             console.log("error in getLOLSummonerID");
+            this.errorLog.responseCode = err.response.status;
+            this.errorLog.method = "getLOLSummonerID";
             throw err;
         });
     }
@@ -124,6 +130,9 @@ class RequestMaker {
         .catch(err => {
             // console.log(err);
             console.log("error in getLOLAccountID");
+            this.errorLog.responseCode = err.response.status;
+            this.errorLog.method = "getLOLAccountID";
+
             // console.log(err.response.status);
             throw err;
         });
@@ -178,7 +187,13 @@ class RequestMaker {
             return data;
         })
         .catch(err => {
-            console.log(err);
+            console.log("error in getMatchList");
+            this.errorLog.responseCode = err.response.status;
+            this.errorLog.method = "getMatchList";
+            // console.log(err);
+            // if(err.response) {
+            //     console.log(err.response);
+            // }
             throw err;
         });
     }
@@ -232,6 +247,9 @@ class RequestMaker {
             return playerTimelineData;
         })
         .catch(err => {
+            console.log("error in getTimelineData");
+            this.errorLog.responseCode = err.response.status;
+            this.errorLog.method = "getTimelineData";
             // console.log(err);
             // console.log(err.response.status);
             throw err;
@@ -316,7 +334,10 @@ class RequestMaker {
         //     console.log(data);
         // })
         .catch(err => {
-            console.log(err);
+            console.log("error in getStatsByGame");
+            this.errorLog.responseCode = err.response.status;
+            this.errorLog.method = "getStatsByGame";
+            // console.log(err);
             // console.log(err.response.status);
             throw err;
         });
@@ -389,7 +410,6 @@ class RequestMaker {
                 // rate limited version works
                 // uses promisifying the rate limiter call as suggested in:
                 // https://stackoverflow.com/questions/52051275/promisify-callbacks-that-use-rate-limiter
-                // current rate limit is 1 per second: overly conservative
     
                 return Promise.all(gamesRetrieved.map(gameInfo => {
                     return this.getStatsByGame(gameInfo["gameId"], gameInfo["champion"])
@@ -438,12 +458,12 @@ class RequestMaker {
             // console.log(err);
             // console.log(err.response);
             console.log("error message from RequestMaker");
-            // console.log(err.response.status);
-            if(err.response) {
-                return err.response.status;
-            } else {
-                console.log(err);
-            }
+            console.log(`error response code: ${this.errorLog.responseCode}`);
+            // console.log(`error occurred in method: ${this.errorLog.method}`);
+            // if(!err.response) {
+            //     console.log(err);
+            // }
+            return this.errorLog;
             
         });
     }

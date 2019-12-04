@@ -16,15 +16,17 @@ class App extends React.Component {
       queueType: "",
       currentStats: [],
       httpCode: 200,
-      dataReady: false
+      dataReady: false,
+      errorLog: {}
     };
 
     this.updateState = this.updateState.bind(this);
   }
 
   // changed to handle errors as well as valid data
-  updateState(httpCode, statsObj) {
+  updateState(httpCode, data) {
     if(httpCode === 200) {
+      let statsObj = data;
       // console.log(statsObj);
       this.setState({
         summName: statsObj.summonerName,
@@ -36,7 +38,8 @@ class App extends React.Component {
     } else {
       // console.log(`httpCode from updateState: ${httpCode}`);
       this.setState({
-        httpCode: httpCode
+        httpCode: httpCode,
+        errorLog: data
       });
     }
     

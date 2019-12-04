@@ -34,11 +34,16 @@ class HomeForm extends React.Component {
 
     RequestHandler.handleRequest(this.state)
     .then(data => {
-      if(isNaN(data)) {
+      if(data.hasOwnProperty("summonerName")) {
         this.props.callback(200, data);
       } else {
-        this.props.callback(data);
+        this.props.callback(data.responseCode, data);
       }
+      // if(isNaN(data)) {
+      //   this.props.callback(200, data);
+      // } else {
+      //   this.props.callback(data);
+      // }
     })
     .catch(err => {
       console.log(err);

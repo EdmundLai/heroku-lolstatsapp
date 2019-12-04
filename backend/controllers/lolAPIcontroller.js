@@ -20,11 +20,12 @@ module.exports.getStats = function(req, res) {
     this.requestMaker.getStats(playerTag, gameTypes, numGames)
     .then(data => {
         // console.log(data);
-        if(isNaN(data)) {
-            res.send(data);
-        } else {
-            res.sendStatus(data);
-        }
+        res.send(data);
+        // if(isNaN(data)) {
+        //     res.send(data);
+        // } else {
+        //     res.sendStatus(data);
+        // }
         
     })
     .catch(err => {
