@@ -5,7 +5,7 @@ var RateLimiter = require('limiter').RateLimiter;
 // DONE: Convert all axios requests to na1.api.riotgames.com to use RateLimiter
 class RequestMaker {
     constructor(apiToken) {
-        this.limiter = new RateLimiter(90, 120000);
+        this.limiter1 = new RateLimiter(90, 120000);
         this.limiter2 = new RateLimiter(18, 1000);
         this.apiToken = apiToken;
         this.gameType = {
@@ -25,7 +25,7 @@ class RequestMaker {
     // removing tokens from first limiter to adhere to 100 requests per 2 minutes
     removeTokenLimiter1() {
         return new Promise((resolve) => {
-            this.limiter.removeTokens(1, resolve);
+            this.limiter1.removeTokens(1, resolve);
         });
     }
 
@@ -38,17 +38,7 @@ class RequestMaker {
 
     // combining removeTokenLimiter calls to make sure each request adheres to both rate limits
     removeToken() {
-        return new Promise((resolve) => {
-            return this.removeTokenLimiter1()
-            .then(() => {
-                return this.removeTokenLimiter2()
-                .then(() => {
-                    // console.log(`limiter1 tokens remaining: ${this.limiter.getTokensRemaining()}`);
-                    // console.log(`limiter2 tokens remaining: ${this.limiter2.getTokensRemaining()}`);
-                    return resolve();
-                })
-            });
-        });
+        return Promise.all([this.removeTokenLimiter1(), this.removeTokenLimiter2()]);
     }
 
     // getting champion data from latest patch
@@ -376,41 +366,6 @@ class RequestMaker {
     
                 let gamesRetrieved = gameInfoArr.slice(0, numGamesRetrieved);
     
-                // non rate limited version
-    
-                // return Promise.all(gamesRetrieved.map(gameInfo => {
-                //     // getStatsByGame needs to be rate limited
-                //     return getStatsByGame(gameInfo["gameId"], gameInfo["champion"])
-                //     .catch(err => {
-                //         throw err;
-                //     });
-                // }))
-                // .catch(err => {
-                //     throw err;
-                // });
-    
-                // testing rate limited version (v1)
-                // rate limited version works but is a very inelegant solution
-                // cannot get the entire statsArray at one time
-                // current rate limit is 1 per second: overly conservative
-    
-                // gamesRetrieved.map(gameInfo => {
-                //     limiter.removeTokens(1, (err, requestsRemaining) => {
-                //         getStatsByGame(gameInfo["gameId"], gameInfo["champion"])
-                //         .then(stats => {
-                //             statsArray.push(stats);
-                //         })
-                //         .catch(err => {
-                //             console.log(err);
-                //         });
-                //     });
-                // });
-    
-                // testing rate limited version (v2)
-                // rate limited version works
-                // uses promisifying the rate limiter call as suggested in:
-                // https://stackoverflow.com/questions/52051275/promisify-callbacks-that-use-rate-limiter
-    
                 return Promise.all(gamesRetrieved.map(gameInfo => {
                     return this.getStatsByGame(gameInfo["gameId"], gameInfo["champion"])
                     .then(gameData => {
@@ -455,14 +410,9 @@ class RequestMaker {
             });
         })
         .catch(err => {
-            // console.log(err);
-            // console.log(err.response);
             console.log("error message from RequestMaker");
             console.log(`error response code: ${this.errorLog.responseCode}`);
             // console.log(`error occurred in method: ${this.errorLog.method}`);
-            // if(!err.response) {
-            //     console.log(err);
-            // }
             return this.errorLog;
             
         });
