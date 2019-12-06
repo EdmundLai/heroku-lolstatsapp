@@ -4,6 +4,7 @@ import AppFooter from './components/AppFooter/AppFooter';
 import HomePage from './components/HomePage/HomePage';
 // import HomeForm from './components/HomeForm/HomeForm';
 import LeagueStats from './components/LeagueStats/LeagueStats';
+import InDepthStats from './components/InDepthStats/InDepthStats';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
@@ -55,6 +56,7 @@ class App extends React.Component {
             <Switch>
               <Route path="/stats" render={(props) => <LeagueStats {...props} dataState={this.state} />} />
               <Route exact path="/" render={(props) => <HomePage {...props} callback={this.updateState} />} />
+              <Route path="/stats_indepth" render={(props) => <InDepthStats {...props} dataState={this.state} />} />
             </Switch>
   
           </div>

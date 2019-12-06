@@ -1,29 +1,27 @@
 import React from 'react';
-import GamesPage from '../GamesPage/GamesPage';
+import DataAnalysisPage from '../DataAnalysisPage/DataAnalysisPage';
 import ErrorPage from '../ErrorPage/ErrorPage';
 
-import './LeagueStats.css';
-
-
-
-class LeagueStats extends React.Component {
+class InDepthStats extends React.Component {
   render() {
     let dataState = this.props.dataState;
     let responseCode = dataState.httpCode;
     let StatsContent = <></>;
 
     if(responseCode === 200) {
-      StatsContent = <GamesPage dataState={dataState} />
+      StatsContent = <DataAnalysisPage dataState={dataState}/>
     } else {
       StatsContent = <ErrorPage code={responseCode} errorLog={dataState.errorLog} />
     }
 
     return(
-      <div className="LeagueStats">
+      <div className="InDepthStats">
         {StatsContent}
       </div>
     );
   }
 }
 
-export default LeagueStats;
+
+
+export default InDepthStats;

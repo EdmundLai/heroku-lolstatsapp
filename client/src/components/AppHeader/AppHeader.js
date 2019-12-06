@@ -5,8 +5,10 @@ import './AppHeader.css';
 class AppHeader extends React.Component {
   render() {
     let statsLink = <></>;
+    // let statsLink2 = <></>;
     if(this.props.showStats) {
       statsLink = <Link to="/stats">Stats</Link>;
+      // statsLink2 = <Link to="/stats_indepth">More Stats</Link>;
     }
 
     return(
@@ -19,6 +21,10 @@ class AppHeader extends React.Component {
             </li>
             <li>
               {statsLink}
+            </li>
+            <li>
+              {/* {statsLink2} */}
+              <Link to="/stats_indepth">More Stats</Link>
             </li>
           </ul>
         </nav>
