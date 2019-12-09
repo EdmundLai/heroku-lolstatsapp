@@ -1,7 +1,8 @@
 import React from 'react';
 import AppHeader from './components/AppHeader/AppHeader';
 import AppFooter from './components/AppFooter/AppFooter';
-import HomeForm from './components/HomeForm/HomeForm';
+import HomePage from './components/HomePage/HomePage';
+// import HomeForm from './components/HomeForm/HomeForm';
 import LeagueStats from './components/LeagueStats/LeagueStats';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -53,7 +54,7 @@ class App extends React.Component {
           <div className="App-body">
             <Switch>
               <Route path="/stats" render={(props) => <LeagueStats {...props} dataState={this.state} />} />
-              <Route exact path="/" render={(props) => <HomeForm {...props} callback={this.updateState} />} />
+              <Route exact path="/" render={(props) => <HomePage {...props} callback={this.updateState} />} />
             </Switch>
   
           </div>

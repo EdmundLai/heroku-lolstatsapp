@@ -1,3 +1,13 @@
+.HomePage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.FormHint {
+  font-size: 1rem;
+}
+
 .HomeForm {
   display: flex;
   flex-direction: column;
