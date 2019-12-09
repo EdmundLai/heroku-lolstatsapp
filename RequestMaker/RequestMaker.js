@@ -298,8 +298,8 @@ class RequestMaker {
                 let csPerMin = stats["totalMinionsKilled"] / gameLenInMin;
                 let goldPerMin = (stats["goldEarned"] - startingGold) / gameLenInMin;
 
-                csPerMin = csPerMin.toFixed(1);
-                goldPerMin = goldPerMin.toFixed(1);
+                csPerMin = parseFloat(csPerMin.toFixed(1));
+                goldPerMin = parseFloat(goldPerMin.toFixed(1));
 
                 return {
                     csPerMin, goldPerMin

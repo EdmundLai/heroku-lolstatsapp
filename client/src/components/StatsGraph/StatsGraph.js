@@ -1,5 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import ArrayUtil from '../../utils/array';
 import './StatsGraph.css';
 
 class StatsGraph extends React.Component {
@@ -37,8 +38,8 @@ class StatsGraph extends React.Component {
     //   }]
     // }
 
-    let gpmAvgArray = fillArray(deltasData.timeDeltas.length, gameStats.goldPerMin);
-    let xppmAvgArray = fillArray(deltasData.timeDeltas.length, avgXpPerMin);
+    let gpmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, gameStats.goldPerMin);
+    let xppmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, avgXpPerMin);
 
     let xpDeltaData = {
       labels: deltasData.timeDeltas,
@@ -104,16 +105,6 @@ class StatsGraph extends React.Component {
       </div>
     );
   }
-}
-
-// fill array with length arrLen with val
-function fillArray(arrLen, val) {
-  let outputArr = [];
-  for(let i = 0; i < arrLen; i++) {
-    outputArr.push(val);
-  }
-
-  return outputArr;
 }
 
 function processTimelineData(data) {
