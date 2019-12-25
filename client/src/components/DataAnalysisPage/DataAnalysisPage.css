@@ -1,4 +1,17 @@
 .DataAnalysisPage {
+  display: flex;
+  flex-direction: column;
   min-width: 1000px;
   min-height: 800px;
+  margin: 2rem 0;
+  align-items: center;
+}
+
+.ScatterPlotContainer {
+  width: 50vw;
+  height: 50vw;
+  max-height: 512px;
+  max-width: 512px;
+  background-image: url("../../resources/summ_rift.png");
+  background-repeat: no-repeat;
 }

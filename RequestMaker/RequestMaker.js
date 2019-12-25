@@ -231,6 +231,7 @@ class RequestMaker {
                 }
 
                 playerTimelineData[currFrame] = participantFrames[correctPlayerIndex];
+                playerTimelineData[currFrame].events = frameObj.events;
 
             }
 
