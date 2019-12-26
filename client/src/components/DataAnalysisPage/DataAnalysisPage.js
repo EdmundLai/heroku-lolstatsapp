@@ -16,99 +16,26 @@ class DataAnalysisPage extends React.Component {
     let scatterContainer = <></>;
 
     if(statsArray.length !== 0) {
-      let csPerMinData = getDataFromArray(statsArray);
-    
-      let avgCSPerMin = ArrayUtil.calculateAvgFromArray(csPerMinData.csPerMinArr);
-      // console.log(avgCSPerMin);
-
-      let avgCSArr = ArrayUtil.fillArray(csPerMinData.csPerMinArr.length, avgCSPerMin);
-      // console.log(avgCSArr);
-      // console.log(csPerMinData);
-
-      let csPerMinGraphData = {
-        labels: csPerMinData.gameDateArr,
-        datasets: [{
-          label: "CS per Min Avg by Game",
-          fill: false,
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          data: csPerMinData.csPerMinArr
-        },
-        {
-          label: "CS Per Min Average of Last 5 games",
-          fill: false,
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(0, 191, 255)',
-          data: avgCSArr,
-          borderDash: [10,5],
-          pointRadius: 0,
-          pointHitRadius: 0,
-        }
-      ]
-      }
-
-      let chartOptions = {
-        hover: {
-          mode: 'nearest'
-        }
-      }
+      const lineGraph = createCSLineGraph(statsArray);
 
       lineGraphContainer = 
         <div className="CSLineGraph">
           <h2>CS Per Minute Average for last 5 games</h2>
-          <Line data={csPerMinGraphData} options={chartOptions} />
+          {lineGraph}
         </div>;
     }
 
     // testing for analyzeTimelineData
     if(statsArray.length !== 0) {
       const firstGameData = statsArray[0];
-      // console.log("firstGameData: ");
-      // console.log(firstGameData);
-      const killEvents = analyzeTimelineData(firstGameData);
-      // console.log("killEvents: ");
-      // console.log(killEvents);
 
-      const flatKillEvents = make1DArrayFrom2DArray(killEvents);
-
-      // console.log(flatKillEvents);
-
-      const killPositionsArray = getPositionDataFromFlatEventArray(flatKillEvents);
-
-      // console.log(killPositionsArray);
-
-      const killsGraphData = {
-        datasets: [
-          {
-            data: killPositionsArray,
-            pointRadius: 10,
-            pointHoverRadius: 15,
-            pointBackgroundColor: 'rgb(0, 191, 255)',
-          }
-        ]
-      }
-
-      const scatterOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-          display: false,
-        },
-        scales: {
-          xAxes: [{
-            display: false
-          }],
-          yAxes: [{
-            display: false
-          }],
-        },
-      };
+      const killScatterPlot = createKillMap(firstGameData);
 
       scatterContainer = 
         <div className="ScatterContainer">
           <h2>Kill Map</h2>
           <div className="ScatterPlotContainer">
-            <Scatter data={killsGraphData} options={scatterOptions} />
+            {killScatterPlot}
           </div>
         </div>;
     }
@@ -158,6 +85,83 @@ function analyzeTimelineData(gameStats) {
   }
 
   return gameKillEvents;
+}
+
+function createCSLineGraph(statsArray) {
+  let csPerMinData = getDataFromArray(statsArray);
+    
+  let avgCSPerMin = ArrayUtil.calculateAvgFromArray(csPerMinData.csPerMinArr);
+  // console.log(avgCSPerMin);
+
+  let avgCSArr = ArrayUtil.fillArray(csPerMinData.csPerMinArr.length, avgCSPerMin);
+  // console.log(avgCSArr);
+  // console.log(csPerMinData);
+
+  let csPerMinGraphData = {
+    labels: csPerMinData.gameDateArr,
+    datasets: [{
+      label: "CS per Min Avg by Game",
+      fill: false,
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: csPerMinData.csPerMinArr
+    },
+    {
+      label: "CS Per Min Average of Last 5 games",
+      fill: false,
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(0, 191, 255)',
+      data: avgCSArr,
+      borderDash: [10,5],
+      pointRadius: 0,
+      pointHitRadius: 0,
+    }
+  ]
+  }
+
+  let chartOptions = {
+    hover: {
+      mode: 'nearest'
+    }
+  }
+
+  return <Line data={csPerMinGraphData} options={chartOptions} />;
+}
+
+function createKillMap(gameData) {
+  const killEvents = analyzeTimelineData(gameData);
+  const flatKillEvents = make1DArrayFrom2DArray(killEvents);
+
+  const killPositionsArray = getPositionDataFromFlatEventArray(flatKillEvents);
+
+  const killsGraphData = {
+    datasets: [
+      {
+        data: killPositionsArray,
+        pointRadius: 10,
+        pointHoverRadius: 15,
+        pointBackgroundColor: 'rgb(0, 191, 255)',
+      }
+    ]
+  }
+
+  const scatterOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      display: false,
+    },
+    scales: {
+      xAxes: [{
+        display: false
+      }],
+      yAxes: [{
+        display: false
+      }],
+    },
+  };
+
+  return <Scatter data={killsGraphData} options={scatterOptions} />;
 }
 
 function make1DArrayFrom2DArray(array2D) {
