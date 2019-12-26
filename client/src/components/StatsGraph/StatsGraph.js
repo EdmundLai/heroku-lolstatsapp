@@ -7,8 +7,10 @@ class StatsGraph extends React.Component {
 
   render() {
 
-    let timeline = this.props.statsObj.timelineData;
-    let gameStats = this.props.statsObj.gameStats; 
+    let timeline = this.props.statsObj.timelineData.playerTimelineData;
+    // console.log(this.props.statsObj.timelineData);
+    // console.log(timeline);
+    let gameStats = this.props.statsObj.playerStats;
     let gameLength = this.props.statsObj.gameLength;
     let dataForGraphs = processTimelineData(timeline);    
 

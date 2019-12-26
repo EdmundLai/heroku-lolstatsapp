@@ -4,12 +4,18 @@ import './ChampionBar.css';
 class ChampionBar extends React.Component {
   render() {
     let champion = this.props.champion;
-    let champName = champion.match(/[A-Z][a-z]+/g).join(" ");
+    // console.log(champion);
+    let champName = champion;
+    let champImg = <></>;
+    if(typeof champion === "string") {
+      champName = champion.match(/[A-Z][a-z]+/g).join(" ");
+      champImg = <img id="ChampionImg" src={require(`../../resources/champion/${champion}.png`)} alt={champion}></img>;
+    }
 
     return (
       <div className="ChampionBar">
         <p id="ChampionName">{champName}</p>
-        <img id="ChampionImg" src={require(`../../resources/champion/${champion}.png`)} alt={champion}></img>
+        {champImg}
       </div>
     );
   }

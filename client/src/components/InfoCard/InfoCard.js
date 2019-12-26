@@ -57,10 +57,15 @@ class InfoCard extends React.Component {
 
   render(){
     let statsObj = this.props.gameInfo;
-    let stats = statsObj.gameStats;
+    let stats = statsObj.playerStats;
     // console.log(statsObj);
 
-    let champion = ChampKeys[statsObj.championID];
+    let champion = statsObj.championID;
+
+    if(ChampKeys.hasOwnProperty(statsObj.championID)) {
+      champion = ChampKeys[statsObj.championID];
+    }
+    // console.log(champion);
     let isMobile = this.state.windowWidth < 900 ? true : false;
     
     if(isMobile) {

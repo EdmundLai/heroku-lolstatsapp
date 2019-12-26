@@ -75,7 +75,7 @@ class DataAnalysisPage extends React.Component {
 
       const killPositionsArray = getPositionDataFromFlatEventArray(flatKillEvents);
 
-      console.log(killPositionsArray);
+      // console.log(killPositionsArray);
 
       const killsGraphData = {
         datasets: [
@@ -126,7 +126,7 @@ function getDataFromArray(statsArray) {
   let csPerMinArr = [];
   let gameDateArr = [];
   statsArray.forEach(gameData => {
-    let csPerMin = gameData.gameStats.csPerMin;
+    let csPerMin = gameData.playerStats.csPerMin;
     let gameDate = TimeUtil.convertGameDate(gameData.gameTime);
     csPerMinArr.push(csPerMin);
     gameDateArr.push(gameDate);
@@ -139,15 +139,13 @@ function getDataFromArray(statsArray) {
 
 // analyze timeline data for one game
 function analyzeTimelineData(gameStats) {
-  const timelineData = gameStats.timelineData;
+  const timelineData = gameStats.timelineData.frames;
   // console.log("timelineData: ");
   // console.log(timelineData);
   let gameKillEvents = [];
 
-  let timelineArray = Object.values(timelineData);
-
-  for(let i = 0; i < timelineArray.length; i++) {
-    let frameObj = timelineArray[i];
+  for(let i = 0; i < timelineData.length; i++) {
+    let frameObj = timelineData[i];
     let gameEvents = frameObj.events;
     let lastMinKills = [];
     for(let j = 0; j < gameEvents.length; j++) {

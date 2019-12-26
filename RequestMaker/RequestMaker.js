@@ -231,11 +231,15 @@ class RequestMaker {
                 }
 
                 playerTimelineData[currFrame] = participantFrames[correctPlayerIndex];
-                playerTimelineData[currFrame].events = frameObj.events;
+                // playerTimelineData[currFrame].events = frameObj.events;
 
             }
 
-            return playerTimelineData;
+            let allTimelineData = data;
+
+            allTimelineData.playerTimelineData = playerTimelineData;
+
+            return allTimelineData;
         })
         .catch(err => {
             console.log("error in getTimelineData");
@@ -292,7 +296,7 @@ class RequestMaker {
                 return {participantId, win, kills, assists, deaths, visionScore, totalMinionsKilled, totalDamageDealt, totalDamageDealtToChampions, goldEarned};
             } 
 
-            let gameStats = processStats(fullStats);
+            let playerStats = processStats(fullStats);
 
             function calculateExtraStats(stats, gameLength) {
                 let gameLenInMin = gameLength / 60;
@@ -307,17 +311,20 @@ class RequestMaker {
                 };
             }
 
-            let extraStats = calculateExtraStats(gameStats, gameLength);
+            let extraStats = calculateExtraStats(playerStats, gameLength);
 
-            gameStats.csPerMin = extraStats.csPerMin;
-            gameStats.goldPerMin = extraStats.goldPerMin;
+            playerStats.csPerMin = extraStats.csPerMin;
+            playerStats.goldPerMin = extraStats.goldPerMin;
+
+            let gameStats = data;
 
             let gameInfo = {
                 gameID,
                 championID,
                 gameLength,
                 gameTime,
-                gameStats
+                gameStats,
+                playerStats
             };
             return gameInfo;
         })
@@ -370,7 +377,7 @@ class RequestMaker {
                 return Promise.all(gamesRetrieved.map(gameInfo => {
                     return this.getStatsByGame(gameInfo["gameId"], gameInfo["champion"])
                     .then(gameData => {
-                        let stats = gameData.gameStats;
+                        let stats = gameData.playerStats;
                         let participantId = stats.participantId;
                         let gameID = gameData.gameID;
 
