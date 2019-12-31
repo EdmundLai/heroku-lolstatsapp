@@ -14,6 +14,7 @@ class DataAnalysisPage extends React.Component {
 
     let lineGraphContainer = <></>;
     let scatterContainer = <></>;
+    let goldDiffContainer = <></>;
 
     if(statsArray.length !== 0) {
       const lineGraph = createCSLineGraph(statsArray);
@@ -40,10 +41,51 @@ class DataAnalysisPage extends React.Component {
         </div>;
     }
 
+    if(statsArray.length !== 0) {
+      const firstGameData = statsArray[0];
+
+      const teamsData = getTeamsData(firstGameData);
+      // console.log(teamsData);
+
+      const teamGoldData = getTeamGoldData(firstGameData);
+
+      console.log(teamGoldData);
+
+      let timeArr = [];
+      let goldDiffArr = [];
+
+      for(let minute = 0; minute < teamGoldData.goldDiff.length; minute++) {
+        timeArr.push(minute);
+        goldDiffArr.push(teamGoldData.goldDiff[minute]);
+      }
+
+      let goldDiffDataset = {
+        labels: timeArr,
+        datasets: [{
+          label: "Gold difference",
+          fill: false,
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: goldDiffArr
+        }]
+      }
+
+      const lineOptions = {
+        responsive: true,
+      }
+
+      goldDiffContainer = 
+      <div className="GoldDiffContainer">
+        <h2>Gold Difference</h2>
+        <Line data={goldDiffDataset} options={lineOptions}/>
+      </div>;
+    }
+
     return(
       <div className="DataAnalysisPage">
         {lineGraphContainer}
         {scatterContainer}
+        {goldDiffContainer}
       </div>
     );
   }
@@ -162,6 +204,89 @@ function createKillMap(gameData) {
   };
 
   return <Scatter data={killsGraphData} options={scatterOptions} />;
+}
+
+// returns team data from gameData
+function getTeamsData(gameData) {
+  const gameStats = gameData.gameStats;
+  const participantArray = gameStats.participants;
+  const teamArray = gameStats.teams;
+
+  let teamsData = {
+    blue: {},
+    red: {},
+  };
+
+  let blueData = {};
+  let redData = {};
+
+  let firstTeamIsBlue = false;
+
+  const firstTeam = teamArray[0];
+
+  if(firstTeam.teamId === 100) {
+    firstTeamIsBlue = true;
+  }
+
+  if(firstTeam.win === "Win") {
+    blueData.win = (firstTeamIsBlue ? true : false);
+    redData.win = (firstTeamIsBlue ? false : true);
+  } else {
+    blueData.win = (firstTeamIsBlue ? false : true);
+    redData.win = (firstTeamIsBlue ? true : false);
+  }
+
+  let bluePlayerArr = [];
+  let redPlayerArr = [];
+
+  participantArray.forEach(participantData => {
+    if(participantData.teamId === 100) {
+      bluePlayerArr.push(participantData);
+    } else {
+      redPlayerArr.push(participantData);
+    }
+  });
+
+  blueData.playerArr = bluePlayerArr;
+  redData.playerArr = redPlayerArr;
+
+  teamsData.blue = blueData;
+  teamsData.red = redData;
+
+  return teamsData;
+}
+
+function getTeamGoldData(gameData) {
+  let gameFrames = gameData.timelineData.frames;
+
+  let teamGoldData = {
+    blueTotalGold: [],
+    redTotalGold: [],
+    goldDiff: [],
+  }
+
+  gameFrames.forEach(currentFrame => {
+    let participantFrames = currentFrame.participantFrames;
+
+    let blueGoldAtCurrFrame = 0;
+    let redGoldAtCurrFrame = 0;
+
+    Object.values(participantFrames).forEach(playerFrame => {
+      if(playerFrame.participantId >= 1 && playerFrame.participantId <= 5) {
+        blueGoldAtCurrFrame += playerFrame.totalGold;
+      } else {
+        redGoldAtCurrFrame += playerFrame.totalGold;
+      }
+    });
+
+    let currGoldDifference = blueGoldAtCurrFrame - redGoldAtCurrFrame;
+
+    teamGoldData.blueTotalGold.push(blueGoldAtCurrFrame);
+    teamGoldData.redTotalGold.push(redGoldAtCurrFrame);
+    teamGoldData.goldDiff.push(currGoldDifference);
+  });
+
+  return teamGoldData;
 }
 
 function make1DArrayFrom2DArray(array2D) {

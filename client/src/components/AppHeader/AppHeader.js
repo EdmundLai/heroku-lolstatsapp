@@ -22,10 +22,10 @@ class AppHeader extends React.Component {
             <li>
               {statsLink}
             </li>
-            <li>
+            {/* <li> */}
               {/* {statsLink2} */}
-              <Link to="/stats_indepth">More Stats</Link>
-            </li>
+              {/* <Link to="/stats_indepth">More Stats</Link> */}
+            {/* </li> */}
           </ul>
         </nav>
       </header>
