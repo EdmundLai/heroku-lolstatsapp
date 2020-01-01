@@ -12,7 +12,7 @@ class AppFooter extends React.Component {
         </div>
 
         <div className="Creator-note">
-        Built by Edmund Lai
+          Built by Edmund Lai and Josh Yao
         </div>
       </footer>
     );

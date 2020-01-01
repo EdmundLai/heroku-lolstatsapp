@@ -9,10 +9,61 @@ class HomePage extends React.Component {
     super(props);
 
     this.state = {
-      summName: "",
-      queueType: "normalBlind",
       goToStats: false,
       statsLoading: false
+    };
+
+    this.goToStats = this.goToStats.bind(this);
+    this.toggleStatsLoading = this.toggleStatsLoading.bind(this);
+
+  }
+
+  goToStats() {
+    this.setState({
+      goToStats: true
+    });
+  }
+
+  toggleStatsLoading() {
+    const loadingStatus = this.state.statsLoading;
+    this.setState({
+      statsLoading: !loadingStatus
+    });
+  }
+
+  render() {
+    if(this.state.goToStats) {
+      return(
+        <Redirect to="/stats" />
+      );
+    } else if(this.state.statsLoading) {
+      return(
+        <LoadingAnimation />
+      );
+    } else {
+      return (
+        <div className="HomePage">
+          <SummNameForm callback={this.props.callback} loadingCallback={this.toggleStatsLoading} goToStatsCallback={this.goToStats}/>
+          
+          {/* <div className="FormHint">
+            <p>
+              Don't have a summoner name? Try using the name <b>TitaniumGod</b> to see what the app does!
+            </p>
+          </div> */}
+        </div>
+      );
+    }
+    
+  }
+}
+
+class SummNameForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      summName: "",
+      queueType: "rankedSolo",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -39,119 +90,93 @@ class HomePage extends React.Component {
       } else {
         this.props.callback(data.responseCode, data);
       }
-      // if(isNaN(data)) {
-      //   this.props.callback(200, data);
-      // } else {
-      //   this.props.callback(data);
-      // }
     })
     .catch(err => {
       console.log(err);
     })
     .finally(() => {
-      this.setState({
-        statsLoading: false,
-        goToStats: true
-      });
+      this.props.loadingCallback();
+      this.props.goToStatsCallback();
     });
 
-    this.setState({
-      statsLoading: true
-    });
+    this.props.loadingCallback();
 
     event.preventDefault();
   }
 
   render() {
-    if(this.state.goToStats) {
-      return(
-        <Redirect to="/stats" />
-      );
-    } else if(this.state.statsLoading) {
-      return(
-        <LoadingAnimation />
-      );
-    } else {
-      return (
-        <div className="HomePage">
-          <form className="HomeForm" onSubmit={this.handleSubmit}>
-            <div className="InputBoxes">
-              <label id="NameBox">
-                <div id="NameLabel">Summoner Name:</div>
-                <input
-                type="text"
-                name="summName"
-                value={this.state.summName}
-                onChange={this.handleChange}
-                required
-                />
-              </label>
-    
-              <div className="queue-selector">
-                <div className="queue-selector-title">
-                  Queue Type:
-                </div>
-                
-                <div className="queueOptions">
-                  <label>
-                    <input
-                    type="radio"
-                    name="queueType"
-                    value="normalBlind"
-                    onChange={this.handleChange}
-                    defaultChecked
-                    />
-                    Normal Blind Pick
-                  </label>
-    
-                  <label>
-                    <input
-                    type="radio"
-                    name="queueType"
-                    value="normalDraft"
-                    onChange={this.handleChange}
-                    />
-                    Normal Draft Pick
-                  </label>
-    
-                  <label>
-                    <input
-                    type="radio"
-                    name="queueType"
-                    value="rankedSolo"
-                    onChange={this.handleChange}
-                    />
-                    Ranked Solo/Duo
-                  </label>
-    
-                  <label>
-                    <input
-                    type="radio"
-                    name="queueType"
-                    value="rankedFlex"
-                    onChange={this.handleChange}
-                    />
-                    Ranked Flex Pick
-                  </label>
-                </div>
-                
-              </div>
+    return(
+      <form className="HomeForm" onSubmit={this.handleSubmit}>
+        <div className="InputBoxes">
+          <label id="NameBox">
+            <div id="NameLabel">Summoner Name:</div>
+            <input
+            type="text"
+            name="summName"
+            value={this.state.summName}
+            onChange={this.handleChange}
+            required
+            />
+          </label>
 
-              <input id="DataSubmitButton" type="submit" value="Submit" />
+          <div className="queue-selector">
+            <div className="queue-selector-title">
+              Queue Type:
             </div>
             
-          </form>
+            <div className="queueOptions">
+              <label>
+                <input
+                type="radio"
+                name="queueType"
+                value="rankedSolo"
+                onChange={this.handleChange}
+                defaultChecked
+                />
+                Ranked Solo/Duo
+              </label>
 
-          <div className="FormHint">
-            <p>
-              Don't have a summoner name? Try using the name <b>TitaniumGod</b> to see what the app does!
-            </p>
+              <label>
+                <input
+                type="radio"
+                name="queueType"
+                value="normalBlind"
+                onChange={this.handleChange}
+                />
+                Normal Blind Pick
+              </label>
+
+              <label>
+                <input
+                type="radio"
+                name="queueType"
+                value="normalDraft"
+                onChange={this.handleChange}
+                />
+                Normal Draft Pick
+              </label>
+
+              <label>
+                <input
+                type="radio"
+                name="queueType"
+                value="rankedFlex"
+                onChange={this.handleChange}
+                />
+                Ranked Flex Pick
+              </label>
+            </div>
+            
           </div>
+
+          <input id="DataSubmitButton" type="submit" value="Submit" />
         </div>
-      );
-    }
-    
+        
+      </form>
+    );
   }
+    
+
 }
 
 export default HomePage;

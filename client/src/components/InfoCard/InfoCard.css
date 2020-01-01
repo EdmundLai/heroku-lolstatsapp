@@ -1,5 +1,5 @@
 .InfoCard {
-  background-color: azure;
+  background-color: #1b2c32;
   border: solid 0.1em;
   margin: 1em 0 1em 0;
 }
@@ -21,7 +21,7 @@
 }
 
 .InfoBarMobile {
-  background-color: azure;
+  background-color: #1b2c32;
   border: solid 0.1em;
   display: flex;
   flex-direction: column;

@@ -1,20 +1,17 @@
 .App-header {
-  background-color: #282c34;
-  min-height: 20vh;
+  background-color: #09161C;
   display: flex;
-  flex-direction: column;
+  flex-direction: row-reverse;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 0 1rem;
 }
 
 nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-}
-
-nav ul li {
-  float: left;
+  display: flex;
 }
 
 nav ul li a {
@@ -24,22 +21,4 @@ nav ul li a {
   text-align: center;
   text-decoration: none;
   font-size: 1.5rem;
-}
-
-nav ul li a:hover {
-  text-decoration: none;
-  color: white;
-  animation-duration: 1s;
-  animation-name: darken;
-  animation-fill-mode: forwards;
-}
-
-@keyframes darken {
-  from {
-    color: white;
-  }
-
-  to {
-    color: black;
-  }
 }
