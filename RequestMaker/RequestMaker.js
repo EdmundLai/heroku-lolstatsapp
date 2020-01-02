@@ -1,5 +1,5 @@
-var axios = require('axios');
-var RateLimiter = require('limiter').RateLimiter;
+const axios = require("axios");
+const RateLimiter = require("limiter").RateLimiter;
 
 // class that all calls to League of Legends APIs are made through
 // DONE: Convert all axios requests to na1.api.riotgames.com to use RateLimiter
@@ -9,16 +9,16 @@ class RequestMaker {
         this.limiter2 = new RateLimiter(18, 1000);
         this.apiToken = apiToken;
         this.gameType = {
-            "400": "Draft Pick",
-            "420": "Ranked Solo/Duo",
-            "430": "Blind Pick",
-            "440": "Ranked Flex",
-            "450": "ARAM",
-            "460": "Twisted Treeline 3v3"
+            400: "Draft Pick",
+            420: "Ranked Solo/Duo",
+            430: "Blind Pick",
+            440: "Ranked Flex",
+            450: "ARAM",
+            460: "Twisted Treeline 3v3",
         };
         this.errorLog = {
             responseCode: undefined,
-            method: ""
+            method: "",
         };
     }
 
@@ -41,55 +41,21 @@ class RequestMaker {
         return Promise.all([this.removeTokenLimiter1(), this.removeTokenLimiter2()]);
     }
 
-    // getting champion data from latest patch
-    getDDragonChampKeys() {
-        return axios.get('http://ddragon.leagueoflegends.com/cdn/9.23.1/data/en_US/championFull.json')
-        .then(res => {
-            let champFullData = res.data;
-            let keys = champFullData["keys"];
-            return keys;
-        })
-        .catch(err => {
-            console.log(err);
-            throw err;
-        });
-    }
-
-    // getting queue type data to convert queueID numbers to real queue types
-    getQueueType(queueID) {
-        return axios.get('http://static.developer.riotgames.com/docs/lol/queues.json')
-        .then(res => {
-            let dataArray = res.data;
-            for(let i = 0; i < dataArray.length; i++) {
-                let dataObj = dataArray[i];
-                if(dataObj["queueId"] == queueID) {
-                    return dataObj["description"];
-                }
-            }
-            console.log(`queueID ${queueID} not found.`);
-            return null;
-        })
-        .catch(err => {
-            console.log(err);
-            throw err;
-        });
-    }
-
     getLOLSummonerID(summonerName) {
         return this.removeToken()
         .then(() => {
             return axios({
                 url: `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`,
-                method: 'get',
+                method: "get",
                 headers: {
-                    "X-Riot-Token": this.apiToken
-                }
+                    "X-Riot-Token": this.apiToken,
+                },
             });
         })
         .then(res => {
-            let data = res.data;
+            const data = res.data;
             console.log(data);
-            let summonerID = data["id"];
+            const summonerID = data.id;
             return summonerID;
         })
         .catch(err => {
@@ -106,15 +72,15 @@ class RequestMaker {
         .then(() => {
             return axios({
                 url: `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`,
-                method: 'get',
+                method: "get",
                 headers: {
-                    "X-Riot-Token": this.apiToken
-                }
+                    "X-Riot-Token": this.apiToken,
+                },
             });
-        })        
+        })
         .then(res => {
-            let data = res.data;
-            let accountID = data["accountId"];
+            const data = res.data;
+            const accountID = data.accountId;
             return accountID;
         })
         .catch(err => {
@@ -139,18 +105,18 @@ class RequestMaker {
     getMatchList(summonerID, queueTypes) {
         let requestURL = null;
         requestURL = `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${summonerID}`;
-        
-        if(queueTypes !== undefined) {
-            if(typeof(queueTypes) == 'number') {
+
+        if (queueTypes !== undefined) {
+            if (typeof (queueTypes) === "number") {
                 requestURL += `?queue=${queueTypes}`;
-            } else if(typeof(queueTypes) == 'object') {
-                for(let i = 0; i < queueTypes.length; i++) {
-                    let queueType = queueTypes[i];
-                    if(isNaN(queueType)) {
+            } else if (typeof (queueTypes) === "object") {
+                for (let i = 0; i < queueTypes.length; i++) {
+                    const queueType = queueTypes[i];
+                    if (isNaN(queueType)) {
                         console.log("queueType is not a number.");
                         return null;
                     }
-                    if(i === 0) {
+                    if (i === 0) {
                         requestURL += `?queue=${queueType}`;
                     } else {
                         requestURL += `&queue=${queueType}`;
@@ -165,14 +131,14 @@ class RequestMaker {
         .then(() => {
             return axios({
                 url: requestURL,
-                method: 'get',
+                method: "get",
                 headers: {
-                    "X-Riot-Token": this.apiToken
-                }
+                    "X-Riot-Token": this.apiToken,
+                },
             });
         })
         .then(res => {
-            let data = res.data["matches"];
+            const data = res.data.matches;
             // console.log(data);
             return data;
         })
@@ -194,35 +160,36 @@ class RequestMaker {
         .then(() => {
             return axios({
                 url: `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameID}`,
-                method: 'get',
+                method: "get",
                 headers: {
-                    "X-Riot-Token": this.apiToken
-                }
+                    "X-Riot-Token": this.apiToken,
+                },
             });
         })
         .then(res => {
-            let data = res.data;
+            const data = res.data;
             // console.log(data);
-            let dataframes = data.frames;
+            const dataframes = data.frames;
 
-            let totalFrames = Object.keys(dataframes).length;
+            const totalFrames = Object.keys(dataframes).length;
 
             let correctPlayerIndex = null;
 
-            let playerTimelineData = {};
+            const playerTimelineData = {};
 
-            for(let currFrame = 0; currFrame < totalFrames; currFrame++) {
-                let frameObj = dataframes[currFrame];
+            for (let currFrame = 0; currFrame < totalFrames; currFrame++) {
+                const frameObj = dataframes[currFrame];
 
-                // frameObj also contains the property "events", which is an array of game events such as
-                // purchasing/selling item, objective taken, or champion killed in the last minute of play
+                // frameObj also contains the property "events", which is an array of game events
+                // such as purchasing/selling item, objective taken, or champion killed in the
+                // last minute of play
 
                 // using participantFrames for now
-                let participantFrames = frameObj.participantFrames;
+                const participantFrames = frameObj.participantFrames;
 
-                if(correctPlayerIndex === null) {
-                    for(let index = 1; index <= 10; index++) {
-                        if(participantFrames[index].participantId == participantId) {
+                if (correctPlayerIndex === null) {
+                    for (let index = 1; index <= 10; index++) {
+                        if (participantFrames[index].participantId == participantId) {
                             // break out of loop if participantId is found
                             correctPlayerIndex = index;
                             break;
@@ -235,7 +202,7 @@ class RequestMaker {
 
             }
 
-            let allTimelineData = data;
+            const allTimelineData = data;
 
             allTimelineData.playerTimelineData = playerTimelineData;
 
@@ -256,24 +223,24 @@ class RequestMaker {
         .then(() => {
             return axios({
                 url: `https://na1.api.riotgames.com/lol/match/v4/matches/${gameID}`,
-                method: 'get',
+                method: "get",
                 headers: {
-                    "X-Riot-Token": this.apiToken
-                }
+                    "X-Riot-Token": this.apiToken,
+                },
             });
         })
         .then(res => {
-            let data = res.data;
-            let gameTime = data["gameCreation"];
-            let playerDataArr = data["participants"];
-            let gameLength = data["gameDuration"];
-            let queueId = data["queueId"];
+            const data = res.data;
+            const gameTime = data.gameCreation;
+            const playerDataArr = data.participants;
+            const gameLength = data.gameDuration;
+            const queueId = data.queueId;
             let startingGold;
 
             // startingGold values based on map
-            if(queueId == 450) {
+            if (queueId === 450) {
                 startingGold = 1400;
-            } else if(queueId == 460 || queueId == 470) {
+            } else if (queueId === 460 || queueId === 470) {
                 startingGold = 850;
             } else {
                 startingGold = 500;
@@ -282,49 +249,67 @@ class RequestMaker {
             // console.log(startingGold);
 
             function getPlayerStats() {
-                for(let i = 0; i < playerDataArr.length; i++) {
-                    let playerData = playerDataArr[i];
-                    if(playerData["championId"] == championID) {
-                        return playerData["stats"];
+                for (let i = 0; i < playerDataArr.length; i++) {
+                    const playerData = playerDataArr[i];
+                    if (playerData.championId === championID) {
+                        return playerData.stats;
                     }
                 }
+
+                // should never happen
+                console.log("Champion ID not found!");
+                return null;
             }
 
-            let fullStats = getPlayerStats();
+            const fullStats = getPlayerStats();
 
-            function processStats({participantId, win, kills, assists, deaths, visionScore, totalMinionsKilled, totalDamageDealt, totalDamageDealtToChampions, goldEarned}) {
-                return {participantId, win, kills, assists, deaths, visionScore, totalMinionsKilled, totalDamageDealt, totalDamageDealtToChampions, goldEarned};
-            } 
+            function processStats({
+                participantId, win, kills, assists, deaths, visionScore, totalMinionsKilled,
+                totalDamageDealt, totalDamageDealtToChampions, goldEarned,
+            }) {
+                return {
+                    participantId,
+                    win,
+                    kills,
+                    assists,
+                    deaths,
+                    visionScore,
+                    totalMinionsKilled,
+                    totalDamageDealt,
+                    totalDamageDealtToChampions,
+                    goldEarned,
+                };
+            }
 
-            let playerStats = processStats(fullStats);
+            const playerStats = processStats(fullStats);
 
-            function calculateExtraStats(stats, gameLength) {
-                let gameLenInMin = gameLength / 60;
-                let csPerMin = stats["totalMinionsKilled"] / gameLenInMin;
-                let goldPerMin = (stats["goldEarned"] - startingGold) / gameLenInMin;
+            function calculateExtraStats(stats, gameLen) {
+                const gameLenInMin = gameLen / 60;
+                let csPerMin = stats.totalMinionsKilled / gameLenInMin;
+                let goldPerMin = (stats.goldEarned - startingGold) / gameLenInMin;
 
                 csPerMin = parseFloat(csPerMin.toFixed(1));
                 goldPerMin = parseFloat(goldPerMin.toFixed(1));
 
                 return {
-                    csPerMin, goldPerMin
+                    csPerMin, goldPerMin,
                 };
             }
 
-            let extraStats = calculateExtraStats(playerStats, gameLength);
+            const extraStats = calculateExtraStats(playerStats, gameLength);
 
             playerStats.csPerMin = extraStats.csPerMin;
             playerStats.goldPerMin = extraStats.goldPerMin;
 
-            let gameStats = data;
+            const gameStats = data;
 
-            let gameInfo = {
+            const gameInfo = {
                 gameID,
                 championID,
                 gameLength,
                 gameTime,
                 gameStats,
-                playerStats
+                playerStats,
             };
             return gameInfo;
         })
@@ -344,14 +329,15 @@ class RequestMaker {
     // returns array of stats per game if call is successful
     // returns http status code if any calls failed along the way
     getStats(summonerName, queueType, numGames) {
-        if(isNaN(numGames)) {
+        if (isNaN(numGames)) {
             console.log("Please request a numeric value for numGames.");
             return null;
-        } else if(numGames < 1) {
+        }
+        if (numGames < 1) {
             console.log("Please request numGames of at least 1.");
             return null;
         }
-        let maxNumGames = 20;
+        const maxNumGames = 20;
         let numGamesRetrieved = numGames > maxNumGames ? maxNumGames : numGames;
         console.log(`numGamesRetrieved: ${numGamesRetrieved}`);
         return this.getLOLAccountID(summonerName)
@@ -360,7 +346,7 @@ class RequestMaker {
             return this.getMatchList(id, queueType)
             .then(matchList => {
                 // uses object destructuring
-                let gameInfoArr = matchList.map(({ gameId, champion }) => {
+                const gameInfoArr = matchList.map(({ gameId, champion }) => {
                     return { gameId, champion };
                 });
                 // for debugging purposes
@@ -368,18 +354,18 @@ class RequestMaker {
                 return gameInfoArr;
             })
             .then(gameInfoArr => {
-                if(numGamesRetrieved > gameInfoArr.length) {
+                if (numGamesRetrieved > gameInfoArr.length) {
                     numGamesRetrieved = gameInfoArr.length;
                 }
-    
-                let gamesRetrieved = gameInfoArr.slice(0, numGamesRetrieved);
-    
+
+                const gamesRetrieved = gameInfoArr.slice(0, numGamesRetrieved);
+
                 return Promise.all(gamesRetrieved.map(gameInfo => {
-                    return this.getStatsByGame(gameInfo["gameId"], gameInfo["champion"])
+                    return this.getStatsByGame(gameInfo.gameId, gameInfo.champion)
                     .then(gameData => {
-                        let stats = gameData.playerStats;
-                        let participantId = stats.participantId;
-                        let gameID = gameData.gameID;
+                        const stats = gameData.playerStats;
+                        const participantId = stats.participantId;
+                        const gameID = gameData.gameID;
 
                         return this.getTimelineData(gameID, participantId)
                         .then(timelineData => {
@@ -399,16 +385,16 @@ class RequestMaker {
                 //     console.log(data);
                 // })
                 .catch(err => {
-                    console.log("some error occurred in promise all"); 
+                    console.log("some error occurred in promise all");
                     throw err;
                 });
-                
+
             })
             .then(statsArray => {
-                let statsObj = {
-                    summonerName: summonerName,
-                    queueType: queueType,
-                    statsArray: statsArray
+                const statsObj = {
+                    summonerName,
+                    queueType,
+                    statsArray,
                 };
 
                 return statsObj;
@@ -422,10 +408,42 @@ class RequestMaker {
             console.log(`error response code: ${this.errorLog.responseCode}`);
             // console.log(`error occurred in method: ${this.errorLog.method}`);
             return this.errorLog;
-            
         });
     }
 }
 
+// getting champion data from latest patch
+function getDDragonChampKeys() {
+    return axios.get("http://ddragon.leagueoflegends.com/cdn/9.23.1/data/en_US/championFull.json")
+    .then(res => {
+        const champFullData = res.data;
+        const keys = champFullData.keys;
+        return keys;
+    })
+    .catch(err => {
+        console.log(err);
+        throw err;
+    });
+}
+
+// getting queue type data to convert queueID numbers to real queue types
+function getQueueType(queueID) {
+    return axios.get("http://static.developer.riotgames.com/docs/lol/queues.json")
+    .then(res => {
+        const dataArray = res.data;
+        for (let i = 0; i < dataArray.length; i++) {
+            const dataObj = dataArray[i];
+            if (dataObj.queueId == queueID) {
+                return dataObj.description;
+            }
+        }
+        console.log(`queueID ${queueID} not found.`);
+        return null;
+    })
+    .catch(err => {
+        console.log(err);
+        throw err;
+    });
+}
 
 module.exports = RequestMaker;

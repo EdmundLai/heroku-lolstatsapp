@@ -44,6 +44,8 @@ class HomePage extends React.Component {
       return (
         <div className="HomePage">
           <SummNameForm callback={this.props.callback} loadingCallback={this.toggleStatsLoading} goToStatsCallback={this.goToStats}/>
+
+          {/* <SearchBar /> */}
           
           {/* <div className="FormHint">
             <p>
@@ -175,8 +177,17 @@ class SummNameForm extends React.Component {
       </form>
     );
   }
-    
-
 }
+
+// class SearchBar extends React.Component {
+
+//   render() {
+//     return (
+//       <div className="SearchBar">
+
+//       </div>
+//     );
+//   }
+// }
 
 export default HomePage;

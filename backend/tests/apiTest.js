@@ -1,12 +1,12 @@
-var axios = require('axios');
+const axios = require('axios');
 
 function makeStatsRequest(playerTag, gameTypeArr, numGames) {
     axios.get('http://localhost:5000/api/stats', {
         params: {
             summonerName: playerTag,
             gameTypes: gameTypeArr,
-            numRequested: numGames
-        }
+            numRequested: numGames,
+        },
     })
     .then(res => {
         console.log(res.data);
