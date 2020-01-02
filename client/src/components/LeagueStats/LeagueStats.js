@@ -1,10 +1,11 @@
 import React from 'react';
 import GamesPage from '../GamesPage/GamesPage';
 import ErrorPage from '../ErrorPage/ErrorPage';
+// import { withRouter } from 'react-router-dom';
+// import SearchBar from '../SearchBar/SearchBar';
+// import LoadingAnimation from '../LoadingAnimation/LoadingAnimation';
 
 import './LeagueStats.css';
-
-
 
 class LeagueStats extends React.Component {
   render() {
@@ -20,6 +21,7 @@ class LeagueStats extends React.Component {
 
     return(
       <div className="LeagueStats">
+        {/* <SearchBar updateAppState={this.props.updateAppState} loadingCallback={this.toggleStatsLoading} goToStatsCallback={this.goToStats}/> */}
         {StatsContent}
       </div>
     );

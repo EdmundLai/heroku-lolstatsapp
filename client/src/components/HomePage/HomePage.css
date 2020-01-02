@@ -56,12 +56,3 @@
   align-self: end;
 }
 
-.SearchBar {
-  background-color: white;
-  width: 640px;
-  height: 60px;
-  left: 400px;
-  top: 414px;
-  margin-top: 2rem;
-  border-radius: 60px
-}

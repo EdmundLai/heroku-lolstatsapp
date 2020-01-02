@@ -44,7 +44,7 @@ class DataAnalysisPage extends React.Component {
     if(statsArray.length !== 0) {
       const firstGameData = statsArray[0];
 
-      const teamsData = getTeamsData(firstGameData);
+      // const teamsData = getTeamsData(firstGameData);
       // console.log(teamsData);
 
       const teamGoldData = getTeamGoldData(firstGameData);

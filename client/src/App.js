@@ -6,6 +6,7 @@ import AboutPage from './components/AboutPage/AboutPage';
 import LeagueStats from './components/LeagueStats/LeagueStats';
 // import InDepthStats from './components/InDepthStats/InDepthStats';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+// import LoadingAnimation from './components/LoadingAnimation/LoadingAnimation';
 
 import './App.css';
 
@@ -19,7 +20,7 @@ class App extends React.Component {
       currentStats: [],
       httpCode: 200,
       dataReady: false,
-      errorLog: {}
+      errorLog: {},
     };
 
     this.updateState = this.updateState.bind(this);
@@ -47,19 +48,25 @@ class App extends React.Component {
     
   }
 
+
   render() {
     return (
       <Router>
         <div className="App">
-          <AppHeader showStats={this.state.dataReady} />
+          <AppHeader showStats={this.state.dataReady} updateAppState={this.updateState} />
           <div className="App-body">
             <Switch>
-              <Route path="/stats" render={(props) => <LeagueStats {...props} dataState={this.state} />} />
+              <Route path="/stats" render={(props) => <LeagueStats {...props} 
+                dataState={this.state} 
+                updateAppState={this.updateState} 
+              />} />
               <Route path="/about"><AboutPage/></Route>
-              <Route exact path="/" render={(props) => <HomePage {...props} callback={this.updateState} />} />
+              <Route exact path="/" render={(props) => <HomePage {...props} 
+                updateAppState={this.updateState}
+              />} />
               {/* <Route path="/stats_indepth" render={(props) => <InDepthStats {...props} dataState={this.state} />} /> */}
             </Switch>
-  
+
           </div>
           <AppFooter />
         </div>
