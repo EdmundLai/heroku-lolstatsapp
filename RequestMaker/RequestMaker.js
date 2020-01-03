@@ -199,7 +199,6 @@ class RequestMaker {
 
                 playerTimelineData[currFrame] = participantFrames[correctPlayerIndex];
                 // playerTimelineData[currFrame].events = frameObj.events;
-
             }
 
             const allTimelineData = data;
@@ -388,7 +387,6 @@ class RequestMaker {
                     console.log("some error occurred in promise all");
                     throw err;
                 });
-
             })
             .then(statsArray => {
                 const statsObj = {
@@ -413,37 +411,37 @@ class RequestMaker {
 }
 
 // getting champion data from latest patch
-function getDDragonChampKeys() {
-    return axios.get("http://ddragon.leagueoflegends.com/cdn/9.23.1/data/en_US/championFull.json")
-    .then(res => {
-        const champFullData = res.data;
-        const keys = champFullData.keys;
-        return keys;
-    })
-    .catch(err => {
-        console.log(err);
-        throw err;
-    });
-}
+// function getDDragonChampKeys() {
+//     return axios.get("http://ddragon.leagueoflegends.com/cdn/9.23.1/data/en_US/championFull.json")
+//     .then(res => {
+//         const champFullData = res.data;
+//         const keys = champFullData.keys;
+//         return keys;
+//     })
+//     .catch(err => {
+//         console.log(err);
+//         throw err;
+//     });
+// }
 
 // getting queue type data to convert queueID numbers to real queue types
-function getQueueType(queueID) {
-    return axios.get("http://static.developer.riotgames.com/docs/lol/queues.json")
-    .then(res => {
-        const dataArray = res.data;
-        for (let i = 0; i < dataArray.length; i++) {
-            const dataObj = dataArray[i];
-            if (dataObj.queueId == queueID) {
-                return dataObj.description;
-            }
-        }
-        console.log(`queueID ${queueID} not found.`);
-        return null;
-    })
-    .catch(err => {
-        console.log(err);
-        throw err;
-    });
-}
+// function getQueueType(queueID) {
+//     return axios.get("http://static.developer.riotgames.com/docs/lol/queues.json")
+//     .then(res => {
+//         const dataArray = res.data;
+//         for (let i = 0; i < dataArray.length; i++) {
+//             const dataObj = dataArray[i];
+//             if (dataObj.queueId === queueID) {
+//                 return dataObj.description;
+//             }
+//         }
+//         console.log(`queueID ${queueID} not found.`);
+//         return null;
+//     })
+//     .catch(err => {
+//         console.log(err);
+//         throw err;
+//     });
+// }
 
 module.exports = RequestMaker;

@@ -21,7 +21,6 @@ class LeagueStats extends React.Component {
 
     return(
       <div className="LeagueStats">
-        {/* <SearchBar updateAppState={this.props.updateAppState} loadingCallback={this.toggleStatsLoading} goToStatsCallback={this.goToStats}/> */}
         {StatsContent}
       </div>
     );

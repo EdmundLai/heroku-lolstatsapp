@@ -42,6 +42,7 @@ class SearchBar extends React.Component {
 
     RequestHandler.handleRequest(this.state)
     .then(data => {
+      // console.log(data);
       if(data.hasOwnProperty("summonerName")) {
         this.props.updateAppState(200, data);
       } else {

@@ -16,10 +16,8 @@ class App extends React.Component {
 
     this.state = {
       summName: "",
-      queueType: "",
-      currentStats: [],
+      statsArrayByQueue: [],
       httpCode: 200,
-      dataReady: false,
       errorLog: {},
     };
 
@@ -28,15 +26,13 @@ class App extends React.Component {
 
   // changed to handle errors as well as valid data
   updateState(httpCode, data) {
+    console.log(data);
     if(httpCode === 200) {
       let statsObj = data;
-      // console.log(statsObj);
       this.setState({
         summName: statsObj.summonerName,
-        queueType: statsObj.queueType,
-        currentStats: statsObj.statsArray,
+        statsArrayByQueue: statsObj.statsArrayByQueue,
         httpCode: 200,
-        dataReady: true
       });
     } else {
       // console.log(`httpCode from updateState: ${httpCode}`);
@@ -53,7 +49,7 @@ class App extends React.Component {
     return (
       <Router>
         <div className="App">
-          <AppHeader showStats={this.state.dataReady} updateAppState={this.updateState} />
+          <AppHeader updateAppState={this.updateState} />
           <div className="App-body">
             <Switch>
               <Route path="/stats" render={(props) => <LeagueStats {...props} 

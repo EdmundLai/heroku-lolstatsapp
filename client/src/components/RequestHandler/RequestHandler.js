@@ -9,11 +9,34 @@ const queueTypeDict = {
 
 function handleRequest(reqObj) {
   let summName = reqObj.summName;
-  let queueType = reqObj.queueType;
+  // let queueType = reqObj.queueType;
 
-  let queueCode = queueTypeDict[queueType];
+  let statsArrayByQueue = [];
+  let returnedStatsObj = {};
 
-  return makeStatsRequest(summName, [queueCode])
+  return makeStatsRequest(summName, [queueTypeDict["rankedSolo"]])
+  .then(data => {
+    statsArrayByQueue.push(data);
+    return makeStatsRequest(summName, [queueTypeDict["rankedFlex"]]);
+  })
+  .then(data => {
+    statsArrayByQueue.push(data);
+    return makeStatsRequest(summName, [queueTypeDict["normalBlind"]]);
+  })
+  .then(data => {
+    statsArrayByQueue.push(data);
+    return makeStatsRequest(summName, [queueTypeDict["normalDraft"]]);
+  })
+  .then(data => {
+    statsArrayByQueue.push(data);
+    const summName = statsArrayByQueue[0].summonerName;
+    returnedStatsObj = {
+      summonerName: summName,
+      statsArrayByQueue
+    };
+
+    return returnedStatsObj;
+  })
   .catch(err => {
     console.log(err);
     throw err;
