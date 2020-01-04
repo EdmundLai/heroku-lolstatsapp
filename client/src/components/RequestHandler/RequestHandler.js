@@ -29,10 +29,18 @@ function handleRequest(reqObj) {
   })
   .then(data => {
     statsArrayByQueue.push(data);
+    return makeSummDataRequest(summName);
+  })
+  .then(data => {
+    const summonerLevel = data.summonerLevel;
+    const profileIconId = data.profileIconId;
     const summName = statsArrayByQueue[0].summonerName;
+
     returnedStatsObj = {
       summonerName: summName,
-      statsArrayByQueue
+      statsArrayByQueue,
+      summonerLevel,
+      profileIconId
     };
 
     return returnedStatsObj;
@@ -45,25 +53,45 @@ function handleRequest(reqObj) {
 
 // default number of games requested will be 10
 function makeStatsRequest(playerTag, gameTypeArr) {
-    return axios.get('api/stats', {
-        params: {
-            summonerName: playerTag,
-            gameTypes: gameTypeArr,
-            numRequested: 5
-        }
-    })
-    .then(res => {
-        return res.data;
-    })
-    .catch(err => {
-        console.log(err);
-        if(err.response) {
-          console.log(err.response.status);
-          return err.response.status;
-        }
-        // in case there is no response, return default value
-        return [];
-    });
+  return axios.get('api/stats', {
+      params: {
+        summonerName: playerTag,
+        gameTypes: gameTypeArr,
+        numRequested: 5
+      }
+  })
+  .then(res => {
+    return res.data;
+  })
+  .catch(err => {
+    console.log(err);
+    if(err.response) {
+      console.log(err.response.status);
+      return err.response.status;
+    }
+    // in case there is no response, return default value
+    return {};
+  });
+}
+
+function makeSummDataRequest(playerTag) {
+  return axios.get('api/getSummData', {
+    params: {
+      summonerName: playerTag
+    }
+  })
+  .then(res => {
+    return res.data;
+  })
+  .catch(err => {
+    console.log(err);
+    if(err.response) {
+      console.log(err.response.status);
+      return err.response.status;
+    }
+    // in case there is no response, return default value
+    return {};
+  });
 }
 
 module.exports.handleRequest = handleRequest;

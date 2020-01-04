@@ -41,7 +41,7 @@ class RequestMaker {
         return Promise.all([this.removeTokenLimiter1(), this.removeTokenLimiter2()]);
     }
 
-    getLOLSummonerID(summonerName) {
+    getLOLSummonerData(summonerName) {
         return this.removeToken()
         .then(() => {
             return axios({
@@ -54,15 +54,18 @@ class RequestMaker {
         })
         .then(res => {
             const data = res.data;
-            console.log(data);
-            const summonerID = data.id;
-            return summonerID;
+            const dataObj = {
+                summonerLevel: data.summonerLevel,
+                profileIconId: data.profileIconId,
+            };
+
+            return dataObj;
         })
         .catch(err => {
             // console.log(err);
-            console.log("error in getLOLSummonerID");
+            console.log("error in getLOLSummonerData");
             this.errorLog.responseCode = err.response.status;
-            this.errorLog.method = "getLOLSummonerID";
+            this.errorLog.method = "getLOLSummonerData";
             throw err;
         });
     }
