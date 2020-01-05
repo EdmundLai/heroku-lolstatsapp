@@ -1,0 +1,26 @@
+.GamesTabSelector {
+  display: flex;
+  margin: 2rem 7vw 0 7vw;
+  justify-content: center;
+}
+
+.GameTab {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem;
+  background-color: #111B1F;
+  margin: 0 2rem;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.TabTime {
+  font-size: 1rem;
+  padding-top: 1rem;
+}
+
+.TabImage {
+  align-self: center;
+  padding: 1rem 0;
+  width: 100px;
+  height: 100px;
+}

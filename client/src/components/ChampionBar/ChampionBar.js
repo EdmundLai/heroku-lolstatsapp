@@ -9,7 +9,7 @@ class ChampionBar extends React.Component {
     let champImg = <></>;
     if(typeof champion === "string") {
       champName = champion.match(/[A-Z][a-z]+/g).join(" ");
-      champImg = <img id="ChampionImg" src={require(`../../resources/champion/${champion}.png`)} alt={champion}></img>;
+      champImg = <img id="ChampionImg" src={require(`../../resources/champion/${champion}.png`)} alt={champion} />;
     }
 
     return (

@@ -1,12 +1,6 @@
 import React from 'react';
-import InfoCard from '../InfoCard/InfoCard';
-
-const QueueDict = {
-  "430": "Normal Blind",
-  "420": "Ranked Solo",
-  "400": "Normal Draft",
-  "440": "Ranked Flex"
-};
+import DynamicStatsContent from '../DynamicStatsContent/DynamicStatsContent';
+import './GamesPage.css';
 
 class GamesPage extends React.Component {
   constructor(props) {
@@ -41,48 +35,44 @@ class GamesPage extends React.Component {
       400: 3
     };
 
-    const currGameStats = queueStatsArray[queueTypeDict[this.state.queueType]];
-
-    function DynamicStatsContent(props) {
-      console.log(props.dataState);
-      const queueType = props.queueType;
-
-      if(currGameStats.hasOwnProperty("queueType")) {
-        return(
-          <>
-            <p>{QueueDict[currGameStats.queueType]}</p>
-            {currGameStats.statsArray.map(statsObj => 
-              <InfoCard 
-                key={statsObj.gameID}
-                gameInfo={statsObj}
-              />
-            )}
-          </>
-        );
-      }
-      if(props.currGameStats.responseCode === 404) {
-        return(
-          <p>{`Go play some more ${QueueDict[queueType]} games!`}</p>
-        );
-      }
-      return(
-        <p>Something went wrong! Please contact the developers of the site.</p>
-      );
-    } 
+    const statsObj = queueStatsArray[queueTypeDict[this.state.queueType]];
 
     return(
       <div className="GamesPage">
-        <h2>{dataState.summName}</h2>
-        <select value={this.state.queueType} onChange={this.handleSelectChange}>
-          <option value="420">Ranked Solo Queue</option>
-          <option value="440">Ranked Flex Queue</option>
-          <option value="430">Normal Blind Pick</option>
-          <option value="400">Normal Draft Pick</option>
-        </select>
-        <DynamicStatsContent queueType={this.state.queueType} currGameStats={currGameStats} />
+        <SummonerTopBar dataState={dataState} />
+        <SelectSection queueType={this.state.queueType} handleSelectChange={this.handleSelectChange} />
+        <DynamicStatsContent queueType={this.state.queueType} statsObj={statsObj} />
       </div>
     );
   }
+}
+
+function SelectSection(props) {
+  return(
+    <div className="SelectSection">
+      <div className="SelectDescription">Queue Type: </div>
+      <select value={props.queueType} onChange={props.handleSelectChange}>
+        <option value="420">Ranked Solo</option>
+        <option value="440">Ranked Flex</option>
+        <option value="430">Normal Blind</option>
+        <option value="400">Normal Draft</option>
+      </select>
+    </div>
+  );
+}
+
+function SummonerTopBar(props) {
+  const dataState = props.dataState;
+
+  return(
+    <div className="SummonerTopBar">
+      <img className="ProfileIconImg" src={require(`../../resources/profileicon/${dataState.profileIconId}.png`)} alt="Profile Icon" />
+      <div className="SummonerText">
+        <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
+        <div className="SummonerHeading">{dataState.summName}</div>
+      </div>
+    </div>
+  );
 }
 
 export default GamesPage;

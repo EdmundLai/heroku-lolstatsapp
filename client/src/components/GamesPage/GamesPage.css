@@ -1,0 +1,41 @@
+.GamesPage {
+  margin-bottom: auto;
+  width: 100%;
+  background-color: #1B2C32;
+}
+
+.SummonerTopBar {
+  display: flex;
+  margin: 2rem 7vw 0 7vw;
+}
+
+.SummonerText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.SummonerSubHeading {
+  font-size: 1.25rem;
+}
+
+.SummonerHeading {
+  font-size: 3rem;
+}
+
+.ProfileIconImg {
+  width: 120px;
+  height: 120px;
+  margin-right: 2rem;
+}
+
+.SelectSection {
+  display: flex;
+  margin: 2rem 7vw 0 7vw;
+}
+
+.SelectDescription {
+  font-size: 1rem;
+  margin-right: 1rem;
+}

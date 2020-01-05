@@ -32,6 +32,8 @@ class App extends React.Component {
       this.setState({
         summName: statsObj.summonerName,
         statsArrayByQueue: statsObj.statsArrayByQueue,
+        summonerLevel: statsObj.summonerLevel,
+        profileIconId: statsObj.profileIconId,
         httpCode: 200,
       });
     } else {
