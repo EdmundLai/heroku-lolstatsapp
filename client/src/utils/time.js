@@ -25,6 +25,8 @@ function getTimeAgo(gameTime) {
 
   const daysAgo = millisecondsAgo / (1000 * 3600 * 24);
 
+  const monthsAgo = millisecondsAgo / (1000 * 3600 * 24 * 365 / 12);
+
   const yearsAgo = millisecondsAgo / (1000 * 3600 * 24 * 365);
 
   let timeUnit = "seconds";
@@ -33,6 +35,9 @@ function getTimeAgo(gameTime) {
   if(Math.floor(yearsAgo) > 0) {
     timeUnit = "years";
     finalNumber = Math.floor(yearsAgo);
+  } else if(Math.floor(monthsAgo) > 0) {
+    timeUnit = "months";
+    finalNumber = Math.floor(monthsAgo);
   } else if(Math.floor(daysAgo) > 0) {
     timeUnit = "days";
     finalNumber = Math.floor(daysAgo);

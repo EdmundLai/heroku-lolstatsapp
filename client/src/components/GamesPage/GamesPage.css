@@ -6,7 +6,7 @@
 
 .SummonerTopBar {
   display: flex;
-  margin: 2rem 7vw 0 7vw;
+  margin: 4rem 7vw 0 7vw;
 }
 
 .SummonerText {
@@ -32,7 +32,7 @@
 
 .SelectSection {
   display: flex;
-  margin: 2rem 7vw 0 7vw;
+  margin: 4rem 7vw 0 7vw;
 }
 
 .SelectDescription {
