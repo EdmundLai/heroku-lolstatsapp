@@ -14,7 +14,7 @@ class DynamicStatsContent extends React.Component {
   render() {
     const statsObj = this.props.statsObj;
     const queueType = this.props.queueType;
-    console.log(statsObj);
+    // console.log(statsObj);
 
     // handle error case first
     if(statsObj.responseCode === 404) {
@@ -22,10 +22,6 @@ class DynamicStatsContent extends React.Component {
         <p>{`Go play some more ${QueueDict[queueType]} games!`}</p>
       );
     }
-
-    const currGameObj = getCurrGameObj(statsObj, this.props.currGameID);
-
-    console.log(currGameObj);
 
     // Page structure
 
@@ -36,12 +32,17 @@ class DynamicStatsContent extends React.Component {
     // GraphCard
     // TurningPointsSection
     // TipsCard
-    // GoodLuckMessage
 
-    if(statsObj.hasOwnProperty("queueType") && currGameObj !== null) {
+    if(statsObj.hasOwnProperty("statsArray") && (statsObj.statsArray.length !== 0)) {
+      const currGameObj = getCurrGameObj(statsObj, this.props.currGameID);
+
+      // console.log(this.props.currGameID);
+
+      // console.log(currGameObj);
+
       return(
         <>
-          <GamesTabSelector statsObj={statsObj} handleTabChange={this.props.handleTabChange} currGameID={this.props.currGameID}/>
+          <GamesTabSelector statsObj={statsObj} handleTabChange={this.props.handleGameIDChange} currGameID={this.props.currGameID}/>
           <OverviewCard currGameObj={currGameObj} />
           <StatsCard currGameObj={currGameObj} />
         </>

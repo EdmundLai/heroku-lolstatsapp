@@ -38,7 +38,7 @@ class AppHeader extends React.Component {
       return(
         <header className="App-header header-other">
           <div className="HeaderLeftSection">
-            <h1 className="HeaderTitle">
+            <h1 className="HeaderTitle" id="top">
               <Link to="/">
                 LolSA.gg
               </Link>

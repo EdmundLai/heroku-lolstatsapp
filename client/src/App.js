@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
 
+
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -19,11 +21,13 @@ class App extends React.Component {
       statsArrayByQueue: [],
       httpCode: 200,
       errorLog: {},
-      currGameID: 0
+      currGameID: 0,
+      queueType: "420",
     };
 
     this.updateState = this.updateState.bind(this);
     this.handleGameIDChange = this.handleGameIDChange.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
   // changed to handle errors as well as valid data
@@ -38,6 +42,7 @@ class App extends React.Component {
         profileIconId: statsObj.profileIconId,
         httpCode: 200,
         currGameID: statsObj.statsArrayByQueue[0].statsArray[0].gameID,
+        queueType: "420",
       });
     } else {
       // console.log(`httpCode from updateState: ${httpCode}`);
@@ -47,6 +52,29 @@ class App extends React.Component {
       });
     }
     
+  }
+
+  handleSelectChange(event) {
+    // maps queue type (for example, 420) to index in queueStatsArray
+    const queueTypeDict = {
+      420: 0,
+      440: 1,
+      430: 2,
+      400: 3
+    };
+
+    const queueIndex = queueTypeDict[event.target.value];
+    this.setState({
+      queueType: event.target.value,
+    });
+
+    const statsArray = this.state.statsArrayByQueue[queueIndex].statsArray;
+
+    if(typeof statsArray !== "undefined") {
+      const queueDefaultGameID = this.state.statsArrayByQueue[queueIndex].statsArray[0].gameID;
+
+      this.handleGameIDChange(queueDefaultGameID);
+    }
   }
 
   handleGameIDChange(gameID) {
@@ -67,6 +95,7 @@ class App extends React.Component {
                 dataState={this.state} 
                 updateAppState={this.updateState}
                 handleGameIDChange={this.handleGameIDChange}
+                handleSelectChange={this.handleSelectChange}
               />} />
               <Route path="/about"><AboutPage/></Route>
               <Route exact path="/" render={(props) => <HomePage {...props} 

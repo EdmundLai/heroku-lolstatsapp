@@ -11,9 +11,12 @@ class LeagueStats extends React.Component {
     let StatsContent = <></>;
 
     if(responseCode === 200) {
-      StatsContent = <GamesPage dataState={dataState} 
-      currGameID={currGameID}
-      handleGameIDChange={this.props.handleGameIDChange} />
+      StatsContent = <GamesPage 
+        dataState={dataState} 
+        currGameID={currGameID}
+        handleGameIDChange={this.props.handleGameIDChange}
+        handleSelectChange={this.props.handleSelectChange} 
+      />
     } else {
       StatsContent = <ErrorPage code={responseCode} errorLog={dataState.errorLog} />
     }

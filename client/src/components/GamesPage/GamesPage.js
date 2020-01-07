@@ -2,41 +2,16 @@ import React from 'react';
 import DynamicStatsContent from '../DynamicStatsContent/DynamicStatsContent';
 import './GamesPage.css';
 
-// maps queue type (for example, 420) to index in queueStatsArray
-const queueTypeDict = {
-  420: 0,
-  440: 1,
-  430: 2,
-  400: 3
-};
-
 class GamesPage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      queueType: "420",
+  render() {
+    // maps queue type (for example, 420) to index in queueStatsArray
+    const queueTypeDict = {
+      420: 0,
+      440: 1,
+      430: 2,
+      400: 3
     };
 
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-  }
-
-  handleSelectChange(event) {
-    const queueIndex = queueTypeDict[event.target.value];
-    this.setState({
-      queueType: event.target.value,
-    });
-
-    const statsArray = this.props.dataState.statsArrayByQueue[queueIndex].statsArray;
-
-    if(typeof statsArray !== "undefined") {
-      const queueDefaultGameID = this.props.dataState.statsArrayByQueue[queueIndex].statsArray[0].gameID;
-
-      this.props.handleGameIDChange(queueDefaultGameID);
-    }
-  }
-
-  render() {
     const dataState = this.props.dataState;
     const queueStatsArray = dataState.statsArrayByQueue;
 
@@ -44,18 +19,19 @@ class GamesPage extends React.Component {
       return <></>;
     }
 
-    const statsObj = queueStatsArray[queueTypeDict[this.state.queueType]];
+    const statsObj = queueStatsArray[queueTypeDict[dataState.queueType]];
 
     return(
       <div className="GamesPage">
         <SummonerTopBar dataState={dataState} />
-        <SelectSection queueType={this.state.queueType} handleSelectChange={this.handleSelectChange} />
+        <SelectSection queueType={dataState.queueType} handleSelectChange={this.props.handleSelectChange} />
         <DynamicStatsContent 
-        queueType={this.state.queueType} 
+        queueType={dataState.queueType} 
         statsObj={statsObj} 
-        handleTabChange={this.props.handleGameIDChange}
+        handleGameIDChange={this.props.handleGameIDChange}
         currGameID={this.props.currGameID}
         />
+        <EndMessageCard />
       </div>
     );
   }
@@ -84,6 +60,21 @@ function SummonerTopBar(props) {
       <div className="SummonerText">
         <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
         <div className="SummonerHeading">{dataState.summName}</div>
+      </div>
+    </div>
+  );
+}
+
+function EndMessageCard(props) {
+  return(
+    <div className="EndMessageCard">
+      <div className="EncouragementMessage">
+        Good luck on your next game!
+      </div>
+      <div className="RedirectTop">
+        <a href="#top">
+          BACK TO TOP
+        </a>
       </div>
     </div>
   );

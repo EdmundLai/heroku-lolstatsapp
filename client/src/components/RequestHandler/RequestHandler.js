@@ -9,7 +9,6 @@ const queueTypeDict = {
 
 function handleRequest(reqObj) {
   let summName = reqObj.summName;
-  // let queueType = reqObj.queueType;
 
   let statsArrayByQueue = [];
   let returnedStatsObj = {};

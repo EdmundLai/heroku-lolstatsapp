@@ -11,7 +11,6 @@ class SearchBar extends React.Component {
 
     this.state = {
       summName: "",
-      queueType: "rankedSolo",
       loading: false,
       goToStats: false,
       windowWidth: window.innerWidth,
