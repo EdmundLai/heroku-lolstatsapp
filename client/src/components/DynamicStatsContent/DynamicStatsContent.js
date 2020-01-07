@@ -1,7 +1,8 @@
 import React from 'react';
+import GamesTabSelector from '../GamesTabSelector/GamesTabSelector';
+import OverviewCard from '../OverviewCard/OverviewCard';
 import InfoCard from '../InfoCard/InfoCard';
-import TimeUtil from '../../utils/time';
-import ChampKeys from '../../resources/ChampKeys';
+
 import './DynamicStatsContent.css';
 
 const QueueDict = {
@@ -19,10 +20,12 @@ class DynamicStatsContent extends React.Component {
 
     const currGameObj = getCurrGameObj(statsObj, this.props.currGameID);
 
+    // console.log(currGameObj);
+
     // Page structure
 
-    // GamesTabSelector
-    // OverviewCard
+    // GamesTabSelector - done
+    // OverviewCard - done
     // MessageToPlayer
     // StatsCard
     // GraphCard
@@ -30,10 +33,11 @@ class DynamicStatsContent extends React.Component {
     // TipsCard
     // GoodLuckMessage
 
-    if(statsObj.hasOwnProperty("queueType")) {
+    if(statsObj.hasOwnProperty("queueType") && currGameObj !== null) {
       return(
         <>
           <GamesTabSelector statsObj={statsObj} handleTabChange={this.props.handleTabChange} currGameID={this.props.currGameID}/>
+          <OverviewCard currGameObj={currGameObj} />
           
           {/* <InfoCard gameInfo={currGameObj} /> */}
         </>
@@ -46,67 +50,6 @@ class DynamicStatsContent extends React.Component {
     }
     return(
       <p>Something went wrong! Please contact the developers of the site.</p>
-    );
-  }
-} 
-
-class GamesTabSelector extends React.Component {
-  render() {
-    const statsObj = this.props.statsObj;
-
-    return(
-      <div className="GamesTabSelector">
-        {statsObj.statsArray.map(gameData => {
-          return(
-            <GameTab 
-              key={gameData.gameID} 
-              gameID={gameData.gameID} 
-              championID={gameData.championID} 
-              gameTime={gameData.gameTime}
-              handleTabChange={this.props.handleTabChange}
-              currGameID={this.props.currGameID} 
-            />
-          );
-        })}
-      </div>
-    );
-  }
-}
-
-class GameTab extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.handleTabSelected = this.handleTabSelected.bind(this);
-  }
-
-  handleTabSelected() {
-    this.props.handleTabChange(this.props.gameID);
-  }
-
-  render() {
-    const championID = this.props.championID;
-    const gameTime = this.props.gameTime;
-
-    const tabSelected = this.props.currGameID === this.props.gameID ? "CurrentTab" : "";
-
-    let champion = championID;
-
-    if(ChampKeys.hasOwnProperty(championID)) {
-      champion = ChampKeys[championID];
-    }
-
-    let champImg = <></>;
-
-    if(typeof champion === "string") {
-      champImg = <img className="TabImage" src={require(`../../resources/champion/${champion}.png`)} alt={champion} />;
-    }
-
-    return(
-      <div className={`GameTab ${tabSelected}`} onClick={this.handleTabSelected}>
-        <div className="TabTime">{`${TimeUtil.getTimeAgo(gameTime)}`}</div>
-        {champImg}
-      </div>
     );
   }
 }

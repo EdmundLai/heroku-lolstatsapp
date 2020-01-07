@@ -1,7 +1,10 @@
 function convertLengthToTimeString(gameLength) {
   let numMin = Math.floor(gameLength / 60);
   let numSeconds = gameLength % 60;
-  return `${numMin} min ${numSeconds} s`;
+  if(numSeconds < 10) {
+    numSeconds = "0" + numSeconds;
+  }
+  return `${numMin}:${numSeconds}`;
 }
 
 function convertGameDate(gameTime) {
