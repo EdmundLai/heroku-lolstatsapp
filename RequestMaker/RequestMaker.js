@@ -70,7 +70,7 @@ class RequestMaker {
         });
     }
 
-    getLOLAccountID(summonerName) {
+    getLOLAccountNameAndID(summonerName) {
         return this.removeToken()
         .then(() => {
             return axios({
@@ -84,13 +84,18 @@ class RequestMaker {
         .then(res => {
             const data = res.data;
             const accountID = data.accountId;
-            return accountID;
+            const summName = data.name;
+            const dataObj = {
+                accountID,
+                summName,
+            };
+            return dataObj;
         })
         .catch(err => {
             // console.log(err);
-            console.log("error in getLOLAccountID");
+            console.log("error in getLOLAccountNameAndID");
             this.errorLog.responseCode = err.response.status;
-            this.errorLog.method = "getLOLAccountID";
+            this.errorLog.method = "getLOLAccountNameAndID";
 
             // console.log(err.response.status);
             throw err;
@@ -267,7 +272,8 @@ class RequestMaker {
 
             function processStats({
                 participantId, win, kills, assists, deaths, visionScore, totalMinionsKilled,
-                totalDamageDealt, totalDamageDealtToChampions, goldEarned,
+                totalDamageDealt, totalDamageDealtToChampions, goldEarned, timeCCingOthers,
+                damageDealtToObjectives,
             }) {
                 return {
                     participantId,
@@ -280,6 +286,8 @@ class RequestMaker {
                     totalDamageDealt,
                     totalDamageDealtToChampions,
                     goldEarned,
+                    timeCCingOthers,
+                    damageDealtToObjectives,
                 };
             }
 
@@ -342,9 +350,11 @@ class RequestMaker {
         const maxNumGames = 20;
         let numGamesRetrieved = numGames > maxNumGames ? maxNumGames : numGames;
         console.log(`numGamesRetrieved: ${numGamesRetrieved}`);
-        return this.getLOLAccountID(summonerName)
-        .then(id => {
+        return this.getLOLAccountNameAndID(summonerName)
+        .then(dataObj => {
             // console.log(id);
+            const id = dataObj.accountID;
+            const summName = dataObj.summName;
             return this.getMatchList(id, queueType)
             .then(matchList => {
                 // uses object destructuring
@@ -393,7 +403,7 @@ class RequestMaker {
             })
             .then(statsArray => {
                 const statsObj = {
-                    summonerName,
+                    summonerName: summName,
                     queueType,
                     statsArray,
                 };

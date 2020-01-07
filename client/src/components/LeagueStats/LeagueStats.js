@@ -5,12 +5,15 @@ import ErrorPage from '../ErrorPage/ErrorPage';
 
 class LeagueStats extends React.Component {
   render() {
-    let dataState = this.props.dataState;
-    let responseCode = dataState.httpCode;
+    const dataState = this.props.dataState;
+    const currGameID = dataState.currGameID;
+    const responseCode = dataState.httpCode;
     let StatsContent = <></>;
 
     if(responseCode === 200) {
-      StatsContent = <GamesPage dataState={dataState} />
+      StatsContent = <GamesPage dataState={dataState} 
+      currGameID={currGameID}
+      handleGameIDChange={this.props.handleGameIDChange} />
     } else {
       StatsContent = <ErrorPage code={responseCode} errorLog={dataState.errorLog} />
     }

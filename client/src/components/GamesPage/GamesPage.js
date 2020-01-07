@@ -14,33 +14,26 @@ class GamesPage extends React.Component {
   constructor(props) {
     super(props);
 
-    let currID = 0;
-    if(this.props.dataState.statsArrayByQueue.length !== 0) {
-      currID = this.props.dataState.statsArrayByQueue[0].statsArray[0].gameID;
-    }
-
     this.state = {
       queueType: "420",
-      currGameID: currID,
     };
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   handleSelectChange(event) {
     const queueIndex = queueTypeDict[event.target.value];
     this.setState({
       queueType: event.target.value,
-      currGameID: this.props.dataState.statsArrayByQueue[queueIndex].statsArray[0].gameID,
     });
-  }
 
-  handleTabChange(gameID) {
+    const statsArray = this.props.dataState.statsArrayByQueue[queueIndex].statsArray;
 
-    this.setState({
-      currGameID: gameID
-    });
+    if(typeof statsArray !== "undefined") {
+      const queueDefaultGameID = this.props.dataState.statsArrayByQueue[queueIndex].statsArray[0].gameID;
+
+      this.props.handleGameIDChange(queueDefaultGameID);
+    }
   }
 
   render() {
@@ -60,8 +53,8 @@ class GamesPage extends React.Component {
         <DynamicStatsContent 
         queueType={this.state.queueType} 
         statsObj={statsObj} 
-        handleTabChange={this.handleTabChange}
-        currGameID={this.state.currGameID}
+        handleTabChange={this.props.handleGameIDChange}
+        currGameID={this.props.currGameID}
         />
       </div>
     );

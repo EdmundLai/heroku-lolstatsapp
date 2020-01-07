@@ -1,6 +1,7 @@
 import React from 'react';
 import GamesTabSelector from '../GamesTabSelector/GamesTabSelector';
 import OverviewCard from '../OverviewCard/OverviewCard';
+import StatsCard from '../StatsCard/StatsCard';
 
 const QueueDict = {
   "430": "Normal Blind",
@@ -13,18 +14,25 @@ class DynamicStatsContent extends React.Component {
   render() {
     const statsObj = this.props.statsObj;
     const queueType = this.props.queueType;
-    // console.log(statsObj);
+    console.log(statsObj);
+
+    // handle error case first
+    if(statsObj.responseCode === 404) {
+      return(
+        <p>{`Go play some more ${QueueDict[queueType]} games!`}</p>
+      );
+    }
 
     const currGameObj = getCurrGameObj(statsObj, this.props.currGameID);
 
-    // console.log(currGameObj);
+    console.log(currGameObj);
 
     // Page structure
 
     // GamesTabSelector - done
     // OverviewCard - done
     // MessageToPlayer
-    // StatsCard
+    // StatsCard - done
     // GraphCard
     // TurningPointsSection
     // TipsCard
@@ -35,14 +43,11 @@ class DynamicStatsContent extends React.Component {
         <>
           <GamesTabSelector statsObj={statsObj} handleTabChange={this.props.handleTabChange} currGameID={this.props.currGameID}/>
           <OverviewCard currGameObj={currGameObj} />
+          <StatsCard currGameObj={currGameObj} />
         </>
       );
     }
-    if(statsObj.responseCode === 404) {
-      return(
-        <p>{`Go play some more ${QueueDict[queueType]} games!`}</p>
-      );
-    }
+    
     return(
       <p>Something went wrong! Please contact the developers of the site.</p>
     );

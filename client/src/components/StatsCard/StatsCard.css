@@ -1,0 +1,53 @@
+.StatsCard {
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #000000 0%, #000000 40.3%, rgba(0, 0, 0, 0) 77.6%, rgba(0, 0, 0, 0) 100%);
+}
+
+.StatsCardDetails {
+  max-width: 60vw;
+  margin: 4rem 0;
+  margin-left: 5vw;
+}
+
+.StatsCardDetails, .StatsDetailsGold, .StatContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.StatContainer {
+  margin-top: 2rem;
+}
+
+.StatsDetailsGold {
+  margin-top: 2rem;
+}
+
+.DamageStats, .UtilityStats {
+  padding-right: 2rem;
+}
+
+.StatsDetailsHeading {
+  font-size: 0.875rem;
+}
+
+.StatSubheading {
+  font-size: 1rem;
+  color: #1E9BD0;
+}
+
+.GoldSubheading {
+  font-size: 2rem;
+  color: #D9BD81;
+  margin-top: 2rem;
+}
+
+.GoldStat {
+  font-size: 3rem;
+}
+
+.StatsDetailsMain {
+  display: flex;
+  margin-top: 2rem;
+}

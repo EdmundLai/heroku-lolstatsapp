@@ -19,9 +19,11 @@ class App extends React.Component {
       statsArrayByQueue: [],
       httpCode: 200,
       errorLog: {},
+      currGameID: 0
     };
 
     this.updateState = this.updateState.bind(this);
+    this.handleGameIDChange = this.handleGameIDChange.bind(this);
   }
 
   // changed to handle errors as well as valid data
@@ -35,6 +37,7 @@ class App extends React.Component {
         summonerLevel: statsObj.summonerLevel,
         profileIconId: statsObj.profileIconId,
         httpCode: 200,
+        currGameID: statsObj.statsArrayByQueue[0].statsArray[0].gameID,
       });
     } else {
       // console.log(`httpCode from updateState: ${httpCode}`);
@@ -44,6 +47,12 @@ class App extends React.Component {
       });
     }
     
+  }
+
+  handleGameIDChange(gameID) {
+    this.setState({
+      currGameID: gameID
+    });
   }
 
 
@@ -56,7 +65,8 @@ class App extends React.Component {
             <Switch>
               <Route path="/stats" render={(props) => <LeagueStats {...props} 
                 dataState={this.state} 
-                updateAppState={this.updateState} 
+                updateAppState={this.updateState}
+                handleGameIDChange={this.handleGameIDChange}
               />} />
               <Route path="/about"><AboutPage/></Route>
               <Route exact path="/" render={(props) => <HomePage {...props} 
