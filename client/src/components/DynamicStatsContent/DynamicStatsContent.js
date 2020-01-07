@@ -1,7 +1,6 @@
 import React from 'react';
 import GamesTabSelector from '../GamesTabSelector/GamesTabSelector';
 import OverviewCard from '../OverviewCard/OverviewCard';
-// import InfoCard from '../InfoCard/InfoCard';
 
 const QueueDict = {
   "430": "Normal Blind",
@@ -36,8 +35,6 @@ class DynamicStatsContent extends React.Component {
         <>
           <GamesTabSelector statsObj={statsObj} handleTabChange={this.props.handleTabChange} currGameID={this.props.currGameID}/>
           <OverviewCard currGameObj={currGameObj} />
-          
-          {/* <InfoCard gameInfo={currGameObj} /> */}
         </>
       );
     }

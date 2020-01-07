@@ -23,7 +23,7 @@ class StatsGrid extends React.Component {
   render() {
     const overviewObj = this.props.overviewObj;
 
-    console.log(overviewObj);
+    // console.log(overviewObj);
 
     return(
       <div className="StatsGrid">
@@ -31,7 +31,7 @@ class StatsGrid extends React.Component {
           {overviewObj.allyTeam.participantStats.map(playerStats => {
             return(
               <PlayerStatsContainer key={playerStats.summonerName} playerStats={playerStats} 
-              maxDamage={overviewObj.maxDamageToChampions} type="ally"/>
+              maxDamage={overviewObj.maxDamageToChampions} currPlayerId={overviewObj.currPlayerId} type="ally"/>
             );
           }
           )}
@@ -40,7 +40,7 @@ class StatsGrid extends React.Component {
           {overviewObj.enemyTeam.participantStats.map(playerStats => {
             return(
               <PlayerStatsContainer key={playerStats.summonerName} playerStats={playerStats} 
-              maxDamage={overviewObj.maxDamageToChampions} type="enemy"/>
+              maxDamage={overviewObj.maxDamageToChampions} currPlayerId={overviewObj.currPlayerId} type="enemy"/>
             );
           }
           )}
@@ -55,7 +55,17 @@ class PlayerStatsContainer extends React.Component {
     const playerStats = this.props.playerStats;
     const championID = playerStats.championId;
 
+    const currPlayerId = this.props.currPlayerId;
+
+    // console.log(playerStats);
+
     let champion = championID;
+
+    let playerClassImg = "";
+
+    if(currPlayerId === playerStats.participantId) {
+      playerClassImg = "CurrentPlayerImg";
+    }
 
     if(ChampKeys.hasOwnProperty(championID)) {
       champion = ChampKeys[championID];
@@ -83,9 +93,9 @@ class PlayerStatsContainer extends React.Component {
       width: barLengthInPx
     }
     if(damageBarLength === 0) {
-      damageStyle["background-color"] = "transparent";
+      damageStyle["backgroundColor"] = "transparent";
     }
-    const champImg = <img className={`StatsImage ${imageType}`} src={require(`../../resources/champion/${champion}.png`)} alt={champion} />;
+    const champImg = <img className={`StatsImage ${imageType} ${playerClassImg}`} src={require(`../../resources/champion/${champion}.png`)} alt={champion} />;
 
     return(
       <div className={`PlayerStatsContainer ${containerType}`}>
@@ -169,7 +179,8 @@ function getOverviewObj(currGameObj) {
 
   // will return array of length 1
   const participantArray = gameStats.participants;
-  const currParticipantObj = participantArray.filter(participantObj => participantObj.participantId === currGameObj.playerStats.participantId)[0];
+  const currPlayerId = currGameObj.playerStats.participantId;
+  const currParticipantObj = participantArray.filter(participantObj => participantObj.participantId === currPlayerId)[0];
   // console.log("currParticipantObj");
   // console.log(currParticipantObj);
   allyTeam.teamId = currParticipantObj.teamId;
@@ -204,6 +215,7 @@ function getOverviewObj(currGameObj) {
     }
 
     const playerStatsObj = {
+      participantId,
       summonerName,
       championId,
       kills,
@@ -222,6 +234,7 @@ function getOverviewObj(currGameObj) {
   }
 
   const OverviewObj = {
+    currPlayerId,
     timeString,
     win,
     allyTeam,
