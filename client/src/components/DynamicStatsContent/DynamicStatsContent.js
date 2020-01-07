@@ -1,9 +1,7 @@
 import React from 'react';
 import GamesTabSelector from '../GamesTabSelector/GamesTabSelector';
 import OverviewCard from '../OverviewCard/OverviewCard';
-import InfoCard from '../InfoCard/InfoCard';
-
-import './DynamicStatsContent.css';
+// import InfoCard from '../InfoCard/InfoCard';
 
 const QueueDict = {
   "430": "Normal Blind",
