@@ -59,6 +59,7 @@ class RequestMaker {
             const dataObj = {
                 summonerLevel: data.summonerLevel,
                 profileIconId: data.profileIconId,
+                name: data.name,
             };
 
             return dataObj;

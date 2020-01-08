@@ -23,10 +23,10 @@ function handleRequest(reqObj) {
 
     const summonerLevel = data.summonerLevel;
     const profileIconId = data.profileIconId;
-    const summName = statsArrayByQueue[0].summonerName;
+    const summonerName = data.name;
 
     returnedStatsObj = {
-      summonerName: summName,
+      summonerName,
       summonerLevel,
       profileIconId
     };

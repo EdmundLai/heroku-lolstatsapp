@@ -1,6 +1,7 @@
 import React from 'react';
 import TimeUtil from '../../utils/time';
 import ChampKeys from '../../resources/ChampKeys';
+import ImgHostURL from '../../resources/ImgHostUrl';
 import './GamesTabSelector.css';
 
 class GamesTabSelector extends React.Component {
@@ -52,7 +53,7 @@ class GameTab extends React.Component {
     let champImg = <></>;
 
     if(typeof champion === "string") {
-      champImg = <img className="TabImage" src={require(`../../resources/champion/${champion}.png`)} alt={champion} />;
+      champImg = <img className="TabImage" src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
     }
 
     return(

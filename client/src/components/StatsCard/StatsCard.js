@@ -1,5 +1,6 @@
 import React from 'react';
 import ChampKeys from '../../resources/ChampKeys';
+import ImgHostURL from '../../resources/ImgHostUrl';
 
 import './StatsCard.css';
 
@@ -17,7 +18,7 @@ class StatsCard extends React.Component {
     }
     
     const statsCardStyle = {
-      backgroundImage: `url(${require(`../../resources/splash/${champion}_0.jpg`)})`,
+      backgroundImage: `url(${ImgHostURL}/splash/${champion}_0.jpg)`,
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
     };

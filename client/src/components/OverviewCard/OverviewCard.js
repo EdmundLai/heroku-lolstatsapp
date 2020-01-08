@@ -1,6 +1,7 @@
 import React from 'react';
 import TimeUtil from '../../utils/time';
 import ChampKeys from '../../resources/ChampKeys';
+import ImgHostURL from '../../resources/ImgHostUrl';
 import './OverviewCard.css';
 
 class OverviewCard extends React.Component {
@@ -95,7 +96,7 @@ class PlayerStatsContainer extends React.Component {
     if(damageBarLength === 0) {
       damageStyle["backgroundColor"] = "transparent";
     }
-    const champImg = <img className={`StatsImage ${imageType} ${playerClassImg}`} src={require(`../../resources/champion/${champion}.png`)} alt={champion} />;
+    const champImg = <img className={`StatsImage ${imageType} ${playerClassImg}`} src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
 
     return(
       <div className={`PlayerStatsContainer ${containerType}`}>

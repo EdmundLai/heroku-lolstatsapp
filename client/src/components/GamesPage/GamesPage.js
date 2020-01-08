@@ -1,6 +1,7 @@
 import React from 'react';
 import DynamicStatsContent from '../DynamicStatsContent/DynamicStatsContent';
 import './GamesPage.css';
+import ImgHostURL from '../../resources/ImgHostUrl';
 
 class GamesPage extends React.Component {
   render() {
@@ -56,7 +57,7 @@ function SummonerTopBar(props) {
 
   return(
     <div className="SummonerTopBar">
-      <img className="ProfileIconImg" src={require(`../../resources/profileicon/${dataState.profileIconId}.png`)} alt="Profile Icon" />
+      <img className="ProfileIconImg" src={`${ImgHostURL}/profileicon/${dataState.profileIconId}.png`} alt="Profile Icon" />
       <div className="SummonerText">
         <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
         <div className="SummonerHeading">{dataState.summName}</div>
