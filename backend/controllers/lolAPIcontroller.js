@@ -21,10 +21,6 @@ class LoLAPIcontroller {
         .then(data => {
             // console.log(data);
             res.send(data);
-        })
-        .catch(err => {
-            console.log("error message from LoLAPIcontroller getStats");
-            console.log(err);
         });
     }
 
@@ -34,10 +30,6 @@ class LoLAPIcontroller {
         this.requestMaker.getLOLSummonerData(playerTag)
         .then(data => {
             res.send(data);
-        })
-        .catch(err => {
-            console.log("error message from LoLAPIcontroller getStats");
-            console.log(err);
         });
     }
 }

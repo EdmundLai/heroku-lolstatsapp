@@ -19,7 +19,7 @@ class ErrorPage extends React.Component {
     let errorMessage;
 
     if(this.props.code === 404) {
-      if(this.props.errorLog.method === "getLOLAccountID") {
+      if(this.props.errorLog.method === "getLOLSummonerData") {
         errorMessage = "Summoner not found! Maybe try searching for a different username?";
       } else if(this.props.errorLog.method === "getMatchList") {
         errorMessage = "No games found for this queue type!";

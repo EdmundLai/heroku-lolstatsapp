@@ -41,6 +41,8 @@ class RequestMaker {
         return Promise.all([this.removeTokenLimiter1(), this.removeTokenLimiter2()]);
     }
 
+    // called directly from lolAPIcontroller.js
+    // must return errorLog directly when in catch block
     getLOLSummonerData(summonerName) {
         return this.removeToken()
         .then(() => {
@@ -66,7 +68,7 @@ class RequestMaker {
             console.log("error in getLOLSummonerData");
             this.errorLog.responseCode = err.response.status;
             this.errorLog.method = "getLOLSummonerData";
-            throw err;
+            return this.errorLog;
         });
     }
 
