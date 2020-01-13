@@ -1,7 +1,8 @@
 import React from 'react';
 import DynamicStatsContent from '../DynamicStatsContent/DynamicStatsContent';
-import './GamesPage.css';
 import ImgHostURL from '../../resources/ImgHostUrl';
+
+import './GamesPage.css';
 
 class GamesPage extends React.Component {
   constructor(props) {
@@ -59,7 +60,6 @@ class GamesPage extends React.Component {
         currGameID={this.props.currGameID}
         isMobile={isMobile}
         />
-        <EndMessageCard isMobile={isMobile} />
       </div>
     );
   }
@@ -108,33 +108,6 @@ function SummonerTopBar(props) {
       <div className="SummonerText">
         <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
         <div className="SummonerHeading">{dataState.summName}</div>
-      </div>
-    </div>
-  );
-}
-
-function EndMessageCard(props) {
-  const isMobile = props.isMobile;
-
-  let endMessageCardType = "EndMessageCard";
-  let encouragementMessageType = "EncouragementMessage";
-  let redirectTopType = "RedirectTop";
-
-  if(isMobile) {
-    endMessageCardType = "EndMessageCardMobile";
-    encouragementMessageType = "EncouragementMessageMobile";
-    redirectTopType = "RedirectTopMobile";
-  }
-
-  return(
-    <div className={endMessageCardType}>
-      <div className={encouragementMessageType}>
-        Good luck on your next game!
-      </div>
-      <div className={redirectTopType}>
-        <a href="#top">
-          BACK TO TOP
-        </a>
       </div>
     </div>
   );

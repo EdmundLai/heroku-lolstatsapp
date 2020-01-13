@@ -2,6 +2,7 @@ import React from 'react';
 import GamesTabSelector from '../GamesTabSelector/GamesTabSelector';
 import OverviewCard from '../OverviewCard/OverviewCard';
 import StatsCard from '../StatsCard/StatsCard';
+import EndMessageCard from '../EndMessageCard/EndMessageCard';
 
 const QueueDict = {
   "430": "Normal Blind",
@@ -33,6 +34,7 @@ class DynamicStatsContent extends React.Component {
     // GraphCard
     // TurningPointsSection
     // TipsCard
+    // EndMessageCard - done
 
     if(statsObj.hasOwnProperty("statsArray") && (statsObj.statsArray.length !== 0)) {
       const currGameObj = getCurrGameObj(statsObj, this.props.currGameID);
@@ -51,6 +53,7 @@ class DynamicStatsContent extends React.Component {
           />
           <OverviewCard currGameObj={currGameObj} isMobile={isMobile}/>
           <StatsCard currGameObj={currGameObj} isMobile={isMobile}/>
+          <EndMessageCard isMobile={isMobile} />
         </>
       );
     }
