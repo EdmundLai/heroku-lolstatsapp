@@ -35,6 +35,11 @@
   margin: 4rem 7vw 0 7vw;
 }
 
+.SelectSectionMobile {
+  display: flex;
+  margin: 2rem 7vw 0 7vw;
+}
+
 .SelectDescription {
   font-size: 1rem;
   margin-right: 1rem;
@@ -48,8 +53,20 @@
   margin: auto;
 }
 
+.EndMessageCardMobile {
+  display: flex;
+  flex-direction: column;
+  padding: 5rem 0;
+  max-width: 80vw;
+  margin: auto;
+}
+
 .EncouragementMessage {
   font-size: 4.5rem;
+}
+
+.EncouragementMessageMobile {
+  font-size: 2rem;
 }
 
 .RedirectTop {
@@ -63,12 +80,28 @@
   transition: 0.5s;
 }
 
+.RedirectTopMobile {
+  border-radius: 40px;
+  box-sizing: border-box;
+  border: 2px solid white;
+  align-self: center;
+  font-size: 0.75rem;
+  padding: 1rem;
+  margin-top: 2rem;
+  transition: 0.5s;
+}
+
 .RedirectTop:hover {
   background-color: white;
   color: #1B2C32;
 }
 
-.RedirectTop a {
+.RedirectTopMobile:hover {
+  background-color: white;
+  color: #1B2C32;
+}
+
+.RedirectTop a, .RedirectTopMobile a {
   text-decoration: none;
   color: inherit;
 }

@@ -10,6 +10,7 @@ class StatsCard extends React.Component {
     const currGameObj = this.props.currGameObj;
     const championID = currGameObj.championID;
     const stats = currGameObj.playerStats;
+    const isMobile = this.props.isMobile;
 
     let champion = championID;
 
@@ -23,19 +24,31 @@ class StatsCard extends React.Component {
       backgroundSize: "cover",
     };
 
+    let statsCardDetailsType = "StatsCardDetails";
+    let damageStatsType = "DamageStats";
+    let utilityStatsType = "UtilityStats";
+    let statsDetailsMainType = "StatsDetailsMain";
+
+    if(isMobile) {
+      statsCardDetailsType = "StatsCardDetailsMobile";
+      damageStatsType = "DamageStatsMobile";
+      utilityStatsType = "UtilityStatsMobile";
+      statsDetailsMainType = "StatsDetailsMainMobile";
+    }
+
     return(
       <div className="StatsCardBackground" style={statsCardStyle}>
         <div className="StatsCard">
-          <div className="StatsCardDetails">
+          <div className={statsCardDetailsType}>
             <div className="StatsDetailsHeading">
               YOUR STATS
             </div>
-            <div className="StatsDetailsMain">
-              <div className="DamageStats">
+            <div className={statsDetailsMainType}>
+              <div className={damageStatsType}>
                 <StatContainer heading="DAMAGE TO CHAMPIONS" value={stats.totalDamageDealtToChampions}/>
                 <StatContainer heading="DAMAGE TO OBJECTIVES" value={stats.damageDealtToObjectives} />
               </div>
-              <div className="UtilityStats">
+              <div className={utilityStatsType}>
                 <StatContainer heading="VISION SCORE" value={stats.visionScore} />
                 <StatContainer heading="CROWD CONTROL SCORE" value={stats.timeCCingOthers} />
               </div>

@@ -14,6 +14,14 @@ class AppHeader extends React.Component {
     this.handleWindowResize = this.handleWindowResize.bind(this);
   }
 
+  componentDidMount() {
+    window.addEventListener("resize", this.handleWindowResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleWindowResize);
+  }
+
   handleWindowResize() {
     this.setState({
       windowWidth: window.innerWidth

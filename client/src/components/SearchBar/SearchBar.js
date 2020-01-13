@@ -21,6 +21,14 @@ class SearchBar extends React.Component {
     this.handleWindowResize = this.handleWindowResize.bind(this);
   }
 
+  componentDidMount() {
+    window.addEventListener("resize", this.handleWindowResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleWindowResize);
+  }
+
   handleChange(event) {
     let target = event.target;
     let value = target.value;
@@ -77,14 +85,8 @@ class SearchBar extends React.Component {
     
     let SearchBarContent = <></>
 
-    let loadingContent = <></>
-
-    if(this.state.loading && !(isMobile && inHeader)) {
-      loadingContent = <LoadingAnimation />;
-    }
-
-    if(this.state.loading && !inHeader) {
-      SearchBarContent = loadingContent;
+    if(this.state.loading) {
+      SearchBarContent = <LoadingAnimation />;
     } else {
       let headerType = inHeader ? "SearchBarMobileHeader" : "SearchBarMobileNoHeader";
       if(isMobile) {
@@ -105,7 +107,6 @@ class SearchBar extends React.Component {
               <input className="SearchSubmit" type="submit" value="Go!"/>
             </form> 
           </div>
-          {loadingContent}
         </>
       }
       

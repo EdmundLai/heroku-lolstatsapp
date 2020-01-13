@@ -35,13 +35,19 @@ class App extends React.Component {
     console.log(data);
     if(httpCode === 200) {
       let statsObj = data;
+      let newGameID = null;
+
+      // handling case where RequestMaker cannot get data from default queue type
+      if(typeof statsObj.statsArrayByQueue[0].statsArray !== undefined) {
+        newGameID = statsObj.statsArrayByQueue[0].statsArray[0].gameID;
+      }
       this.setState({
         summName: statsObj.summonerName,
         statsArrayByQueue: statsObj.statsArrayByQueue,
         summonerLevel: statsObj.summonerLevel,
         profileIconId: statsObj.profileIconId,
         httpCode: 200,
-        currGameID: statsObj.statsArrayByQueue[0].statsArray[0].gameID,
+        currGameID: newGameID,
         queueType: "420",
       });
     } else {

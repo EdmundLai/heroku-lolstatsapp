@@ -7,6 +7,7 @@ import './GamesTabSelector.css';
 class GamesTabSelector extends React.Component {
   render() {
     const statsObj = this.props.statsObj;
+    const isMobile = this.props.isMobile;
 
     return(
       <div className="GamesTabSelector">
@@ -18,7 +19,8 @@ class GamesTabSelector extends React.Component {
               championID={gameData.championID} 
               gameTime={gameData.gameTime}
               handleTabChange={this.props.handleTabChange}
-              currGameID={this.props.currGameID} 
+              currGameID={this.props.currGameID}
+              isMobile={isMobile} 
             />
           );
         })}
@@ -41,6 +43,7 @@ class GameTab extends React.Component {
   render() {
     const championID = this.props.championID;
     const gameTime = this.props.gameTime;
+    const isMobile = this.props.isMobile;
 
     const tabSelected = this.props.currGameID === this.props.gameID ? "CurrentTab" : "NormalTab";
 
@@ -51,14 +54,25 @@ class GameTab extends React.Component {
     }
 
     let champImg = <></>;
+    
+
+    let tabType = "GameTab";
+    let tabImageType = "TabImage";
+    let tabTimeType = "TabTime";
+
+    if(isMobile) {
+      tabType = "GameTabMobile";
+      tabImageType = "TabImageMobile";
+      tabTimeType = "TabTimeMobile";
+    }
 
     if(typeof champion === "string") {
-      champImg = <img className="TabImage" src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
+      champImg = <img className={tabImageType} src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
     }
 
     return(
-      <div className={`GameTab ${tabSelected}`} onClick={this.handleTabSelected}>
-        <div className="TabTime">{`${TimeUtil.getTimeAgo(gameTime)}`}</div>
+      <div className={`${tabType} ${tabSelected}`} onClick={this.handleTabSelected}>
+        <div className={tabTimeType}>{`${TimeUtil.getTimeAgo(gameTime)}`}</div>
         {champImg}
       </div>
     );

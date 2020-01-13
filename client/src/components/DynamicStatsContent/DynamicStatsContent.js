@@ -14,6 +14,7 @@ class DynamicStatsContent extends React.Component {
   render() {
     const statsObj = this.props.statsObj;
     const queueType = this.props.queueType;
+    const isMobile = this.props.isMobile;
     // console.log(statsObj);
 
     // handle error case first
@@ -42,9 +43,14 @@ class DynamicStatsContent extends React.Component {
 
       return(
         <>
-          <GamesTabSelector statsObj={statsObj} handleTabChange={this.props.handleGameIDChange} currGameID={this.props.currGameID}/>
-          <OverviewCard currGameObj={currGameObj} />
-          <StatsCard currGameObj={currGameObj} />
+          <GamesTabSelector 
+          statsObj={statsObj} 
+          handleTabChange={this.props.handleGameIDChange} 
+          currGameID={this.props.currGameID}
+          isMobile={isMobile}
+          />
+          <OverviewCard currGameObj={currGameObj} isMobile={isMobile}/>
+          <StatsCard currGameObj={currGameObj} isMobile={isMobile}/>
         </>
       );
     }

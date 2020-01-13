@@ -7,14 +7,19 @@ import './OverviewCard.css';
 class OverviewCard extends React.Component {
   render() {
     const overviewObj = getOverviewObj(this.props.currGameObj);
+    const isMobile = this.props.isMobile;
 
     // console.log(overviewObj);
+    let overviewCardType = "OverviewCard";
+
+    if(isMobile) {
+      overviewCardType = "OverviewCardMobile";
+    }
 
     return(
-      <div className="OverviewCard">
+      <div className={overviewCardType}>
         <OverviewHeader overviewObj={overviewObj} />
-        <StatsGrid overviewObj={overviewObj} />
-
+        <StatsGrid overviewObj={overviewObj} isMobile={isMobile} />
       </div>
     );
   }
@@ -23,25 +28,44 @@ class OverviewCard extends React.Component {
 class StatsGrid extends React.Component {
   render() {
     const overviewObj = this.props.overviewObj;
+    const isMobile = this.props.isMobile;
 
     // console.log(overviewObj);
 
+    let statsGridType = "StatsGrid";
+    let allyTeamStatsType = "AllyTeamStats";
+    let enemyTeamStatsType = "EnemyTeamStats";
+    let enemyContainerType = "enemy";
+
+    if(isMobile) {
+      statsGridType = "StatsGridMobile";
+      allyTeamStatsType = "TeamStatsMobile";
+      enemyTeamStatsType = "TeamStatsMobile";
+      enemyContainerType = "ally";
+    }
+
     return(
-      <div className="StatsGrid">
-        <div className="AllyTeamStats">
+      <div className={statsGridType}>
+        <div className={allyTeamStatsType}>
+          <div className="AllyHeading">
+            YOUR TEAM
+          </div>
           {overviewObj.allyTeam.participantStats.map(playerStats => {
             return(
               <PlayerStatsContainer key={playerStats.summonerName} playerStats={playerStats} 
-              maxDamage={overviewObj.maxDamageToChampions} currPlayerId={overviewObj.currPlayerId} type="ally"/>
+              maxDamage={overviewObj.maxDamageToChampions} currPlayerId={overviewObj.currPlayerId} type="ally" isMobile={isMobile}/>
             );
           }
           )}
         </div>
-        <div className="EnemyTeamStats">
+        <div className={enemyTeamStatsType}>
+          <div className="EnemyHeading">
+            ENEMY TEAM
+          </div>
           {overviewObj.enemyTeam.participantStats.map(playerStats => {
             return(
               <PlayerStatsContainer key={playerStats.summonerName} playerStats={playerStats} 
-              maxDamage={overviewObj.maxDamageToChampions} currPlayerId={overviewObj.currPlayerId} type="enemy"/>
+              maxDamage={overviewObj.maxDamageToChampions} currPlayerId={overviewObj.currPlayerId} type={enemyContainerType} isMobileEnemy={isMobile} isMobile={isMobile}/>
             );
           }
           )}
@@ -57,6 +81,8 @@ class PlayerStatsContainer extends React.Component {
     const championID = playerStats.championId;
 
     const currPlayerId = this.props.currPlayerId;
+
+    const isMobile = this.props.isMobile;
 
     // console.log(playerStats);
 
@@ -88,8 +114,18 @@ class PlayerStatsContainer extends React.Component {
       descriptionType = "EnemyDamageDescription";
     }
 
-    const damageBarLength = playerStats.totalDamageDealtToChampions / this.props.maxDamage * 300;
-    const barLengthInPx = damageBarLength + "px";
+    // isMobileEnemy only passed into enemy container
+    if(this.props.isMobileEnemy) {
+      damageBarType = "EnemyMobileDamageBar";
+    }
+
+    let widthBaseValue = 20;
+    if(isMobile) {
+      widthBaseValue = 40;
+    }
+
+    const damageBarLength = playerStats.totalDamageDealtToChampions / this.props.maxDamage * widthBaseValue;
+    const barLengthInPx = damageBarLength + "vw";
     const damageStyle = {
       width: barLengthInPx
     }
@@ -149,14 +185,6 @@ function OverviewHeader(props) {
         </div>
         <div className="EnemyKills">
           {overviewObj.enemyTeam.kills}
-        </div>
-      </div>
-      <div className="TeamHeadings">
-        <div className="AllyHeading">
-          YOUR TEAM
-        </div>
-        <div className="EnemyHeading">
-          ENEMY TEAM
         </div>
       </div>
     </div>

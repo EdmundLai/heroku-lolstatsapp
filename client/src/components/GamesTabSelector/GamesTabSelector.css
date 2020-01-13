@@ -24,9 +24,21 @@
   padding-top: 1rem;
 }
 
+.TabTimeMobile {
+  font-size: 1rem;
+  padding-top: 0.5rem;
+}
+
 .TabImage {
   align-self: center;
   padding: 1rem 0;
   width: 100px;
   height: 100px;
+}
+
+.TabImageMobile {
+  align-self: center;
+  padding: 0.25rem 0;
+  width: 16vw;
+  height: 16vw;
 }
