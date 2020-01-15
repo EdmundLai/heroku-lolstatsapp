@@ -1,5 +1,6 @@
 const RequestMaker = require('../../RequestMaker/RequestMaker');
-const API_TOKEN = require('../token');
+
+const API_TOKEN = process.env.API_TOKEN;
 
 class LoLAPIcontroller {
     constructor() {

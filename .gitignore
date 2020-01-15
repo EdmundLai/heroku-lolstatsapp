@@ -2,6 +2,7 @@ node_modules
 
 # backend server gitignore
 /backend/node_modules
+/backend/.env
 
 # create react app gitignore defaults
 /client/node_modules
