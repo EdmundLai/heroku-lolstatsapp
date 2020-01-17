@@ -1,0 +1,43 @@
+.GraphContainer {
+  padding: 2rem 0 4rem 0;
+  background-color: #010101;
+}
+
+.TabList ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  list-style-type: none;
+}
+
+.TabList ul li a {
+  display: block;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.5rem;
+  outline: none;
+}
+
+.TabList ul li a:hover {
+  text-decoration: none;
+  color: #282c34;
+  animation-duration: 1s;
+  animation-name: lighten;
+  animation-fill-mode: forwards;
+}
+
+.ActiveTab {
+  border-bottom: 4px solid white;
+}
+
+@keyframes lighten {
+  from {
+    color: white;
+  }
+
+  to {
+    color: lightseagreen;
+  }
+}

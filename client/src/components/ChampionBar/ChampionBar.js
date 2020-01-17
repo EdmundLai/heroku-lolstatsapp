@@ -1,4 +1,5 @@
 import React from 'react';
+import ImgHostURL from '../../resources/ImgHostUrl';
 import './ChampionBar.css';
 
 class ChampionBar extends React.Component {
@@ -9,7 +10,7 @@ class ChampionBar extends React.Component {
     let champImg = <></>;
     if(typeof champion === "string") {
       champName = champion.match(/[A-Z][a-z]+/g).join(" ");
-      champImg = <img id="ChampionImg" src={require(`../../resources/champion/${champion}.png`)} alt={champion} />;
+      champImg = <img id="ChampionImg" src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
     }
 
     return (

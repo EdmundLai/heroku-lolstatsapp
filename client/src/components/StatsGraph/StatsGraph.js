@@ -87,18 +87,86 @@ class StatsGraph extends React.Component {
       ]
     }
 
-    let chartOptions = {
+    const gridLineOptions = {
+      display: true,
+      drawOnChartArea: false,
+      drawTicks: false,
+      color: 'white',
+    };
+
+    const yAxesTickOptions = {
+      padding: 10,
+      fontSize: 16,
+      stepSize: 500,
+    }
+
+    const xAxesTickOptions = {
+      padding: 10,
+      fontSize: 16,
+    }
+
+    const timeScaleOptions = {
+      display: true,
+      labelString: 'Time (min)',
+      fontSize: 16,
+    };
+
+    const goldChartOptions = {
       hover: {
         mode: 'nearest'
+      },
+      legend: {
+        position: 'bottom'
+      },
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Gold Gained',
+            fontSize: 16,
+          },
+          gridLines: gridLineOptions,
+          ticks: yAxesTickOptions,
+        }],
+        xAxes: [{
+          scaleLabel: timeScaleOptions,
+          gridLines: gridLineOptions,
+          ticks: xAxesTickOptions,
+        }],
+      }
+    }
+
+    const expChartOptions = {
+      hover: {
+        mode: 'nearest'
+      },
+      legend: {
+        position: 'bottom'
+      },
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Exp Gained',
+            fontSize: 16,
+          },
+          gridLines: gridLineOptions,
+          ticks: yAxesTickOptions,
+        }],
+        xAxes: [{
+          scaleLabel: timeScaleOptions,
+          gridLines: gridLineOptions,
+          ticks: xAxesTickOptions,
+        }],
       }
     }
 
     let displayedGraph;
 
     if(this.props.type === "gold") {
-      displayedGraph = <Line data={goldDeltaData} options={chartOptions}/>
+      displayedGraph = <Line data={goldDeltaData} options={goldChartOptions}/>
     } else {
-      displayedGraph = <Line data={xpDeltaData} options={chartOptions}/>
+      displayedGraph = <Line data={xpDeltaData} options={expChartOptions}/>
     }
     
     return(

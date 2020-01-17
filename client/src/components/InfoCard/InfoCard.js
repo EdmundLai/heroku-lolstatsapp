@@ -1,62 +1,15 @@
 import React from 'react';
 import ChampKeys from '../../resources/ChampKeys';
-import StatsGraph from '../StatsGraph/StatsGraph';
 import StatsBox from '../StatsBox/StatsBox';
 import ChampionBar from '../ChampionBar/ChampionBar';
 import TimeBox from '../TimeBox/TimeBox';
+import GraphContainer from '../GraphContainer/GraphContainer';
+
 import './InfoCard.css';
 
 class InfoCard extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      activeTab: "gold",
-      windowWidth: window.innerWidth
-    }
-
-    this.setTabToGold = this.setTabToGold.bind(this);
-    this.setTabToExp = this.setTabToExp.bind(this);
-    this.handleWindowResize = this.handleWindowResize.bind(this);
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.handleWindowResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleWindowResize);
-  }
-
-  handleWindowResize() {
-    this.setState({
-      windowWidth: window.innerWidth
-    });
-  }
-
-  setTabToGold(event) {
-    if(this.state.activeTab !== "gold") {
-      this.setState({
-        activeTab: "gold"
-      });
-    }
-
-    event.preventDefault();
-
-  }
-
-  setTabToExp(event) {
-    if(this.state.activeTab !== "exp") {
-      this.setState({
-        activeTab: "exp"
-      });
-    }
-
-    event.preventDefault();
-  }
-
   render(){
-    let statsObj = this.props.gameInfo;
+    let statsObj = this.props.currGameObj;
     let stats = statsObj.playerStats;
     // console.log(statsObj);
 
@@ -66,7 +19,7 @@ class InfoCard extends React.Component {
       champion = ChampKeys[statsObj.championID];
     }
     // console.log(champion);
-    let isMobile = this.state.windowWidth < 900 ? true : false;
+    const isMobile = this.props.isMobile;
     
     if(isMobile) {
       return (
@@ -88,22 +41,9 @@ class InfoCard extends React.Component {
             <TimeBox statsObj={statsObj} />
 
             <StatsBox stats={stats} />
-
           </div>
   
-          <div className="GraphContainer">
-            <div className="TabList">
-              <ul>
-                <li>
-                  <a href="/#" onClick={this.setTabToGold}>Gold Graph</a>
-                </li>
-                <li>
-                  <a href="/#" onClick={this.setTabToExp}>Experience Graph</a>
-                </li>
-              </ul>
-            </div>
-            <StatsGraph statsObj={statsObj} type={this.state.activeTab}/>
-          </div>
+          <GraphContainer statsObj={statsObj} />
 
         </div>
       );

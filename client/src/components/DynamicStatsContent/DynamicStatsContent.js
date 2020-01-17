@@ -3,6 +3,7 @@ import GamesTabSelector from '../GamesTabSelector/GamesTabSelector';
 import OverviewCard from '../OverviewCard/OverviewCard';
 import StatsCard from '../StatsCard/StatsCard';
 import EndMessageCard from '../EndMessageCard/EndMessageCard';
+import GraphContainer from '../GraphContainer/GraphContainer';
 
 const QueueDict = {
   "430": "Normal Blind",
@@ -16,7 +17,7 @@ class DynamicStatsContent extends React.Component {
     const statsObj = this.props.statsObj;
     const queueType = this.props.queueType;
     const isMobile = this.props.isMobile;
-    // console.log(statsObj);
+    console.log(statsObj);
 
     // handle error case first
     if(statsObj.responseCode === 404) {
@@ -53,6 +54,8 @@ class DynamicStatsContent extends React.Component {
           />
           <OverviewCard currGameObj={currGameObj} isMobile={isMobile}/>
           <StatsCard currGameObj={currGameObj} isMobile={isMobile}/>
+          <GraphContainer statsObj={currGameObj} />
+          {/* <InfoCard currGameObj={currGameObj} isMobile={isMobile} /> */}
           <EndMessageCard isMobile={isMobile} />
         </>
       );
