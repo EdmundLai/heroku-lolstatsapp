@@ -122,7 +122,7 @@ class StatsGraph extends React.Component {
         yAxes: [{
           scaleLabel: {
             display: true,
-            labelString: 'Gold Gained',
+            labelString: 'Gold Per Min',
             fontSize: 16,
           },
           gridLines: gridLineOptions,
@@ -147,7 +147,7 @@ class StatsGraph extends React.Component {
         yAxes: [{
           scaleLabel: {
             display: true,
-            labelString: 'Exp Gained',
+            labelString: 'EXP Per Min',
             fontSize: 16,
           },
           gridLines: gridLineOptions,
