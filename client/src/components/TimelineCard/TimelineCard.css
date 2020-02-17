@@ -1,0 +1,40 @@
+.TimelineCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.KillCardContainer {
+  display: flex;
+  align-items: center;
+}
+
+.KillCard {
+  display: flex;
+  margin: 1.25rem 0;
+  padding: 0.75rem 3rem 0.75rem 0.75rem;
+}
+
+.BlueTeamKill {
+  background: linear-gradient(90deg, rgb(95, 66, 226) 0%, rgb(95, 66, 226) 50.52%, rgba(226, 66, 66, 0) 100%);
+}
+
+.RedTeamKill {
+  background: linear-gradient(90deg, #E24242 0%, #E24242 50.52%, rgba(226, 66, 66, 0) 100%);
+}
+
+.TimestampLabel {
+  font-size: 1.25rem;
+  margin-right: 1rem;
+}
+
+.ChampionKillImg {
+  width: 75px;
+  height: 75px;
+  margin-right: 1.25rem;
+}
+
+.SwordIcon {
+  margin-right: 1.25rem;
+}

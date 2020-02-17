@@ -7,16 +7,16 @@ class StatsGraph extends React.Component {
 
   render() {
 
-    let timeline = this.props.statsObj.timelineData.playerTimelineData;
+    const timeline = this.props.statsObj.timelineData.playerTimelineData;
     // console.log(this.props.statsObj.timelineData);
     // console.log(timeline);
-    let gameStats = this.props.statsObj.playerStats;
-    let gameLength = this.props.statsObj.gameLength;
-    let dataForGraphs = processTimelineData(timeline);    
+    const gameStats = this.props.statsObj.playerStats;
+    const gameLength = this.props.statsObj.gameLength;
+    const dataForGraphs = processTimelineData(timeline);    
 
-    let avgXpPerMin = calculateAvgXpPerMin(timeline, gameLength);
+    const avgXpPerMin = calculateAvgXpPerMin(timeline, gameLength);
 
-    let deltasData = calculateDeltasPerMin(dataForGraphs);
+    const deltasData = calculateDeltasPerMin(dataForGraphs);
 
     // let xpData = {
     //   labels: dataForGraphs.time,
@@ -40,126 +40,27 @@ class StatsGraph extends React.Component {
     //   }]
     // }
 
-    let gpmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, gameStats.goldPerMin);
-    let xppmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, avgXpPerMin);
+    const gpmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, gameStats.goldPerMin);
+    const xppmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, avgXpPerMin);
 
-    let xpDeltaData = {
+    const xpDeltaData = {
       labels: deltasData.timeDeltas,
-      datasets: [{
-        label: "Experience Per Min",
-        fill: false,
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: deltasData.xpDeltas,
-      },
-      {
-        label: "Experience Per Minute Average",
-        fill: false,
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(0, 191, 255)',
-        data: xppmAvgArray,
-        borderDash: [10,5],
-        pointRadius: 0,
-        pointHitRadius: 0,
-      }
-    ]
+      datasets: [
+        createNormalDataSet("Experience Per Min", deltasData.xpDeltas),
+        createAverageDataSet("Experience Per Minute Average", xppmAvgArray)
+      ],
     }
 
-    let goldDeltaData = {
+    const goldDeltaData = {
       labels: deltasData.timeDeltas,
-      datasets: [{
-        label: "Gold Per Min",
-        fill: false,
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: deltasData.goldDeltas,
-      },
-      {
-        label: "Gold Per Minute Average",
-        fill: false,
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(0, 191, 255)',
-        data: gpmAvgArray,
-        borderDash: [10,5],
-        pointRadius: 0,
-        pointHitRadius: 0,
-      }
-      ]
+      datasets: [
+        createNormalDataSet("Gold Per Min", deltasData.goldDeltas),
+        createAverageDataSet("Gold Per Minute Average",gpmAvgArray)
+      ],
     }
 
-    const gridLineOptions = {
-      display: true,
-      drawOnChartArea: false,
-      drawTicks: false,
-      color: 'white',
-    };
-
-    const yAxesTickOptions = {
-      padding: 10,
-      fontSize: 16,
-      stepSize: 500,
-    }
-
-    const xAxesTickOptions = {
-      padding: 10,
-      fontSize: 16,
-    }
-
-    const timeScaleOptions = {
-      display: true,
-      labelString: 'Time (min)',
-      fontSize: 16,
-    };
-
-    const goldChartOptions = {
-      hover: {
-        mode: 'nearest'
-      },
-      legend: {
-        position: 'bottom'
-      },
-      scales: {
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'Gold Per Min',
-            fontSize: 16,
-          },
-          gridLines: gridLineOptions,
-          ticks: yAxesTickOptions,
-        }],
-        xAxes: [{
-          scaleLabel: timeScaleOptions,
-          gridLines: gridLineOptions,
-          ticks: xAxesTickOptions,
-        }],
-      }
-    }
-
-    const expChartOptions = {
-      hover: {
-        mode: 'nearest'
-      },
-      legend: {
-        position: 'bottom'
-      },
-      scales: {
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'EXP Per Min',
-            fontSize: 16,
-          },
-          gridLines: gridLineOptions,
-          ticks: yAxesTickOptions,
-        }],
-        xAxes: [{
-          scaleLabel: timeScaleOptions,
-          gridLines: gridLineOptions,
-          ticks: xAxesTickOptions,
-        }],
-      }
-    }
+    const goldChartOptions = createChartOptions("Gold Per Min");
+    const expChartOptions = createChartOptions("EXP Per Min");
 
     let displayedGraph;
 
@@ -177,11 +78,85 @@ class StatsGraph extends React.Component {
   }
 }
 
+function createNormalDataSet(label, data) {
+  return {
+    label,
+    fill: false,
+    backgroundColor: 'rgb(255, 99, 132)',
+    borderColor: 'rgb(255, 99, 132)',
+    data,
+  };
+}
+
+function createAverageDataSet(label, data) {
+  return {
+    label,
+    fill: false,
+    backgroundColor: 'rgb(255, 99, 132)',
+    borderColor: 'rgb(0, 191, 255)',
+    data,
+    borderDash: [10,5],
+    pointRadius: 0,
+    pointHitRadius: 0,
+  }
+}
+
+function createChartOptions(label) {
+  const gridLineOptions = {
+    display: true,
+    drawOnChartArea: false,
+    drawTicks: false,
+    color: 'white',
+  };
+
+  const yAxesTickOptions = {
+    padding: 10,
+    fontSize: 16,
+    stepSize: 500,
+  }
+
+  const xAxesTickOptions = {
+    padding: 10,
+    fontSize: 16,
+  }
+
+  const timeScaleOptions = {
+    display: true,
+    labelString: 'Time (min)',
+    fontSize: 16,
+  };
+
+  return {
+    hover: {
+      mode: 'nearest'
+    },
+    legend: {
+      position: 'bottom'
+    },
+    scales: {
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: label,
+          fontSize: 16,
+        },
+        gridLines: gridLineOptions,
+        ticks: yAxesTickOptions,
+      }],
+      xAxes: [{
+        scaleLabel: timeScaleOptions,
+        gridLines: gridLineOptions,
+        ticks: xAxesTickOptions,
+      }],
+    }
+  }
+}
+
 function processTimelineData(data) {
-  let time = [];
-  let totalGold = [];
-  let xp = [];
-  let totalFrames = Object.keys(data).length;
+  const time = [];
+  const totalGold = [];
+  const xp = [];
+  const totalFrames = Object.keys(data).length;
   for(let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
     time.push(`${frameIndex} mins`);
     let currFrame = data[frameIndex];
@@ -189,7 +164,7 @@ function processTimelineData(data) {
     xp.push(currFrame.xp);
   }
 
-  let graphData = {
+  const graphData = {
     time,
     totalGold,
     xp
@@ -199,25 +174,23 @@ function processTimelineData(data) {
 }
 
 function calculateAvgXpPerMin(data, gameLength) {
-  let dataLength = Object.keys(data).length;
+  const dataLength = Object.keys(data).length;
 
-  let avgXpPerMin = data[dataLength - 1].xp / (gameLength / 60);
-
-  return avgXpPerMin;
+  return data[dataLength - 1].xp / (gameLength / 60);
 }
 
 function calculateDeltasPerMin(graphData) {
-  let time = graphData.time;
-  let xpData = graphData.xp;
-  let goldData = graphData.totalGold;
+  const time = graphData.time;
+  const xpData = graphData.xp;
+  const goldData = graphData.totalGold;
 
-  let timeDeltas = [];
-  let xpDeltas = [];
-  let goldDeltas = [];
+  const timeDeltas = [];
+  const xpDeltas = [];
+  const goldDeltas = [];
 
   for(let i = 0; i < time.length - 1; i++) {
-    let xpDeltaPerMin = xpData[i + 1] - xpData[i];
-    let goldDeltaPerMin = goldData[i + 1] - goldData[i];
+    const xpDeltaPerMin = xpData[i + 1] - xpData[i];
+    const goldDeltaPerMin = goldData[i + 1] - goldData[i];
 
     timeDeltas.push(i);
     xpDeltas.push(xpDeltaPerMin);

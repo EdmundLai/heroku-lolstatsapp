@@ -1,3 +1,7 @@
+function convertTimeStampToTimeString(timestamp) {
+  return convertLengthToTimeString(Math.round(timestamp / 1000));
+}
+
 function convertLengthToTimeString(gameLength) {
   let numMin = Math.floor(gameLength / 60);
   let numSeconds = gameLength % 60;
@@ -58,6 +62,8 @@ function getTimeAgo(gameTime) {
 
   return `${finalNumber} ${timeUnit} ago`;
 }
+
+module.exports.convertTimeStampToTimeString = convertTimeStampToTimeString;
 
 module.exports.convertLengthToTimeString = convertLengthToTimeString;
 
