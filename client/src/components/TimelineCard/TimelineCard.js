@@ -5,6 +5,10 @@ import TimeUtils from '../../utils/time';
 import SwordIcon from '../../resources/sword.svg';
 import './TimelineCard.css';
 
+// FOUND BUG: Minute Selected option value in dropdown menu does not reset to
+// default value of 0 when game selected is changed or queue type is changed.
+// STATUS: Bug does not need to be fixed, TimelineCard functionality will be reworked
+// in near future
 class TimelineCard extends React.Component {
   constructor(props) {
     super(props);
@@ -54,7 +58,7 @@ class TimelineCard extends React.Component {
           </select>
         </label>
         {champKillsArr.map(champKillObj => {
-          // console.log(champKillObj);
+          console.log(champKillObj);
           // let assistString = "";
           // if(champKillObj.assistingParticipantIds.length > 0) {
           //   assistString = `with the help of players with ids ${champKillObj.assistingParticipantIds}`;
@@ -73,7 +77,7 @@ class TimelineCard extends React.Component {
             // <div>
             //   {`Player with id ${champKillObj.killerId} killed player with id ${champKillObj.victimId} ${assistString}!`}
             // </div>
-            <div key={timeStampString} className="KillCardContainer">
+            <div key={champKillObj.timestamp} className="KillCardContainer">
               <span className="TimestampLabel">{timeStampString} </span>
               <div className={`KillCard ${killerTeam}`}>
                 {killerImg}

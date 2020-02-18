@@ -1,8 +1,8 @@
 import React from 'react';
 import TimeUtil from '../../utils/time';
 import ArrayUtil from '../../utils/array';
-import DataUtil from '../../utils/data';
 import { Line, Scatter } from 'react-chartjs-2';
+import GoldDiffContainer from '../GoldDiffContainer/GoldDiffContainer';
 
 import './DataAnalysisPage.css';
 
@@ -50,38 +50,7 @@ class DataAnalysisPage extends React.Component {
       // const teamsData = getTeamsData(firstGameData);
       // console.log(teamsData);
 
-      const teamGoldData = DataUtil.getTeamGoldData(firstGameData);
-
-      console.log(teamGoldData);
-
-      let timeArr = [];
-      let goldDiffArr = [];
-
-      for(let minute = 0; minute < teamGoldData.goldDiff.length; minute++) {
-        timeArr.push(minute);
-        goldDiffArr.push(teamGoldData.goldDiff[minute]);
-      }
-
-      let goldDiffDataset = {
-        labels: timeArr,
-        datasets: [{
-          label: "Gold difference",
-          fill: false,
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          data: goldDiffArr
-        }]
-      }
-
-      const lineOptions = {
-        responsive: true,
-      }
-
-      goldDiffContainer = 
-      <div className="GoldDiffContainer">
-        <h2>Gold Difference</h2>
-        <Line data={goldDiffDataset} options={lineOptions}/>
-      </div>;
+      goldDiffContainer = <GoldDiffContainer gameData={firstGameData}/>
     }
 
     return(
