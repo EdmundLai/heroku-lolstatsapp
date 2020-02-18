@@ -1,3 +1,6 @@
+// Array utility functions
+// - Used for array manipulation or data analysis on arrays
+
 // fill array with length arrLen with val
 function fillArray(arrLen, val) {
   let outputArr = [];

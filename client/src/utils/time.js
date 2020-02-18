@@ -1,3 +1,6 @@
+// Time utility functions
+// - Utility functions related to time and displaying them as user friendly strings
+
 function convertTimeStampToTimeString(timestamp) {
   return convertLengthToTimeString(Math.round(timestamp / 1000));
 }

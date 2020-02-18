@@ -1,10 +1,13 @@
 import React from 'react';
 import TimeUtil from '../../utils/time';
 import ArrayUtil from '../../utils/array';
+import DataUtil from '../../utils/data';
 import { Line, Scatter } from 'react-chartjs-2';
 
 import './DataAnalysisPage.css';
 
+// currently not in use (experimental page used for testing new features)
+// currently broken due to changes in data state configuration in App.js
 class DataAnalysisPage extends React.Component {
   render() {
     let dataState = this.props.dataState;
@@ -47,7 +50,7 @@ class DataAnalysisPage extends React.Component {
       // const teamsData = getTeamsData(firstGameData);
       // console.log(teamsData);
 
-      const teamGoldData = getTeamGoldData(firstGameData);
+      const teamGoldData = DataUtil.getTeamGoldData(firstGameData);
 
       console.log(teamGoldData);
 
@@ -204,89 +207,6 @@ function createKillMap(gameData) {
   };
 
   return <Scatter data={killsGraphData} options={scatterOptions} />;
-}
-
-// returns team data from gameData
-function getTeamsData(gameData) {
-  const gameStats = gameData.gameStats;
-  const participantArray = gameStats.participants;
-  const teamArray = gameStats.teams;
-
-  let teamsData = {
-    blue: {},
-    red: {},
-  };
-
-  let blueData = {};
-  let redData = {};
-
-  let firstTeamIsBlue = false;
-
-  const firstTeam = teamArray[0];
-
-  if(firstTeam.teamId === 100) {
-    firstTeamIsBlue = true;
-  }
-
-  if(firstTeam.win === "Win") {
-    blueData.win = (firstTeamIsBlue ? true : false);
-    redData.win = (firstTeamIsBlue ? false : true);
-  } else {
-    blueData.win = (firstTeamIsBlue ? false : true);
-    redData.win = (firstTeamIsBlue ? true : false);
-  }
-
-  let bluePlayerArr = [];
-  let redPlayerArr = [];
-
-  participantArray.forEach(participantData => {
-    if(participantData.teamId === 100) {
-      bluePlayerArr.push(participantData);
-    } else {
-      redPlayerArr.push(participantData);
-    }
-  });
-
-  blueData.playerArr = bluePlayerArr;
-  redData.playerArr = redPlayerArr;
-
-  teamsData.blue = blueData;
-  teamsData.red = redData;
-
-  return teamsData;
-}
-
-function getTeamGoldData(gameData) {
-  let gameFrames = gameData.timelineData.frames;
-
-  let teamGoldData = {
-    blueTotalGold: [],
-    redTotalGold: [],
-    goldDiff: [],
-  }
-
-  gameFrames.forEach(currentFrame => {
-    let participantFrames = currentFrame.participantFrames;
-
-    let blueGoldAtCurrFrame = 0;
-    let redGoldAtCurrFrame = 0;
-
-    Object.values(participantFrames).forEach(playerFrame => {
-      if(playerFrame.participantId >= 1 && playerFrame.participantId <= 5) {
-        blueGoldAtCurrFrame += playerFrame.totalGold;
-      } else {
-        redGoldAtCurrFrame += playerFrame.totalGold;
-      }
-    });
-
-    let currGoldDifference = blueGoldAtCurrFrame - redGoldAtCurrFrame;
-
-    teamGoldData.blueTotalGold.push(blueGoldAtCurrFrame);
-    teamGoldData.redTotalGold.push(redGoldAtCurrFrame);
-    teamGoldData.goldDiff.push(currGoldDifference);
-  });
-
-  return teamGoldData;
 }
 
 function make1DArrayFrom2DArray(array2D) {
