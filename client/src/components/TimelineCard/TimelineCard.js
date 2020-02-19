@@ -58,38 +58,48 @@ class TimelineCard extends React.Component {
           </select>
         </label>
         {champKillsArr.map(champKillObj => {
-          console.log(champKillObj);
-          // let assistString = "";
-          // if(champKillObj.assistingParticipantIds.length > 0) {
-          //   assistString = `with the help of players with ids ${champKillObj.assistingParticipantIds}`;
-          // }
-          const killerChampId = playerTeamObj[champKillObj.killerId].championId;
-          const victimChampId = playerTeamObj[champKillObj.victimId].championId;
-
-          const timeStampString = TimeUtils.convertTimeStampToTimeString(champKillObj.timestamp);
-
-          const killerImg = showChampImgFromChampId(killerChampId);
-          const victimImg = showChampImgFromChampId(victimChampId); 
-
-          const killerTeam = playerTeamObj[champKillObj.killerId].teamId === currPlayerTeamId ? "BlueTeamKill" : "RedTeamKill";
           
           return(
-            // <div>
-            //   {`Player with id ${champKillObj.killerId} killed player with id ${champKillObj.victimId} ${assistString}!`}
-            // </div>
-            <div key={champKillObj.timestamp} className="KillCardContainer">
-              <span className="TimestampLabel">{timeStampString} </span>
-              <div className={`KillCard ${killerTeam}`}>
-                {killerImg}
-                <img className="SwordIcon" src={SwordIcon} alt="Sword Icon"/>
-                {victimImg}
-              </div>
-            </div>
+            <KillCardContainer 
+            key={champKillObj.timestamp} 
+            champKillObj={champKillObj} 
+            playerTeamObj={playerTeamObj}
+            currPlayerTeamId={currPlayerTeamId} 
+            />
           );
         })}
       </div>
     );
   }
+}
+
+function KillCardContainer(props) {
+  const champKillObj = props.champKillObj;
+  const playerTeamObj = props.playerTeamObj;
+  const currPlayerTeamId = props.currPlayerTeamId;
+
+  // console.log(champKillObj);
+
+  const killerChampId = playerTeamObj[champKillObj.killerId].championId;
+  const victimChampId = playerTeamObj[champKillObj.victimId].championId;
+
+  const timeStampString = TimeUtils.convertTimeStampToTimeString(champKillObj.timestamp);
+
+  const killerImg = showChampImgFromChampId(killerChampId);
+  const victimImg = showChampImgFromChampId(victimChampId); 
+
+  const killerTeam = playerTeamObj[champKillObj.killerId].teamId === currPlayerTeamId ? "BlueTeamKill" : "RedTeamKill";
+  
+  return(
+    <div className="KillCardContainer">
+      <span className="TimestampLabel">{timeStampString} </span>
+      <div className={`KillCard ${killerTeam}`}>
+        {killerImg}
+        <img className="SwordIcon" src={SwordIcon} alt="Sword Icon"/>
+        {victimImg}
+      </div>
+    </div>
+  );
 }
 
 function showChampImgFromChampId(championId) {

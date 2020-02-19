@@ -4,8 +4,9 @@ import OverviewCard from '../OverviewCard/OverviewCard';
 import StatsCard from '../StatsCard/StatsCard';
 import EndMessageCard from '../EndMessageCard/EndMessageCard';
 import GraphContainer from '../GraphContainer/GraphContainer';
-import TimelineCard from '../TimelineCard/TimelineCard';
+// import TimelineCard from '../TimelineCard/TimelineCard';
 import GoldDiffContainer from '../GoldDiffContainer/GoldDiffContainer';
+import GameAnalysisSection from '../GameAnalysisSection/GameAnalysisSection';
 
 const QueueDict = {
   "430": "Normal Blind",
@@ -57,7 +58,8 @@ class DynamicStatsContent extends React.Component {
           <OverviewCard currGameObj={currGameObj} isMobile={isMobile}/>
           <StatsCard currGameObj={currGameObj} isMobile={isMobile}/>
           <GraphContainer statsObj={currGameObj} />
-          <TimelineCard currGameObj={currGameObj} />
+          {/* <TimelineCard currGameObj={currGameObj} /> */}
+          <GameAnalysisSection currGameObj={currGameObj} />
           <GoldDiffContainer currGameObj={currGameObj} />
           <EndMessageCard isMobile={isMobile} />
         </>

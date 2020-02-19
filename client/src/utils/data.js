@@ -34,6 +34,67 @@ function getTeamGoldData(gameData) {
   return teamGoldData;
 }
 
+// returns array of gold differences for each minute
+function getGoldDiffArray(gameData) {
+  const teamGoldData = getTeamGoldData(gameData);
+
+  const goldDiffArr = [];
+
+  for(let minute = 0; minute < teamGoldData.goldDiff.length; minute++) {
+    goldDiffArr.push(teamGoldData.goldDiff[minute]);
+  }
+
+  return goldDiffArr;
+}
+
+// returns array of objects with properties:
+// minute and goldDiffDelta
+function getGoldSwings(gameData) {
+  const goldDiffArray = getGoldDiffArray(gameData);
+
+  const goldSwings = [];
+
+  for(let i = 1; i < goldDiffArray.length; i++) {
+    const goldDiffDelta = goldDiffArray[i] - goldDiffArray[i-1];
+
+    goldSwings.push({
+      startingMinute: i-1,
+      goldDiffDelta,
+    });
+  }
+
+  return goldSwings;
+}
+
+// sort the gold swings array by magnitude of gold change
+function sortGoldSwingsMagnitude(goldSwingsArray) {
+  const sortedGoldSwings = goldSwingsArray.sort(sortByGoldDiffMagnitude);
+
+  function sortByGoldDiffMagnitude(a, b) {
+    return Math.abs(b.goldDiffDelta) - Math.abs(a.goldDiffDelta);
+  }
+
+  return sortedGoldSwings;
+}
+
+function sortGoldSwingsTime(goldSwingsArray) {
+  const sortedGoldSwings = goldSwingsArray.sort(sortByGoldDiffTime);
+
+  function sortByGoldDiffTime(a, b) {
+    return Math.abs(a.startingMinute) - Math.abs(b.startingMinute);
+  }
+
+  return sortedGoldSwings;
+}
+
+// get top N gold swings and sort them by chronological order
+function getTopNGoldSwings(goldSwingsArray, n) {
+  const sortedGoldSwings = sortGoldSwingsMagnitude(goldSwingsArray);
+  const topNGoldSwings =  sortGoldSwingsTime(sortedGoldSwings.slice(0, n));
+
+  return topNGoldSwings;
+}
+
 // calculating average EXP per minute gained for current player
 function calculateAvgXpPerMin(playerTimelineData, gameLength) {
   const dataLength = Object.keys(playerTimelineData).length;
@@ -92,6 +153,16 @@ function processTimelineData(playerTimelineData) {
 }
 
 module.exports.getTeamGoldData = getTeamGoldData;
+
+module.exports.getGoldDiffArray = getGoldDiffArray;
+
+module.exports.getGoldSwings = getGoldSwings;
+
+module.exports.sortGoldSwingsMagnitude = sortGoldSwingsMagnitude;
+
+module.exports.sortGoldSwingsTime = sortGoldSwingsTime;
+
+module.exports.getTopNGoldSwings = getTopNGoldSwings;
 
 module.exports.calculateAvgXpPerMin = calculateAvgXpPerMin;
 
