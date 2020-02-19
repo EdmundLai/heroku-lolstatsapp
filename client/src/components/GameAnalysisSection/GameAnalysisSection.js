@@ -1,19 +1,20 @@
 import React from 'react';
+import TimelineCard from '../TimelineCard/TimelineCard';
 import DataUtil from '../../utils/data';
 
 function GameAnalysisSection(props) {
   const currGameObj = props.currGameObj;
 
-  const goldSwings = DataUtil.getGoldSwings(currGameObj);
-
-  const top3GoldSwings = DataUtil.getTopNGoldSwings(goldSwings, 3);
+  const turningPoints = DataUtil.getTurningPoints(currGameObj);
 
   return(
     <div className="GameAnalysisSection">
-      {top3GoldSwings.map(goldSwingData => {
+      {/* Analysis Overview Card - TODO */}
+      {turningPoints.map(goldSwingData => {
         return(
-          <div key={goldSwingData.endingMinute} className="GoldSwingData">
+          <div key={goldSwingData.startingMinute} className="GoldSwingData">
             {`Gold change of ${goldSwingData.goldDiffDelta} in minute ${goldSwingData.startingMinute}`}
+            <TimelineCard currGameObj={currGameObj} endingMin={goldSwingData.startingMinute + 1} />
           </div>
         );
       })}

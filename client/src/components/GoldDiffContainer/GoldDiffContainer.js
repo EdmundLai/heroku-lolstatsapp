@@ -8,7 +8,7 @@ import './GoldDiffContainer.css';
 function GoldDiffContainer(props) {
   const teamGoldData = DataUtil.getTeamGoldData(props.currGameObj);
 
-  console.log(teamGoldData);
+  // console.log(teamGoldData);
 
   let timeArr = [];
   let goldDiffArr = [];

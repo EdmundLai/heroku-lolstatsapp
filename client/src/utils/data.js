@@ -95,6 +95,69 @@ function getTopNGoldSwings(goldSwingsArray, n) {
   return topNGoldSwings;
 }
 
+function isGoldSwingATurningPoint(currGameObj, endingMin) {
+    const timelineData = currGameObj.timelineData;
+
+    const timelineArr = convertFramesToTimelineObj(timelineData.frames);
+
+    const currTimelineObj = timelineArr[endingMin];
+    const champKillsArr = currTimelineObj.CHAMPION_KILL;
+    const objectiveKillsArr = currTimelineObj.ELITE_MONSTER_KILL;
+    const buildingKillsArr = currTimelineObj.BUILDING_KILL;
+
+    const isTurningPoint = (champKillsArr.length + objectiveKillsArr.length + buildingKillsArr.length) > 0;
+
+    return isTurningPoint;
+}
+
+function filterTurningPoints(currGameObj, goldSwingsArray) {
+  const turningPoints = goldSwingsArray.filter(goldSwing => 
+    isGoldSwingATurningPoint(currGameObj, (goldSwing.startingMinute + 1)));
+
+  return turningPoints;
+}
+
+function getTurningPoints(currGameObj) {
+  const goldSwings = getGoldSwings(currGameObj);
+  const top3GoldSwings = getTopNGoldSwings(goldSwings, 3);
+  const turningPoints = filterTurningPoints(currGameObj, top3GoldSwings);
+
+  return turningPoints;
+}
+
+// pass in timelineData.frames as input
+function convertFramesToTimelineObj(frames) {
+  const timelineObj = frames.map((frameData) => {
+    const frameObj = {
+      CHAMPION_KILL: [],
+      WARD_PLACED: [],
+      WARD_KILL: [],
+      BUILDING_KILL: [],
+      ELITE_MONSTER_KILL: [],
+      ITEM_PURCHASED: [],
+      ITEM_SOLD: [],
+      ITEM_DESTROYED: [],
+      ITEM_UNDO: [],
+      SKILL_LEVEL_UP: [],
+    };
+
+    const frameEvents = frameData.events;
+
+    for(let i = 0; i < frameEvents.length; i++) {
+      const frameEvent = frameEvents[i];
+      if(frameObj.hasOwnProperty(frameEvent.type)) {
+        frameObj[frameEvent.type].push(frameEvent);
+      }
+    }
+
+    return frameObj;
+  });
+
+  return timelineObj;
+}
+
+
+
 // calculating average EXP per minute gained for current player
 function calculateAvgXpPerMin(playerTimelineData, gameLength) {
   const dataLength = Object.keys(playerTimelineData).length;
@@ -163,6 +226,14 @@ module.exports.sortGoldSwingsMagnitude = sortGoldSwingsMagnitude;
 module.exports.sortGoldSwingsTime = sortGoldSwingsTime;
 
 module.exports.getTopNGoldSwings = getTopNGoldSwings;
+
+module.exports.convertFramesToTimelineObj = convertFramesToTimelineObj;
+
+module.exports.isGoldSwingATurningPoint = isGoldSwingATurningPoint;
+
+module.exports.filterTurningPoints = filterTurningPoints;
+
+module.exports.getTurningPoints = getTurningPoints;
 
 module.exports.calculateAvgXpPerMin = calculateAvgXpPerMin;
 

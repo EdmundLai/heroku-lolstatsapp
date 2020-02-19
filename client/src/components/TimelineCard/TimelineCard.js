@@ -1,38 +1,22 @@
 import React from 'react';
 import ChampKeys from '../../resources/ChampKeys';
 import ImgHostURL from '../../resources/ImgHostUrl';
-import TimeUtils from '../../utils/time';
+import TimeUtil from '../../utils/time';
+import DataUtil from '../../utils/data';
 import SwordIcon from '../../resources/sword.svg';
 import './TimelineCard.css';
 
 // FOUND BUG: Minute Selected option value in dropdown menu does not reset to
 // default value of 0 when game selected is changed or queue type is changed.
-// STATUS: Bug does not need to be fixed, TimelineCard functionality will be reworked
-// in near future
+// STATUS: TimelineCard reworked without dropdown menu which was causing the issue
 class TimelineCard extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currMin: 0
-    }
-
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-  }
-
-  handleSelectChange(event) {
-    this.setState({
-      currMin: event.target.value,
-    });
-  }
-
   render() {
     const currGameObj = this.props.currGameObj;
     const timelineData = currGameObj.timelineData;
     const gameStats = currGameObj.gameStats;
     const currPlayerId = currGameObj.playerStats.participantId;
 
-    const timelineArr = convertFramesToTimelineObj(timelineData.frames);
+    const timelineArr = DataUtil.convertFramesToTimelineObj(timelineData.frames);
 
     const playerTeamObj = convertParticipantArrToPlayerTeamObj(gameStats.participants);
 
@@ -42,26 +26,24 @@ class TimelineCard extends React.Component {
     // console.log("playerTeamData")
     // console.log(playerTeamObj);
 
-    const currTimelineObj = timelineArr[this.state.currMin];
+    const currTimelineObj = timelineArr[this.props.endingMin];
     const champKillsArr = currTimelineObj.CHAMPION_KILL;
+    // FOR LATER USE
+    // const objectiveKillsArr = currTimelineObj.ELITE_MONSTER_KILL;
+    // const buildingKillsArr = currTimelineObj.BUILDING_KILL;
+
+    // for testing purposes
+    // console.log(timelineArr);
 
     return(
       <div className="TimelineCard">
-        <label className="MinuteSelector">
-          Game Kills By Minute:  
-          <select value={this.state.currMin} onChange={this.handleSelectChange}>
-            {Array.from(timelineArr.keys()).map(currMinute => {
-              return(
-                <option key={currMinute} value={currMinute}>{currMinute}</option>
-              );
-            })}
-          </select>
-        </label>
+        <div className="TimelineCardTitle">THE EVENTS</div>
         {champKillsArr.map(champKillObj => {
-          
+          const victimChampId = playerTeamObj[champKillObj.victimId].championId;
+          const killCardContainerKey = champKillObj.timestamp * victimChampId;
           return(
             <KillCardContainer 
-            key={champKillObj.timestamp} 
+            key={killCardContainerKey} 
             champKillObj={champKillObj} 
             playerTeamObj={playerTeamObj}
             currPlayerTeamId={currPlayerTeamId} 
@@ -78,17 +60,26 @@ function KillCardContainer(props) {
   const playerTeamObj = props.playerTeamObj;
   const currPlayerTeamId = props.currPlayerTeamId;
 
-  // console.log(champKillObj);
+  const timeStampString = TimeUtil.convertTimeStampToTimeString(champKillObj.timestamp);
 
-  const killerChampId = playerTeamObj[champKillObj.killerId].championId;
+  // BUG TO BE FIXED - if player suicides into nexus or tower it breaks the site because
+  // playerTeamObj[champKillObj.killerId] ends up being undefined. killerId in this situation
+  // is 0 (seen so far)
+  // BUG HAS BEEN FIXED
+  let killerChampId = 0;
+  let killerImg = <img className="ChampionKillImg" src={`${ImgHostURL}/turreticon/turret_icon.png`} alt="Turret" />;
+
+  if(typeof playerTeamObj[champKillObj.killerId] !== 'undefined') {
+    killerChampId = playerTeamObj[champKillObj.killerId].championId;
+    killerImg = showChampImgFromChampId(killerChampId);
+  }
+  
   const victimChampId = playerTeamObj[champKillObj.victimId].championId;
+  
+  const victimImg = showChampImgFromChampId(victimChampId);
 
-  const timeStampString = TimeUtils.convertTimeStampToTimeString(champKillObj.timestamp);
-
-  const killerImg = showChampImgFromChampId(killerChampId);
-  const victimImg = showChampImgFromChampId(victimChampId); 
-
-  const killerTeam = playerTeamObj[champKillObj.killerId].teamId === currPlayerTeamId ? "BlueTeamKill" : "RedTeamKill";
+  // calculated using opposite team of the victim in case the killer is not a champion
+  const killerTeam = playerTeamObj[champKillObj.victimId].teamId === currPlayerTeamId ? "RedTeamKill" : "BlueTeamKill";
   
   return(
     <div className="KillCardContainer">
@@ -138,35 +129,6 @@ function convertParticipantArrToPlayerTeamObj(participants) {
   // });
 }
 
-// pass in timelineData.frames as input
-function convertFramesToTimelineObj(frames) {
-  const timelineObj = frames.map((frameData) => {
-    const frameObj = {
-      CHAMPION_KILL: [],
-      WARD_PLACED: [],
-      WARD_KILL: [],
-      BUILDING_KILL: [],
-      ELITE_MONSTER_KILL: [],
-      ITEM_PURCHASED: [],
-      ITEM_SOLD: [],
-      ITEM_DESTROYED: [],
-      ITEM_UNDO: [],
-      SKILL_LEVEL_UP: [],
-    };
 
-    const frameEvents = frameData.events;
-
-    for(let i = 0; i < frameEvents.length; i++) {
-      const frameEvent = frameEvents[i];
-      if(frameObj.hasOwnProperty(frameEvent.type)) {
-        frameObj[frameEvent.type].push(frameEvent);
-      }
-    }
-
-    return frameObj;
-  });
-
-  return timelineObj;
-}
 
 export default TimelineCard;
