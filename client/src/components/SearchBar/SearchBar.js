@@ -45,12 +45,12 @@ class SearchBar extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state);
+    // console.log(this.state);
 
     RequestHandler.handleRequest(this.state)
     .then(data => {
-      console.log("inside then of handleSubmit");
-      console.log(data);
+      // console.log("inside then of handleSubmit");
+      // console.log(data);
       if(data.hasOwnProperty("summonerName")) {
         this.props.updateAppState(200, data);
       } else {

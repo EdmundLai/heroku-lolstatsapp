@@ -5,7 +5,7 @@ import StatsCard from '../StatsCard/StatsCard';
 import EndMessageCard from '../EndMessageCard/EndMessageCard';
 import GraphContainer from '../GraphContainer/GraphContainer';
 // import TimelineCard from '../TimelineCard/TimelineCard';
-import GoldDiffContainer from '../GoldDiffContainer/GoldDiffContainer';
+// import GoldDiffContainer from '../GoldDiffContainer/GoldDiffContainer';
 import GameAnalysisSection from '../GameAnalysisSection/GameAnalysisSection';
 
 const QueueDict = {
@@ -20,7 +20,7 @@ class DynamicStatsContent extends React.Component {
     const statsObj = this.props.statsObj;
     const queueType = this.props.queueType;
     const isMobile = this.props.isMobile;
-    console.log(statsObj);
+    // console.log(statsObj);
 
     // handle error case first
     if(statsObj.responseCode === 404) {
@@ -60,7 +60,7 @@ class DynamicStatsContent extends React.Component {
           <GraphContainer statsObj={currGameObj} />
           {/* <TimelineCard currGameObj={currGameObj} /> */}
           <GameAnalysisSection currGameObj={currGameObj} />
-          <GoldDiffContainer currGameObj={currGameObj} />
+          {/* <GoldDiffContainer currGameObj={currGameObj} /> */}
           <EndMessageCard isMobile={isMobile} />
         </>
       );

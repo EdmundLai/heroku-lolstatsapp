@@ -1,0 +1,44 @@
+.TurningPointsSummaryCard {
+  background-color: #111b1f;
+}
+
+.TurningPointsSummary {
+  font-size: 3.5rem;
+  width: 30vw;
+  padding: 12.5rem 0;
+  margin: 0 auto;
+}
+
+.WinningTeamText, .AllyTeamText {
+  color: #1E9BD0;
+}
+
+.LosingTeamText, .EnemyTeamText {
+  color: #E24242;
+}
+
+.TurningPointsText {
+  color: #D9BD81;
+}
+
+.TurningPointSplashTitle {
+  font-size: 1rem;
+}
+
+.TurningPointSplash {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: linear-gradient(90deg, #000000 0%, #000000 40.3%, rgba(0, 0, 0, 0) 77.6%, rgba(0, 0, 0, 0) 100%);
+}
+
+.TurningPointSplashContent {
+  max-width: 40vw;
+  text-align: start;
+  font-size: 3.5rem;
+  margin: 3rem 0 17rem 5rem;
+}
+
+.TurningPointSplashBody {
+  margin-top: 12.5rem;
+}

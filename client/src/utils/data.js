@@ -1,6 +1,9 @@
 // Data manipulation utility functions
 // - used primarily for transforming datasets to be used by Chart.JS graphs
+// as well as data manipulation and analysis for turning points in the game
 
+// return object that contains sum of gold of all players on each team every minute,
+// as well as the gold difference between the net gold of each team
 function getTeamGoldData(gameData) {
   let gameFrames = gameData.timelineData.frames;
 
@@ -77,6 +80,7 @@ function sortGoldSwingsMagnitude(goldSwingsArray) {
   return sortedGoldSwings;
 }
 
+// sort the gold swings array by timestamp
 function sortGoldSwingsTime(goldSwingsArray) {
   const sortedGoldSwings = goldSwingsArray.sort(sortByGoldDiffTime);
 
@@ -87,7 +91,7 @@ function sortGoldSwingsTime(goldSwingsArray) {
   return sortedGoldSwings;
 }
 
-// get top N gold swings and sort them by chronological order
+// get top N gold swings and sort them by magnitude and then chronological order
 function getTopNGoldSwings(goldSwingsArray, n) {
   const sortedGoldSwings = sortGoldSwingsMagnitude(goldSwingsArray);
   const topNGoldSwings =  sortGoldSwingsTime(sortedGoldSwings.slice(0, n));
@@ -95,12 +99,11 @@ function getTopNGoldSwings(goldSwingsArray, n) {
   return topNGoldSwings;
 }
 
-function isGoldSwingATurningPoint(currGameObj, endingMin) {
-    const timelineData = currGameObj.timelineData;
-
-    const timelineArr = convertFramesToTimelineObj(timelineData.frames);
-
-    const currTimelineObj = timelineArr[endingMin];
+// determines whether gold swing is a turning point based on if there are any
+// interesting events occurring during that minute (ex. player kills, neutral
+// objectives taken, towers taken)
+function isGoldSwingATurningPoint(currGameObj, goldSwingData) {
+    const currTimelineObj = getTimelineObjFromGameObj(currGameObj, goldSwingData);
     const champKillsArr = currTimelineObj.CHAMPION_KILL;
     const objectiveKillsArr = currTimelineObj.ELITE_MONSTER_KILL;
     const buildingKillsArr = currTimelineObj.BUILDING_KILL;
@@ -110,19 +113,62 @@ function isGoldSwingATurningPoint(currGameObj, endingMin) {
     return isTurningPoint;
 }
 
+// reduce gold swings array by turning point criteria
 function filterTurningPoints(currGameObj, goldSwingsArray) {
-  const turningPoints = goldSwingsArray.filter(goldSwing => 
-    isGoldSwingATurningPoint(currGameObj, (goldSwing.startingMinute + 1)));
+  const turningPoints = goldSwingsArray.filter(goldSwingData => 
+    isGoldSwingATurningPoint(currGameObj, goldSwingData));
 
   return turningPoints;
 }
 
+// overall function used to get top 3 turning points in the game
 function getTurningPoints(currGameObj) {
   const goldSwings = getGoldSwings(currGameObj);
   const top3GoldSwings = getTopNGoldSwings(goldSwings, 3);
   const turningPoints = filterTurningPoints(currGameObj, top3GoldSwings);
 
   return turningPoints;
+}
+
+// function used to extract timeline data from a particular game and
+// minute where a gold swing occurred
+function getTimelineObjFromGameObj(currGameObj, goldSwingData) {
+  const timelineData = currGameObj.timelineData;
+
+  const timelineArr = convertFramesToTimelineObj(timelineData.frames);
+
+  const endingMin = goldSwingData.startingMinute + 1;
+
+  const currTimelineObj = timelineArr[endingMin];
+
+  return currTimelineObj;
+}
+
+// returns dictionary with key of participantId that corresponds to object with championId
+// and teamId of the participant
+function getPlayerTeamObjFromCurrGameObj(currGameObj) {
+  const participants = currGameObj.gameStats.participants;
+
+  const playerObjReduced = {}; 
+
+  const convParticpantObj = function({participantId, teamId, championId}) {
+    playerObjReduced[participantId] = {
+      teamId,
+      championId,
+    };
+  }
+
+  for(let i = 0; i < participants.length; i++) {
+    const participantData = participants[i];
+
+    convParticpantObj(participantData);
+  }
+
+  return playerObjReduced;
+
+  // return participants.map(({participantId, teamId, championId}) => {
+  //   return {participantId, teamId, championId};
+  // });
 }
 
 // pass in timelineData.frames as input
@@ -234,6 +280,10 @@ module.exports.isGoldSwingATurningPoint = isGoldSwingATurningPoint;
 module.exports.filterTurningPoints = filterTurningPoints;
 
 module.exports.getTurningPoints = getTurningPoints;
+
+module.exports.getPlayerTeamObjFromCurrGameObj = getPlayerTeamObjFromCurrGameObj;
+
+module.exports.getTimelineObjFromGameObj = getTimelineObjFromGameObj;
 
 module.exports.calculateAvgXpPerMin = calculateAvgXpPerMin;
 

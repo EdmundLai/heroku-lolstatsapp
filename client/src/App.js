@@ -10,8 +10,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
 
-
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +30,7 @@ class App extends React.Component {
 
   // changed to handle errors as well as valid data
   updateState(httpCode, data) {
-    console.log(data);
+    // console.log(data);
     if(httpCode === 200) {
       let statsObj = data;
       let newGameID = null;

@@ -11,26 +11,29 @@ import './TimelineCard.css';
 // STATUS: TimelineCard reworked without dropdown menu which was causing the issue
 class TimelineCard extends React.Component {
   render() {
-    const currGameObj = this.props.currGameObj;
-    const timelineData = currGameObj.timelineData;
-    const gameStats = currGameObj.gameStats;
+    const { currGameObj, goldSwingData } = this.props;
     const currPlayerId = currGameObj.playerStats.participantId;
 
-    const timelineArr = DataUtil.convertFramesToTimelineObj(timelineData.frames);
-
-    const playerTeamObj = convertParticipantArrToPlayerTeamObj(gameStats.participants);
+    const playerTeamObj = DataUtil.getPlayerTeamObjFromCurrGameObj(currGameObj);
 
     const currPlayerTeamId = playerTeamObj[currPlayerId].teamId;
+
+    const currTimelineObj = DataUtil.getTimelineObjFromGameObj(currGameObj, goldSwingData);
+    const champKillsArr = currTimelineObj.CHAMPION_KILL;
 
     // console.log(timelineArr);
     // console.log("playerTeamData")
     // console.log(playerTeamObj);
 
-    const currTimelineObj = timelineArr[this.props.endingMin];
-    const champKillsArr = currTimelineObj.CHAMPION_KILL;
     // FOR LATER USE
     // const objectiveKillsArr = currTimelineObj.ELITE_MONSTER_KILL;
     // const buildingKillsArr = currTimelineObj.BUILDING_KILL;
+
+    // console.log("objectiveKillsArr:");
+    // console.log(objectiveKillsArr);
+
+    // console.log("buildingKillsArr:");
+    // console.log(buildingKillsArr);
 
     // for testing purposes
     // console.log(timelineArr);
@@ -104,31 +107,5 @@ function showChampImgFromChampId(championId) {
   // shows if the champion cannot be found in ChampKeys
   return <img className="ChampionKillImg" src="" alt={champion} />;
 }
-
-function convertParticipantArrToPlayerTeamObj(participants) {
-
-  const playerObjReduced = {}; 
-
-  const convParticpantObj = function({participantId, teamId, championId}) {
-    playerObjReduced[participantId] = {
-      teamId,
-      championId,
-    };
-  }
-
-  for(let i = 0; i < participants.length; i++) {
-    const participantData = participants[i];
-
-    convParticpantObj(participantData);
-  }
-
-  return playerObjReduced;
-
-  // return participants.map(({participantId, teamId, championId}) => {
-  //   return {participantId, teamId, championId};
-  // });
-}
-
-
 
 export default TimelineCard;
