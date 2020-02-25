@@ -6,7 +6,7 @@
   background-color: #111B1F;
 }
 
-.KillCardContainer {
+.ChampionKillCardContainer, .ObjectiveKillCardContainer {
   display: flex;
   align-items: center;
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import TimelineCard from '../TimelineCard/TimelineCard';
 import DataUtil from '../../utils/data';
 import ImgHostURL from '../../resources/ImgHostUrl';
+import ChampKeys from '../../resources/ChampKeys';
 
 import './GameAnalysisSection.css';
 
@@ -75,8 +76,7 @@ function TurningPointSplash(props) {
 
   // console.log(numKillsObj);
 
-  // TODO: need to pick a champion to select for the splash background
-  const champion = "Ashe"; // placeholder champion
+  const champion = getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwingTeamId);
 
   const statsCardStyle = {
     backgroundImage: `url(${ImgHostURL}/splash/${champion}_0.jpg)`,
@@ -113,6 +113,54 @@ function TurningPointSplash(props) {
       </div>
     </div>
   );
+}
+
+// gets champion name for player that killed most players on team that had the favorable gold swing
+// if no players are found, or if champKillsArr is empty, pick a random player on goldSwingTeam
+function getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwingTeamId) {
+  const killerDict = {};
+
+  for(let i = 0; i < champKillsArr.length; i++) {
+    const killerId = champKillsArr[i].killerId;
+
+    if(playerTeamObj[killerId].teamId === goldSwingTeamId) {
+      if(killerDict.hasOwnProperty(killerId)) {
+        killerDict[killerId] += 1;
+      } else {
+        killerDict[killerId] = 0;
+      }
+    }
+  }
+
+  const killerArr = [];
+
+  if(Object.keys(killerDict).length > 0) {
+    for(const killerId in killerDict) {
+      killerArr.push([killerId, killerDict[killerId]])
+    }
+
+    const mvpId = killerArr.sort(sortByValueDesc)[0][0];
+
+    const mvpChampionId = playerTeamObj[mvpId].championId;
+
+    return ChampKeys[mvpChampionId];
+
+    function sortByValueDesc(a, b) {
+      return b[1] - a[1];
+    }
+  }
+
+  function getRandomIntInclusive(min, max) {
+    const roundedMin = Math.ceil(min);
+    const roundedMax = Math.floor(max);
+    return Math.floor(Math.random() * (roundedMax - roundedMin + 1));
+  }
+
+  const mvpId = goldSwingTeamId === 100 ? getRandomIntInclusive(1, 5) : getRandomIntInclusive(6, 10);
+
+  const mvpChampionId = playerTeamObj[mvpId].championId;
+
+  return ChampKeys[mvpChampionId];
 }
 
 // only supports strings with length 1-3
