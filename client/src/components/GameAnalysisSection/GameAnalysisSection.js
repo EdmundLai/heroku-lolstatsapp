@@ -22,6 +22,7 @@ function GameAnalysisSection(props) {
           <div key={goldSwingData.startingMinute} className="GoldSwingData">
             <TurningPointSplash currGameObj={currGameObj} turningPointIndex={index} goldSwingData={goldSwingData} />
             <TimelineCard currGameObj={currGameObj} goldSwingData={goldSwingData} />
+            <KillContributorsCard currGameObj={currGameObj} goldSwingData={goldSwingData} />
           </div>
         );
       })}
@@ -113,6 +114,148 @@ function TurningPointSplash(props) {
       </div>
     </div>
   );
+}
+
+function KillContributorsCard(props) {
+  const { currGameObj, goldSwingData } = props;
+
+  // console.log(currGameObj);
+
+  const playerTeamObj = DataUtil.getPlayerTeamObjFromCurrGameObj(currGameObj);
+
+  // const playerId = currGameObj.playerStats.participantId;
+
+  // const playerTeamId = playerTeamObj[playerId].teamId;
+
+  // console.log(playerTeamObj);
+
+  const currTimelineObj = DataUtil.getTimelineObjFromGameObj(currGameObj, goldSwingData);
+
+  const champKillsArr = currTimelineObj.CHAMPION_KILL;
+
+  // console.log(champKillsArr);
+
+  const contributorsDataObj = getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldSwingData);
+
+  console.log(contributorsDataObj);
+
+  return(
+    <div className="KillContributorsCard">
+
+    </div>
+  );
+}
+
+// extracting relevant contributor data for use in Kill Contributors Card
+function getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldSwingData){
+
+  const contributorsDataObj = {
+    100: {
+    },
+    200: {
+    },
+  }
+
+  // iterate through champKillsArr to add kill and death stats
+  for(let i = 0; i < champKillsArr.length; i++) {
+    const champKillObj = champKillsArr[i];
+
+    const { assistingParticipantIds, killerId, victimId } = champKillObj;
+    
+    for(let j = 0; j < assistingParticipantIds.length; j++) {
+      const assistPlayerId = assistingParticipantIds[j];
+
+      const assistPlayerTeamId = playerTeamObj[assistPlayerId].teamId;
+
+      if(contributorsDataObj[assistPlayerTeamId].hasOwnProperty(assistPlayerId)) {
+        contributorsDataObj[assistPlayerTeamId][assistPlayerId].assists += 1;
+      } else {
+        contributorsDataObj[assistPlayerTeamId][assistPlayerId] = {
+          kills: 0,
+          assists: 1,
+          survived: true,
+          goldDelta: 0,
+          xpDelta: 0,
+        };
+      }
+    }
+
+    if(playerTeamObj.hasOwnProperty(killerId)) {
+      const killerTeamId = playerTeamObj[killerId].teamId;
+
+      if(contributorsDataObj[killerTeamId].hasOwnProperty(killerId)) {
+        contributorsDataObj[killerTeamId][killerId].kills += 1;
+      } else {
+        contributorsDataObj[killerTeamId][killerId] = {
+          kills: 1,
+          assists: 0,
+          survived: true,
+          goldDelta: 0,
+          xpDelta: 0,
+        };
+      }
+    }
+
+    const victimTeamId = playerTeamObj[victimId].teamId;
+
+    if(contributorsDataObj[victimTeamId].hasOwnProperty(victimId)) {
+      contributorsDataObj[victimTeamId][victimId].survived = false;
+    } else {
+      contributorsDataObj[victimTeamId][victimId] = {
+        kills: 0,
+        assists: 0,
+        survived: false,
+        goldDelta: 0,
+        xpDelta: 0,
+      };
+    }
+  }
+
+  const startingMinute = goldSwingData.startingMinute;
+
+  // adding gold and xp deltas of 1 min intervals to contributorsDataObj
+  for(const teamId in contributorsDataObj) {
+    const teamObj = contributorsDataObj[teamId];
+    for(const participantId in teamObj) {
+      // console.log(participantId);
+      const { xpDelta, goldDelta } = getGoldAndExpDiffForParticipantId(currGameObj, participantId, startingMinute);
+
+      teamObj[participantId].xpDelta = xpDelta;
+      teamObj[participantId].goldDelta = goldDelta;
+    }
+  }
+
+  return contributorsDataObj;
+}
+
+function getGoldAndExpDiffForParticipantId(currGameObj, participantId, startingMinute) {
+  const timelineData = currGameObj.timelineData;
+
+  const endingMinute = startingMinute + 1;
+
+  const startingFrame = getParticipantFrameObj(timelineData.frames[startingMinute].participantFrames, participantId);
+  const endingFrame = getParticipantFrameObj(timelineData.frames[endingMinute].participantFrames, participantId);
+
+  return {
+    xpDelta: endingFrame.xp -startingFrame.xp,
+    goldDelta: endingFrame.totalGold - startingFrame.totalGold,
+  };
+}
+
+// get participantFrameObj corresponding to participantId from participantFrames at particular minute
+function getParticipantFrameObj(participantFrames, participantId) {
+
+  const frameKeys = Object.keys(participantFrames);
+
+  for(let frameIndex = 0; frameIndex < frameKeys.length; frameIndex++) {
+    const frameKey = frameKeys[frameIndex];
+
+    const participantFrameObj = participantFrames[frameKey];
+
+    if(participantFrameObj.participantId === parseInt(participantId)) {
+      return participantFrameObj;
+    }
+  }
 }
 
 // gets champion name for player that killed most players on team that had the favorable gold swing
