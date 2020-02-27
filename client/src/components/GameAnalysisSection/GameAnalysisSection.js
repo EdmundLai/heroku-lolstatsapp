@@ -123,9 +123,9 @@ function KillContributorsCard(props) {
 
   const playerTeamObj = DataUtil.getPlayerTeamObjFromCurrGameObj(currGameObj);
 
-  // const playerId = currGameObj.playerStats.participantId;
+  const playerId = currGameObj.playerStats.participantId;
 
-  // const playerTeamId = playerTeamObj[playerId].teamId;
+  const playerTeamId = playerTeamObj[playerId].teamId;
 
   // console.log(playerTeamObj);
 
@@ -139,11 +139,106 @@ function KillContributorsCard(props) {
 
   console.log(contributorsDataObj);
 
+  const enemyTeamId = playerTeamId === "100" ? "200" : "100";
+
+  const enemyTeamContributors = contributorsDataObj[enemyTeamId];
+  const allyTeamContributors = contributorsDataObj[playerTeamId];
+
   return(
     <div className="KillContributorsCard">
-
+      <div className="EnemyContributorsCard">
+        <div className="EnemyContributorsTitle">
+          ENEMY CONTRIBUTORS
+        </div>
+        {
+          Object.keys(enemyTeamContributors).map(participantId => {
+            return(
+              <KillContributorInfo 
+              teamId={enemyTeamId} 
+              playerTeamObj={playerTeamObj} 
+              teamContributors={enemyTeamContributors}
+              participantId={participantId}
+              />
+            );
+          })
+        }
+      </div>
+      <div className="AllyContributorsCard">
+        <div className="AllyContributorsTitle">
+          ALLY CONTRIBUTORS
+        </div>
+        {
+          Object.keys(allyTeamContributors).map(participantId => {
+            return(
+              <KillContributorInfo 
+              teamId={playerTeamId} 
+              playerTeamObj={playerTeamObj} 
+              teamContributors={allyTeamContributors}
+              participantId={participantId}
+              />
+            );
+          })
+        }
+      </div>
     </div>
   );
+}
+
+function KillContributorInfo(props) {
+  const { teamId, playerTeamObj, teamContributors, participantId } = props;
+
+  const playerDataObj = teamContributors[participantId];
+
+  console.log(playerDataObj);
+
+  const championId = playerTeamObj[participantId].championId;
+
+  const championImg = showContributorImgFromChampId(championId);
+
+  const survivedStatus = playerDataObj.survived ? "SURVIVED" : "DIED";
+
+  return(
+    <div className="KillContributorInfo">
+      {championImg}
+      <div className="ContributorDesciption">
+        <div className="ContributorChampionName">
+          {ChampKeys[championId]}
+        </div>
+        <div className="ContributorKillData">
+          <div className="ContributorKillsAssists">
+            {`${playerDataObj.kills} KILLS ${playerDataObj.assists} ASSISTS`}
+          </div>
+          <div className="ContributorSurvivedStatus">
+            {survivedStatus}
+          </div>
+        </div>
+        <div className="ContributorGoldXPData">
+          <div className="ContributorGoldData">
+            <span className="ContributorGoldXPDescription">Gold Earned: </span>
+            {playerDataObj.goldDelta}
+          </div>
+          <div className="ContributorXPData">
+            <span className="ContributorGoldXPDescription">Experience Gained: </span>
+            {playerDataObj.xpDelta}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// gets the champion image from champion Id
+function showContributorImgFromChampId(championId) {
+  var champion = championId;
+
+  if(ChampKeys.hasOwnProperty(championId)) {
+    champion = ChampKeys[championId];
+    return <img className="ContributorKillImg" src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
+  }
+
+  // shows if the champion cannot be found in ChampKeys
+  return <img className="ContributorKillImg" src="" alt={champion} />;
 }
 
 // extracting relevant contributor data for use in Kill Contributors Card
