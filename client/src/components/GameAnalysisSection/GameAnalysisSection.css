@@ -42,3 +42,75 @@
 .TurningPointSplashBody {
   margin-top: 12.5rem;
 }
+.KillContributorsCard {
+  background-color: #111b1f;
+  padding: 3rem 0 3rem 0;
+}
+
+.EnemyContributorsCard, .AllyContributorsCard {
+  padding: 2rem 0 2rem 2rem;
+}
+
+.EnemyContributorsTitle, .AllyContributorsTitle {
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.ContributorChampionName {
+  font-size: 1.5rem;
+}
+
+.ContributorKillImg {
+  width: 120px;
+  height: 120px;
+  border-radius: 100px;
+  margin-right: 2rem;
+}
+
+.KillContributorInfo {
+  display: flex;
+  margin-right: 3rem;
+  margin-top: 2rem;
+}
+
+.KillContributorContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ContributorDescription {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.ContributorKillData {
+  display: flex;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.ContributorKillsAssists {
+  margin-right: 0.75rem;
+}
+
+.ContributorGoldXPData {
+  font-size: 0.75rem;
+}
+
+.ContributorGoldData, .ContributorXPData {
+  margin-top: 0.5rem;
+}
+
+.SurvivedPlayerText {
+  color: #45da43;
+}
+
+.KilledPlayerText {
+  color:#E24242;
+}
+
+.ContributorGoldXPDescription {
+  color: #585f62;
+}

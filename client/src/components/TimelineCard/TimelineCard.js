@@ -107,6 +107,11 @@ function ObjectiveKillCardContainer(props) {
 
   const killerId = objectiveKillObj.killerId;
 
+  // neutral monster despawns or killed by neutral are not valid
+  if(killerId === 0) {
+    return <></>;
+  }
+
   const killerTeam = playerTeamObj[killerId].teamId === currPlayerTeamId ? "BlueTeamKill" : "RedTeamKill";
 
   const killerChampId = playerTeamObj[killerId].championId;

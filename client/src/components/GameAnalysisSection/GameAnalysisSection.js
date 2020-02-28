@@ -137,7 +137,7 @@ function KillContributorsCard(props) {
 
   const contributorsDataObj = getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldSwingData);
 
-  console.log(contributorsDataObj);
+  // console.log(contributorsDataObj);
 
   const enemyTeamId = playerTeamId === "100" ? "200" : "100";
 
@@ -150,46 +150,52 @@ function KillContributorsCard(props) {
         <div className="EnemyContributorsTitle">
           ENEMY CONTRIBUTORS
         </div>
-        {
-          Object.keys(enemyTeamContributors).map(participantId => {
-            return(
-              <KillContributorInfo 
-              teamId={enemyTeamId} 
-              playerTeamObj={playerTeamObj} 
-              teamContributors={enemyTeamContributors}
-              participantId={participantId}
-              />
-            );
-          })
-        }
+        <div className="KillContributorContent">
+          {
+            Object.keys(enemyTeamContributors).map(participantId => {
+              return(
+                <KillContributorInfo 
+                teamId={enemyTeamId} 
+                playerTeamObj={playerTeamObj} 
+                teamContributors={enemyTeamContributors}
+                participantId={participantId}
+                playerTeamId={playerTeamId}
+                />
+              );
+            })
+          }
+        </div>
       </div>
       <div className="AllyContributorsCard">
         <div className="AllyContributorsTitle">
           ALLY CONTRIBUTORS
         </div>
-        {
-          Object.keys(allyTeamContributors).map(participantId => {
-            return(
-              <KillContributorInfo 
-              teamId={playerTeamId} 
-              playerTeamObj={playerTeamObj} 
-              teamContributors={allyTeamContributors}
-              participantId={participantId}
-              />
-            );
-          })
-        }
+        <div className="KillContributorContent">
+          {
+            Object.keys(allyTeamContributors).map(participantId => {
+              return(
+                <KillContributorInfo 
+                teamId={playerTeamId} 
+                playerTeamObj={playerTeamObj} 
+                teamContributors={allyTeamContributors}
+                participantId={participantId}
+                playerTeamId={playerTeamId}
+                />
+              );
+            })
+          }
+        </div>
       </div>
     </div>
   );
 }
 
 function KillContributorInfo(props) {
-  const { teamId, playerTeamObj, teamContributors, participantId } = props;
+  const { teamId, playerTeamObj, teamContributors, participantId, playerTeamId } = props;
 
   const playerDataObj = teamContributors[participantId];
 
-  console.log(playerDataObj);
+  // console.log(playerDataObj);
 
   const championId = playerTeamObj[participantId].championId;
 
@@ -197,18 +203,26 @@ function KillContributorInfo(props) {
 
   const survivedStatus = playerDataObj.survived ? "SURVIVED" : "DIED";
 
+  const survivedClassText = playerDataObj.survived ? "SurvivedPlayerText" : "KilledPlayerText";
+
+  const championNameTextType = teamId === playerTeamId ? "AllyTeamText" : "EnemyTeamText";
+
+  const champion = ChampKeys[championId];
+
+  const champName = champion.match(/[A-Z][a-z]+/g).join(" ");
+
   return(
     <div className="KillContributorInfo">
       {championImg}
-      <div className="ContributorDesciption">
-        <div className="ContributorChampionName">
-          {ChampKeys[championId]}
+      <div className="ContributorDescription">
+        <div className={`ContributorChampionName ${championNameTextType}`}>
+          {champName}
         </div>
         <div className="ContributorKillData">
           <div className="ContributorKillsAssists">
-            {`${playerDataObj.kills} KILLS ${playerDataObj.assists} ASSISTS`}
+            {`${playerDataObj.kills} KILLS    ${playerDataObj.assists} ASSISTS`}
           </div>
-          <div className="ContributorSurvivedStatus">
+          <div className={`ContributorSurvivedStatus ${survivedClassText}`}>
             {survivedStatus}
           </div>
         </div>
@@ -463,11 +477,15 @@ function getObjectivesTakenByMinute(objectiveKillsArr, playerTeamObj) {
   for(let i = 0; i < objectiveKillsArr.length; i++) {
     const objectiveKill = objectiveKillsArr[i];
 
-    const killerTeamId = playerTeamObj[objectiveKill.killerId].teamId;
+    const killerId = objectiveKill.killerId;
 
-    if(numObjectivesObj.hasOwnProperty(killerTeamId)) {
-      numObjectivesObj[killerTeamId].total += 1;
-      numObjectivesObj[killerTeamId][objectiveKill.monsterType] += 1;
+    if(killerId !== 0) {
+      const killerTeamId = playerTeamObj[killerId].teamId;
+
+      if(numObjectivesObj.hasOwnProperty(killerTeamId)) {
+        numObjectivesObj[killerTeamId].total += 1;
+        numObjectivesObj[killerTeamId][objectiveKill.monsterType] += 1;
+      }
     }
   }
 
