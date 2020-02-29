@@ -119,6 +119,8 @@ function TurningPointSplash(props) {
 function KillContributorsCard(props) {
   const { currGameObj, goldSwingData } = props;
 
+  const startingMinute = goldSwingData.startingMinute;
+
   // console.log(currGameObj);
 
   const playerTeamObj = DataUtil.getPlayerTeamObjFromCurrGameObj(currGameObj);
@@ -153,8 +155,11 @@ function KillContributorsCard(props) {
         <div className="KillContributorContent">
           {
             Object.keys(enemyTeamContributors).map(participantId => {
+              const infoKey = `00${startingMinute}00${participantId}`;
+
               return(
                 <KillContributorInfo 
+                key={infoKey}
                 teamId={enemyTeamId} 
                 playerTeamObj={playerTeamObj} 
                 teamContributors={enemyTeamContributors}
@@ -173,8 +178,11 @@ function KillContributorsCard(props) {
         <div className="KillContributorContent">
           {
             Object.keys(allyTeamContributors).map(participantId => {
+              const infoKey = `00${startingMinute}00${participantId}`;
+
               return(
                 <KillContributorInfo 
+                key={infoKey}
                 teamId={playerTeamId} 
                 playerTeamObj={playerTeamObj} 
                 teamContributors={allyTeamContributors}
@@ -375,11 +383,13 @@ function getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwin
   for(let i = 0; i < champKillsArr.length; i++) {
     const killerId = champKillsArr[i].killerId;
 
-    if(playerTeamObj[killerId].teamId === goldSwingTeamId) {
-      if(killerDict.hasOwnProperty(killerId)) {
-        killerDict[killerId] += 1;
-      } else {
-        killerDict[killerId] = 0;
+    if(playerTeamObj.hasOwnProperty(killerId)) {
+      if(playerTeamObj[killerId].teamId === goldSwingTeamId) {
+        if(killerDict.hasOwnProperty(killerId)) {
+          killerDict[killerId] += 1;
+        } else {
+          killerDict[killerId] = 0;
+        }
       }
     }
   }
@@ -499,13 +509,13 @@ function getNumKillsFromEachTeamByMinute(champKillsArr, playerTeamObj) {
     200: 0,
   };
 
+  // console.log(champKillsArr);
+
   for(let i = 0; i < champKillsArr.length; i++) {
     const killerId = champKillsArr[i].killerId;
 
-
-    const killerTeamId = playerTeamObj[killerId].teamId;
-
-    if(numKillsObj.hasOwnProperty(killerTeamId)) {
+    if(playerTeamObj.hasOwnProperty(killerId)) {
+      const killerTeamId = playerTeamObj[killerId].teamId;
       numKillsObj[killerTeamId] += 1;
     }
   }
