@@ -415,7 +415,7 @@ function getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwin
   function getRandomIntInclusive(min, max) {
     const roundedMin = Math.ceil(min);
     const roundedMax = Math.floor(max);
-    return Math.floor(Math.random() * (roundedMax - roundedMin + 1));
+    return Math.floor(Math.random() * (roundedMax - roundedMin + 1)) + min;
   }
 
   const mvpId = goldSwingTeamId === 100 ? getRandomIntInclusive(1, 5) : getRandomIntInclusive(6, 10);
