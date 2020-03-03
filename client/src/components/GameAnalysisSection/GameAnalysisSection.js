@@ -50,6 +50,8 @@ function TurningPointsSummaryCard(props) {
 function TurningPointSplash(props) {
   const { turningPointIndex, currGameObj, goldSwingData } = props;
 
+  // console.log(currGameObj.timelineData);
+
   const currTimelineObj = DataUtil.getTimelineObjFromGameObj(currGameObj, goldSwingData);
 
   const playerTeamObj = DataUtil.getPlayerTeamObjFromCurrGameObj(currGameObj);
@@ -65,7 +67,7 @@ function TurningPointSplash(props) {
 
   const champKillsArr = currTimelineObj.CHAMPION_KILL;
   const objectiveKillsArr = currTimelineObj.ELITE_MONSTER_KILL;
-  // const buildingKillsArr = currTimelineObj.BUILDING_KILL;
+  const buildingKillsArr = currTimelineObj.BUILDING_KILL;
 
   const goldSwingTeamId = goldSwingData.goldDiffDelta > 0 ? 100 : 200;
 
@@ -89,13 +91,25 @@ function TurningPointSplash(props) {
   const goldSwingWinTeam = goldSwingTeamId === playerTeamId ? "your team" : "the enemy team";
   const teamTextType = goldSwingTeamId === playerTeamId ? "AllyTeamText" : "EnemyTeamText";
 
-  const killOutputString = `killed ${numKillsObj[goldSwingTeamId]} champions`;
+  let killOutputString = "";
+
+  if(numKillsObj[goldSwingTeamId] !== 0) {
+    if(numKillsObj[goldSwingTeamId] === 1) {
+      killOutputString = `killed ${numKillsObj[goldSwingTeamId]} champion`;
+    } else {
+      killOutputString = `killed ${numKillsObj[goldSwingTeamId]} champions`;
+    }
+  }
 
   const numObjectivesObj = getObjectivesTakenByMinute(objectiveKillsArr, playerTeamObj);
 
   const objectivesTakenOutputString = createObjectivesTakenString(numObjectivesObj, goldSwingTeamId);
 
-  const eventsSummary = formatStringsWithAnd([killOutputString, objectivesTakenOutputString]);
+  const numBuildingKillsObj = getBuildingKillsByMinute(buildingKillsArr, playerTeamObj);
+
+  const buildingKillsOutputString = createBuildingKillsOutputString(numBuildingKillsObj, goldSwingTeamId);
+
+  const eventsSummary = formatStringsWithAnd([killOutputString, objectivesTakenOutputString, buildingKillsOutputString]);
 
   return(
     <div className="TurningPointSplashBackground" style={statsCardStyle}>
@@ -145,6 +159,12 @@ function KillContributorsCard(props) {
 
   const enemyTeamContributors = contributorsDataObj[enemyTeamId];
   const allyTeamContributors = contributorsDataObj[playerTeamId];
+
+  if(Object.keys(enemyTeamContributors).length === 0 && Object.keys(allyTeamContributors).length === 0){
+    return(
+      <></>
+    );
+  }
 
   return(
     <div className="KillContributorsCard">
@@ -377,6 +397,7 @@ function getParticipantFrameObj(participantFrames, participantId) {
 
 // gets champion name for player that killed most players on team that had the favorable gold swing
 // if no players are found, or if champKillsArr is empty, pick a random player on goldSwingTeam
+// TODO: Improve algorithm to take into account neutral objective kills and towers taken
 function getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwingTeamId) {
   const killerDict = {};
 
@@ -464,6 +485,63 @@ function createObjectivesTakenString(numObjectivesObj, killerTeamId) {
   const outputString = "took " + formatStringsWithAnd(objectivesArr);
 
   return outputString;
+}
+
+function createBuildingKillsOutputString(numBuildingKillsObj, goldSwingTeamId) {
+  let buildingKillsOutputString = "";
+
+  const teamBuildingKillsObj = numBuildingKillsObj[goldSwingTeamId];
+
+  if(teamBuildingKillsObj.TOWER_BUILDING !== 0 || 
+    teamBuildingKillsObj.INHIBITOR_BUILDING !== 0) {
+      let towerOutputString;
+      if(teamBuildingKillsObj.TOWER_BUILDING === 0) {
+        towerOutputString = "";
+      } else if(teamBuildingKillsObj.TOWER_BUILDING === 1) {
+        towerOutputString = `${teamBuildingKillsObj.TOWER_BUILDING} tower`;
+      } else {
+        towerOutputString = `${teamBuildingKillsObj.TOWER_BUILDING} towers`;
+      }
+
+      let inhibitorOutputString;
+
+      if(teamBuildingKillsObj.INHIBITOR_BUILDING === 0) {
+        inhibitorOutputString = "";
+      } else if(teamBuildingKillsObj.INHIBITOR_BUILDING === 1) {
+        inhibitorOutputString = `${teamBuildingKillsObj.INHIBITOR_BUILDING} inhibitor`;
+      } else {
+        inhibitorOutputString = `${teamBuildingKillsObj.INHIBITOR_BUILDING} inhibitors`;
+      }
+
+      const gameObjectiveString = formatStringsWithAnd([towerOutputString, inhibitorOutputString]);
+      
+      buildingKillsOutputString = `destroyed ${gameObjectiveString}`;
+  }
+
+  return buildingKillsOutputString;
+}
+
+function getBuildingKillsByMinute(buildingKillsArr, playerTeamObj) {
+  const numBuildingKillsObj ={
+    100: {
+      TOWER_BUILDING: 0,
+      INHIBITOR_BUILDING: 0,
+    },
+    200: {
+      TOWER_BUILDING: 0,
+      INHIBITOR_BUILDING: 0,
+    },
+  }
+
+  for(let i = 0; i < buildingKillsArr.length; i++) {
+    const buildingKillObj = buildingKillsArr[i];
+
+    const killerTeamId = buildingKillObj.teamId === 100 ? "200" : "100";
+
+    numBuildingKillsObj[killerTeamId][buildingKillObj.buildingType] += 1;
+  }
+
+  return numBuildingKillsObj;
 }
 
 // processing objectiveKillsArr to get objectives killed by each team
