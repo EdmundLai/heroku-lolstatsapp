@@ -4,8 +4,6 @@ import OverviewCard from '../OverviewCard/OverviewCard';
 import StatsCard from '../StatsCard/StatsCard';
 import EndMessageCard from '../EndMessageCard/EndMessageCard';
 import GraphContainer from '../GraphContainer/GraphContainer';
-// import TimelineCard from '../TimelineCard/TimelineCard';
-// import GoldDiffContainer from '../GoldDiffContainer/GoldDiffContainer';
 import GameAnalysisSection from '../GameAnalysisSection/GameAnalysisSection';
 
 const QueueDict = {
@@ -17,9 +15,7 @@ const QueueDict = {
 
 class DynamicStatsContent extends React.Component {
   render() {
-    const statsObj = this.props.statsObj;
-    const queueType = this.props.queueType;
-    const isMobile = this.props.isMobile;
+    const { statsObj, queueType, isMobile } = this.props;
     // console.log(statsObj);
 
     // handle error case first
@@ -35,8 +31,8 @@ class DynamicStatsContent extends React.Component {
     // OverviewCard - done
     // MessageToPlayer
     // StatsCard - done
-    // GraphCard
-    // TurningPointsSection
+    // GraphCard - done
+    // TurningPointsSection - done
     // TipsCard
     // EndMessageCard - done
 
@@ -57,10 +53,8 @@ class DynamicStatsContent extends React.Component {
           />
           <OverviewCard currGameObj={currGameObj} isMobile={isMobile}/>
           <StatsCard currGameObj={currGameObj} isMobile={isMobile}/>
-          <GraphContainer statsObj={currGameObj} />
-          {/* <TimelineCard currGameObj={currGameObj} /> */}
-          <GameAnalysisSection currGameObj={currGameObj} />
-          {/* <GoldDiffContainer currGameObj={currGameObj} /> */}
+          <GraphContainer statsObj={currGameObj} isMobile={isMobile}/>
+          <GameAnalysisSection currGameObj={currGameObj} isMobile={isMobile} />
           <EndMessageCard isMobile={isMobile} />
         </>
       );

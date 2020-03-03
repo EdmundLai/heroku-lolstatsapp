@@ -39,9 +39,13 @@ class GraphContainer extends React.Component {
     const GoldTabActive = this.state.activeTab === "gold" ? "ActiveTab" : "";
     const ExpTabActive = this.state.activeTab === "exp" ? "ActiveTab" : "";
 
+    const isMobile = this.props.isMobile;
+
+    const tabListType = isMobile ? "TabListMobile" : "TabList";
+
     return(
       <div className="GraphContainer">
-        <div className="TabList">
+        <div className={tabListType}>
           <ul>
             <li>
               <a className={GoldTabActive} href="/#" onClick={this.setTabToGold}>Gold Graph</a>

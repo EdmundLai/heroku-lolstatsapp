@@ -1,13 +1,14 @@
 import React from 'react';
 import TimelineCard from '../TimelineCard/TimelineCard';
 import DataUtil from '../../utils/data';
+// import ImageUtil from '../../utils/image';
 import ImgHostURL from '../../resources/ImgHostUrl';
 import ChampKeys from '../../resources/ChampKeys';
 
 import './GameAnalysisSection.css';
 
 function GameAnalysisSection(props) {
-  const currGameObj = props.currGameObj;
+  const { currGameObj, isMobile } = props;
 
   // console.log(currGameObj);
 
@@ -15,14 +16,30 @@ function GameAnalysisSection(props) {
 
   return(
     <div className="GameAnalysisSection">
-      {/* Analysis Overview Card - TODO */}
-      <TurningPointsSummaryCard currGameObj={currGameObj} numTurningPoints={turningPoints.length} />
+      <TurningPointsSummaryCard 
+      currGameObj={currGameObj} 
+      numTurningPoints={turningPoints.length}
+      isMobile={isMobile}
+      />
       {turningPoints.map((goldSwingData, index) => {
         return(
           <div key={goldSwingData.startingMinute} className="GoldSwingData">
-            <TurningPointSplash currGameObj={currGameObj} turningPointIndex={index} goldSwingData={goldSwingData} />
-            <TimelineCard currGameObj={currGameObj} goldSwingData={goldSwingData} />
-            <KillContributorsCard currGameObj={currGameObj} goldSwingData={goldSwingData} />
+            <TurningPointSplash 
+            currGameObj={currGameObj} 
+            turningPointIndex={index} 
+            goldSwingData={goldSwingData}
+            isMobile={isMobile} 
+            />
+            <TimelineCard 
+            currGameObj={currGameObj} 
+            goldSwingData={goldSwingData} 
+            isMobile={isMobile} 
+            />
+            <KillContributorsCard 
+            currGameObj={currGameObj} 
+            goldSwingData={goldSwingData} 
+            isMobile={isMobile} 
+            />
           </div>
         );
       })}
@@ -31,16 +48,17 @@ function GameAnalysisSection(props) {
 }
 
 function TurningPointsSummaryCard(props) {
-  const currGameObj = props.currGameObj;
-  const numTurningPoints = props.numTurningPoints;
+  const { currGameObj, numTurningPoints, isMobile } = props;
 
   const gameResult = currGameObj.playerStats.win ? "won" : "lost";
   const resultClass = currGameObj.playerStats.win ? "WinningTeamText" : "LosingTeamText";
   const conditionalText = currGameObj.playerStats.win ? "! There" : " but there";
 
+  const turningPointsSummaryType = isMobile ? "TurningPointsSummaryMobile" : "TurningPointsSummary";
+
   return(
     <div className="TurningPointsSummaryCard">
-        <div className="TurningPointsSummary">
+        <div className={turningPointsSummaryType}>
           You <span className={resultClass}>{gameResult}</span>{conditionalText} were <span className="TurningPointsText">{`${numTurningPoints} turning points.`}</span>
         </div>
     </div>
@@ -48,7 +66,7 @@ function TurningPointsSummaryCard(props) {
 }
 
 function TurningPointSplash(props) {
-  const { turningPointIndex, currGameObj, goldSwingData } = props;
+  const { turningPointIndex, currGameObj, goldSwingData, isMobile } = props;
 
   // console.log(currGameObj.timelineData);
 
@@ -111,14 +129,19 @@ function TurningPointSplash(props) {
 
   const eventsSummary = formatStringsWithAnd([killOutputString, objectivesTakenOutputString, buildingKillsOutputString]);
 
+  // mobile styling classes
+  const turningPointSplashContentType = isMobile ? "TurningPointSplashContentMobile" : "TurningPointSplashContent";
+  const turningPointSplashBodyType = isMobile ? "TurningPointSplashBodyMobile" : "TurningPointSplashBody";
+  const turningPointSplashType = isMobile ? "TurningPointSplashMobile" : "TurningPointSplash";
+
   return(
     <div className="TurningPointSplashBackground" style={statsCardStyle}>
-      <div className="TurningPointSplash">
-        <div className="TurningPointSplashContent">
+      <div className={turningPointSplashType}>
+        <div className={turningPointSplashContentType}>
           <div className="TurningPointSplashTitle">
             Turning Point # {turningPointIndex + 1}
           </div>
-          <div className="TurningPointSplashBody">
+          <div className={turningPointSplashBodyType}>
             {`At ${startingMinute} min, ${goldSwingWinTeam} `} 
             <span className={teamTextType}>{eventsSummary}</span>
             {", jumping ahead "} 
@@ -131,7 +154,7 @@ function TurningPointSplash(props) {
 }
 
 function KillContributorsCard(props) {
-  const { currGameObj, goldSwingData } = props;
+  const { currGameObj, goldSwingData, isMobile } = props;
 
   const startingMinute = goldSwingData.startingMinute;
 
@@ -160,6 +183,10 @@ function KillContributorsCard(props) {
   const enemyTeamContributors = contributorsDataObj[enemyTeamId];
   const allyTeamContributors = contributorsDataObj[playerTeamId];
 
+  const killContributorsCardType = isMobile ? "KillContributorsCardMobile" : "KillContributorsCard";
+  const contributorsCardContainerType = isMobile ? "ContributorsCardContainerMobile" : "ContributorsCardContainer";
+  const contributorsCardTitleType = isMobile ? "ContributorsCardTitleMobile" : "ContributorsCardTitle";
+
   if(Object.keys(enemyTeamContributors).length === 0 && Object.keys(allyTeamContributors).length === 0){
     return(
       <></>
@@ -167,9 +194,9 @@ function KillContributorsCard(props) {
   }
 
   return(
-    <div className="KillContributorsCard">
-      <div className="EnemyContributorsCard">
-        <div className="EnemyContributorsTitle">
+    <div className={killContributorsCardType}>
+      <div className={contributorsCardContainerType}>
+        <div className={contributorsCardTitleType}>
           ENEMY CONTRIBUTORS
         </div>
         <div className="KillContributorContent">
@@ -185,14 +212,15 @@ function KillContributorsCard(props) {
                 teamContributors={enemyTeamContributors}
                 participantId={participantId}
                 playerTeamId={playerTeamId}
+                isMobile={isMobile}
                 />
               );
             })
           }
         </div>
       </div>
-      <div className="AllyContributorsCard">
-        <div className="AllyContributorsTitle">
+      <div className={contributorsCardContainerType}>
+        <div className={contributorsCardTitleType}>
           ALLY CONTRIBUTORS
         </div>
         <div className="KillContributorContent">
@@ -208,6 +236,7 @@ function KillContributorsCard(props) {
                 teamContributors={allyTeamContributors}
                 participantId={participantId}
                 playerTeamId={playerTeamId}
+                isMobile={isMobile}
                 />
               );
             })
@@ -219,15 +248,13 @@ function KillContributorsCard(props) {
 }
 
 function KillContributorInfo(props) {
-  const { teamId, playerTeamObj, teamContributors, participantId, playerTeamId } = props;
+  const { teamId, playerTeamObj, teamContributors, participantId, playerTeamId, isMobile } = props;
 
   const playerDataObj = teamContributors[participantId];
 
   // console.log(playerDataObj);
 
   const championId = playerTeamObj[participantId].championId;
-
-  const championImg = showContributorImgFromChampId(championId);
 
   const survivedStatus = playerDataObj.survived ? "SURVIVED" : "DIED";
 
@@ -239,11 +266,18 @@ function KillContributorInfo(props) {
 
   const champName = champion.match(/[A-Z][a-z]+/g).join(" ");
 
+  // mobile classes
+  const contributorKillImgType = isMobile ? "ContributorKillImgMobile" : "ContributorKillImg";
+  const killContributorInfoType = isMobile ? "KillContributorInfoMobile" : "KillContributorInfo";
+  const contributorChampionNameType = isMobile ? "ContributorChampionNameMobile" : "ContributorChampionName";
+
+  const championImg = showChampImgFromChampId(championId, contributorKillImgType);
+
   return(
-    <div className="KillContributorInfo">
+    <div className={killContributorInfoType}>
       {championImg}
       <div className="ContributorDescription">
-        <div className={`ContributorChampionName ${championNameTextType}`}>
+        <div className={`${contributorChampionNameType} ${championNameTextType}`}>
           {champName}
         </div>
         <div className="ContributorKillData">
@@ -269,18 +303,17 @@ function KillContributorInfo(props) {
   );
 }
 
-
 // gets the champion image from champion Id
-function showContributorImgFromChampId(championId) {
+function showChampImgFromChampId(championId, classType) {
   var champion = championId;
 
   if(ChampKeys.hasOwnProperty(championId)) {
     champion = ChampKeys[championId];
-    return <img className="ContributorKillImg" src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
+    return <img className={classType} src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
   }
 
   // shows if the champion cannot be found in ChampKeys
-  return <img className="ContributorKillImg" src="" alt={champion} />;
+  return <img className={classType} src="" alt={champion} />;
 }
 
 // extracting relevant contributor data for use in Kill Contributors Card
