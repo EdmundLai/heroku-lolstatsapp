@@ -1,7 +1,6 @@
 import React from 'react';
 import TimelineCard from '../TimelineCard/TimelineCard';
 import DataUtil from '../../utils/data';
-// import ImageUtil from '../../utils/image';
 import ImgHostURL from '../../resources/ImgHostUrl';
 import ChampKeys from '../../resources/ChampKeys';
 
@@ -178,7 +177,7 @@ function KillContributorsCard(props) {
 
   // console.log(contributorsDataObj);
 
-  const enemyTeamId = playerTeamId === "100" ? "200" : "100";
+  const enemyTeamId = playerTeamId === 100 ? 200 : 100;
 
   const enemyTeamContributors = contributorsDataObj[enemyTeamId];
   const allyTeamContributors = contributorsDataObj[playerTeamId];
@@ -569,7 +568,7 @@ function getBuildingKillsByMinute(buildingKillsArr, playerTeamObj) {
   for(let i = 0; i < buildingKillsArr.length; i++) {
     const buildingKillObj = buildingKillsArr[i];
 
-    const killerTeamId = buildingKillObj.teamId === 100 ? "200" : "100";
+    const killerTeamId = buildingKillObj.teamId === 100 ? 200 : 100;
 
     numBuildingKillsObj[killerTeamId][buildingKillObj.buildingType] += 1;
   }
