@@ -4,8 +4,8 @@ const OldImgHostURL = "https://lol-stats-analysis-images.s3.amazonaws.com";
 // shouldn't break unless Riot is mean and takes down their CDN for older patches :<
 const patchVersion = "10.16.1";
 
-const ImgHostURL = `http://ddragon.leagueoflegends.com/cdn/${patchVersion}/img`;
+const ImgHostURL = `https://ddragon.leagueoflegends.com/cdn/${patchVersion}/img`;
 
-const ImgHostSplashURL = `http://ddragon.leagueoflegends.com/cdn/img`;
+const ImgHostSplashURL = `https://ddragon.leagueoflegends.com/cdn/img`;
 
 export { OldImgHostURL, ImgHostURL, ImgHostSplashURL };
