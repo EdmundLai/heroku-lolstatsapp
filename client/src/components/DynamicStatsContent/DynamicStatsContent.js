@@ -1,16 +1,19 @@
-import React from 'react';
-import GamesTabSelector from '../GamesTabSelector/GamesTabSelector';
-import OverviewCard from '../OverviewCard/OverviewCard';
-import StatsCard from '../StatsCard/StatsCard';
-import EndMessageCard from '../EndMessageCard/EndMessageCard';
-import GraphContainer from '../GraphContainer/GraphContainer';
-import GameAnalysisSection from '../GameAnalysisSection/GameAnalysisSection';
+import React from "react";
+import GamesTabSelector from "../GamesTabSelector/GamesTabSelector";
+import OverviewCard from "../OverviewCard/OverviewCard";
+import StatsCard from "../StatsCard/StatsCard";
+import EndMessageCard from "../EndMessageCard/EndMessageCard";
+import GraphContainer from "../GraphContainer/GraphContainer";
+import GameAnalysisSection from "../GameAnalysisSection/GameAnalysisSection";
+//import TipsCard from "../TipsCard/TipsCard";
+
+// TipsCard is still in development
 
 const QueueDict = {
   "430": "Normal Blind",
   "420": "Ranked Solo",
   "400": "Normal Draft",
-  "440": "Ranked Flex"
+  "440": "Ranked Flex",
 };
 
 class DynamicStatsContent extends React.Component {
@@ -19,10 +22,8 @@ class DynamicStatsContent extends React.Component {
     // console.log(statsObj);
 
     // handle error case first
-    if(statsObj.responseCode === 404) {
-      return(
-        <p>{`Go play some more ${QueueDict[queueType]} games!`}</p>
-      );
+    if (statsObj.responseCode === 404) {
+      return <p>{`Go play some more ${QueueDict[queueType]} games!`}</p>;
     }
 
     // Page structure
@@ -33,43 +34,47 @@ class DynamicStatsContent extends React.Component {
     // StatsCard - done
     // GraphCard - done
     // TurningPointsSection - done
-    // TipsCard
+    // TipsCard - In progress
     // EndMessageCard - done
 
-    if(statsObj.hasOwnProperty("statsArray") && (statsObj.statsArray.length !== 0)) {
+    if (
+      statsObj.hasOwnProperty("statsArray") &&
+      statsObj.statsArray.length !== 0
+    ) {
       const currGameObj = getCurrGameObj(statsObj, this.props.currGameID);
 
       // console.log(this.props.currGameID);
 
       // console.log(currGameObj);
 
-      return(
+      return (
         <>
-          <GamesTabSelector 
-          statsObj={statsObj} 
-          handleTabChange={this.props.handleGameIDChange} 
-          currGameID={this.props.currGameID}
-          isMobile={isMobile}
+          <GamesTabSelector
+            statsObj={statsObj}
+            handleTabChange={this.props.handleGameIDChange}
+            currGameID={this.props.currGameID}
+            isMobile={isMobile}
           />
-          <OverviewCard currGameObj={currGameObj} isMobile={isMobile}/>
-          <StatsCard currGameObj={currGameObj} isMobile={isMobile}/>
-          <GraphContainer statsObj={currGameObj} isMobile={isMobile}/>
+          <OverviewCard currGameObj={currGameObj} isMobile={isMobile} />
+          <StatsCard currGameObj={currGameObj} isMobile={isMobile} />
+          <GraphContainer statsObj={currGameObj} isMobile={isMobile} />
           <GameAnalysisSection currGameObj={currGameObj} isMobile={isMobile} />
+          {/* <TipsCard currGameObj={currGameObj} /> */}
           <EndMessageCard isMobile={isMobile} />
         </>
       );
     }
-    
-    return(
+
+    return (
       <p>Something went wrong! Please contact the developers of the site.</p>
     );
   }
 }
 
 function getCurrGameObj(statsObj, currGameID) {
-  for(let i = 0; i < statsObj.statsArray.length; i++) {
+  for (let i = 0; i < statsObj.statsArray.length; i++) {
     const currGameObj = statsObj.statsArray[i];
-    if(currGameObj.gameID === currGameID) {
+    if (currGameObj.gameID === currGameID) {
       return currGameObj;
     }
   }

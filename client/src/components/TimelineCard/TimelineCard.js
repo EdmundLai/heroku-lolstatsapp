@@ -1,10 +1,10 @@
-import React from 'react';
-import ChampKeys from '../../resources/ChampKeys';
-import ImgHostURL from '../../resources/ImgHostUrl';
-import TimeUtil from '../../utils/time';
-import DataUtil from '../../utils/data';
-import SwordIcon from '../../resources/sword.svg';
-import './TimelineCard.css';
+import React from "react";
+import ChampKeys from "../../resources/ChampKeys";
+import { OldImgHostURL, ImgHostURL } from "../../resources/ImgHostUrl";
+import TimeUtil from "../../utils/time";
+import DataUtil from "../../utils/data";
+import SwordIcon from "../../resources/sword.svg";
+import "./TimelineCard.css";
 
 // shows kills and neutral objectives taken in the last minute with timestamps
 class TimelineCard extends React.Component {
@@ -16,7 +16,10 @@ class TimelineCard extends React.Component {
 
     const currPlayerTeamId = playerTeamObj[currPlayerId].teamId;
 
-    const currTimelineObj = DataUtil.getTimelineObjFromGameObj(currGameObj, goldSwingData);
+    const currTimelineObj = DataUtil.getTimelineObjFromGameObj(
+      currGameObj,
+      goldSwingData
+    );
     const champKillsArr = currTimelineObj.CHAMPION_KILL;
 
     // console.log(timelineArr);
@@ -36,32 +39,33 @@ class TimelineCard extends React.Component {
     // for testing purposes
     // console.log(timelineArr);
 
-    return(
+    return (
       <div className="TimelineCard">
         <div className="TimelineCardTitle">THE EVENTS</div>
-        {champKillsArr.map(champKillObj => {
+        {champKillsArr.map((champKillObj) => {
           const victimChampId = playerTeamObj[champKillObj.victimId].championId;
-          const championKillCardContainerKey = champKillObj.timestamp * victimChampId;
-          return(
-            <ChampionKillCardContainer 
-            key={championKillCardContainerKey} 
-            champKillObj={champKillObj} 
-            playerTeamObj={playerTeamObj}
-            currPlayerTeamId={currPlayerTeamId} 
-            isMobile={isMobile}
+          const championKillCardContainerKey =
+            champKillObj.timestamp * victimChampId;
+          return (
+            <ChampionKillCardContainer
+              key={championKillCardContainerKey}
+              champKillObj={champKillObj}
+              playerTeamObj={playerTeamObj}
+              currPlayerTeamId={currPlayerTeamId}
+              isMobile={isMobile}
             />
           );
         })}
-        {objectiveKillsArr.map(objectiveKillObj => {
-          return(
-            <ObjectiveKillCardContainer 
-            key={objectiveKillObj.timestamp}
-            objectiveKillObj={objectiveKillObj} 
-            playerTeamObj={playerTeamObj}
-            currPlayerTeamId={currPlayerTeamId}
-            isMobile={isMobile}
+        {objectiveKillsArr.map((objectiveKillObj) => {
+          return (
+            <ObjectiveKillCardContainer
+              key={objectiveKillObj.timestamp}
+              objectiveKillObj={objectiveKillObj}
+              playerTeamObj={playerTeamObj}
+              currPlayerTeamId={currPlayerTeamId}
+              isMobile={isMobile}
             />
-          )
+          );
         })}
       </div>
     );
@@ -72,35 +76,50 @@ class TimelineCard extends React.Component {
 function ChampionKillCardContainer(props) {
   const { champKillObj, playerTeamObj, currPlayerTeamId, isMobile } = props;
 
-  const timeStampString = TimeUtil.convertTimeStampToTimeString(champKillObj.timestamp);
+  const timeStampString = TimeUtil.convertTimeStampToTimeString(
+    champKillObj.timestamp
+  );
 
   let killerChampId = 0;
 
   const killCardType = isMobile ? "KillCardMobile" : "KillCard";
-  const championKillImgType = isMobile ? "ChampionKillImgMobile" : "ChampionKillImg";
+  const championKillImgType = isMobile
+    ? "ChampionKillImgMobile"
+    : "ChampionKillImg";
   const swordIconType = isMobile ? "SwordIconMobile" : "SwordIcon";
-  const timestampLabelType = isMobile ? "TimestampLabelMobile" : "TimestampLabel";
+  const timestampLabelType = isMobile
+    ? "TimestampLabelMobile"
+    : "TimestampLabel";
 
-  let killerImg = <img className={championKillImgType} src={`${ImgHostURL}/turreticon/turret_icon.png`} alt="Turret" />;
+  let killerImg = (
+    <img
+      className={championKillImgType}
+      src={`${OldImgHostURL}/turreticon/turret_icon.png`}
+      alt="Turret"
+    />
+  );
 
-  if(typeof playerTeamObj[champKillObj.killerId] !== 'undefined') {
+  if (typeof playerTeamObj[champKillObj.killerId] !== "undefined") {
     killerChampId = playerTeamObj[champKillObj.killerId].championId;
     killerImg = showChampImgFromChampId(killerChampId, championKillImgType);
   }
-  
+
   const victimChampId = playerTeamObj[champKillObj.victimId].championId;
-  
+
   const victimImg = showChampImgFromChampId(victimChampId, championKillImgType);
 
   // calculated using opposite team of the victim in case the killer is not a champion
-  const killerTeam = playerTeamObj[champKillObj.victimId].teamId === currPlayerTeamId ? "RedTeamKill" : "BlueTeamKill";
-  
-  return(
+  const killerTeam =
+    playerTeamObj[champKillObj.victimId].teamId === currPlayerTeamId
+      ? "RedTeamKill"
+      : "BlueTeamKill";
+
+  return (
     <div className="ChampionKillCardContainer">
       <span className={timestampLabelType}>{timeStampString} </span>
       <div className={`${killCardType} ${killerTeam}`}>
         {killerImg}
-        <img className={swordIconType} src={SwordIcon} alt="Sword Icon"/>
+        <img className={swordIconType} src={SwordIcon} alt="Sword Icon" />
         {victimImg}
       </div>
     </div>
@@ -111,20 +130,29 @@ function ChampionKillCardContainer(props) {
 function ObjectiveKillCardContainer(props) {
   const { objectiveKillObj, playerTeamObj, currPlayerTeamId, isMobile } = props;
 
-  const timeStampString = TimeUtil.convertTimeStampToTimeString(objectiveKillObj.timestamp);
+  const timeStampString = TimeUtil.convertTimeStampToTimeString(
+    objectiveKillObj.timestamp
+  );
 
   const killerId = objectiveKillObj.killerId;
 
   // neutral monster despawns or killed by neutral are not valid
-  if(killerId === 0) {
+  if (killerId === 0) {
     return <></>;
   }
 
-  const killerTeam = playerTeamObj[killerId].teamId === currPlayerTeamId ? "BlueTeamKill" : "RedTeamKill";
+  const killerTeam =
+    playerTeamObj[killerId].teamId === currPlayerTeamId
+      ? "BlueTeamKill"
+      : "RedTeamKill";
 
-  const timestampLabelType = isMobile ? "TimestampLabelMobile" : "TimestampLabel";
+  const timestampLabelType = isMobile
+    ? "TimestampLabelMobile"
+    : "TimestampLabel";
   const killCardType = isMobile ? "KillCardMobile" : "KillCard";
-  const championKillImgType = isMobile ? "ChampionKillImgMobile" : "ChampionKillImg";
+  const championKillImgType = isMobile
+    ? "ChampionKillImgMobile"
+    : "ChampionKillImg";
   const swordIconType = isMobile ? "SwordIconMobile" : "SwordIcon";
 
   const killerChampId = playerTeamObj[killerId].championId;
@@ -139,33 +167,39 @@ function ObjectiveKillCardContainer(props) {
 
   let monsterImgName = "";
 
-  if(monsterType === "RIFTHERALD") {
+  if (monsterType === "RIFTHERALD") {
     monsterImgName = "Rift_Herald";
-  } else if(monsterType === "BARON_NASHOR") {
+  } else if (monsterType === "BARON_NASHOR") {
     monsterImgName = "Baron_Nashor";
-  } else if(monsterType === "DRAGON") {
+  } else if (monsterType === "DRAGON") {
     monsterImgName = "Dragon";
-    if(monsterSubType === "AIR_DRAGON") {
+    if (monsterSubType === "AIR_DRAGON") {
       monsterImgName = "Cloud_Drake";
-    } else if(monsterSubType === "EARTH_DRAGON") {
+    } else if (monsterSubType === "EARTH_DRAGON") {
       monsterImgName = "Mountain_Drake";
-    } else if(monsterSubType === "FIRE_DRAGON") {
+    } else if (monsterSubType === "FIRE_DRAGON") {
       monsterImgName = "Infernal_Drake";
-    } else if(monsterSubType === "WATER_DRAGON") {
+    } else if (monsterSubType === "WATER_DRAGON") {
       monsterImgName = "Ocean_Drake";
-    } else if(monsterSubType === "ELDER_DRAGON") {
+    } else if (monsterSubType === "ELDER_DRAGON") {
       monsterImgName = "Elder_Dragon";
     }
   }
 
-  let objectiveImg = <img className={championKillImgType} src={`${ImgHostURL}/neutral-monsters/${monsterImgName}Square.png`} alt={monsterImgName} />;
+  let objectiveImg = (
+    <img
+      className={championKillImgType}
+      src={`${OldImgHostURL}/neutral-monsters/${monsterImgName}Square.png`}
+      alt={monsterImgName}
+    />
+  );
 
-  return(
+  return (
     <div className="ObjectiveKillCardContainer">
       <span className={timestampLabelType}>{timeStampString} </span>
       <div className={`${killCardType} ${killerTeam}`}>
         {killerImg}
-        <img className={swordIconType} src={SwordIcon} alt="Sword Icon"/>
+        <img className={swordIconType} src={SwordIcon} alt="Sword Icon" />
         {objectiveImg}
       </div>
     </div>
@@ -175,9 +209,15 @@ function ObjectiveKillCardContainer(props) {
 function showChampImgFromChampId(championId, classType) {
   var champion = championId;
 
-  if(ChampKeys.hasOwnProperty(championId)) {
+  if (ChampKeys.hasOwnProperty(championId)) {
     champion = ChampKeys[championId];
-    return <img className={classType} src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
+    return (
+      <img
+        className={classType}
+        src={`${ImgHostURL}/champion/${champion}.png`}
+        alt={champion}
+      />
+    );
   }
 
   // shows if the champion cannot be found in ChampKeys

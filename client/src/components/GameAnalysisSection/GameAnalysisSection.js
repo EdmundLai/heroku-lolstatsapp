@@ -1,10 +1,10 @@
-import React from 'react';
-import TimelineCard from '../TimelineCard/TimelineCard';
-import DataUtil from '../../utils/data';
-import ImgHostURL from '../../resources/ImgHostUrl';
-import ChampKeys from '../../resources/ChampKeys';
+import React from "react";
+import TimelineCard from "../TimelineCard/TimelineCard";
+import DataUtil from "../../utils/data";
+import { ImgHostURL, ImgHostSplashURL } from "../../resources/ImgHostUrl";
+import ChampKeys from "../../resources/ChampKeys";
 
-import './GameAnalysisSection.css';
+import "./GameAnalysisSection.css";
 
 function GameAnalysisSection(props) {
   const { currGameObj, isMobile } = props;
@@ -13,31 +13,31 @@ function GameAnalysisSection(props) {
 
   const turningPoints = DataUtil.getTurningPoints(currGameObj);
 
-  return(
+  return (
     <div className="GameAnalysisSection">
-      <TurningPointsSummaryCard 
-      currGameObj={currGameObj} 
-      numTurningPoints={turningPoints.length}
-      isMobile={isMobile}
+      <TurningPointsSummaryCard
+        currGameObj={currGameObj}
+        numTurningPoints={turningPoints.length}
+        isMobile={isMobile}
       />
       {turningPoints.map((goldSwingData, index) => {
-        return(
+        return (
           <div key={goldSwingData.startingMinute} className="GoldSwingData">
-            <TurningPointSplash 
-            currGameObj={currGameObj} 
-            turningPointIndex={index} 
-            goldSwingData={goldSwingData}
-            isMobile={isMobile} 
+            <TurningPointSplash
+              currGameObj={currGameObj}
+              turningPointIndex={index}
+              goldSwingData={goldSwingData}
+              isMobile={isMobile}
             />
-            <TimelineCard 
-            currGameObj={currGameObj} 
-            goldSwingData={goldSwingData} 
-            isMobile={isMobile} 
+            <TimelineCard
+              currGameObj={currGameObj}
+              goldSwingData={goldSwingData}
+              isMobile={isMobile}
             />
-            <KillContributorsCard 
-            currGameObj={currGameObj} 
-            goldSwingData={goldSwingData} 
-            isMobile={isMobile} 
+            <KillContributorsCard
+              currGameObj={currGameObj}
+              goldSwingData={goldSwingData}
+              isMobile={isMobile}
             />
           </div>
         );
@@ -50,16 +50,24 @@ function TurningPointsSummaryCard(props) {
   const { currGameObj, numTurningPoints, isMobile } = props;
 
   const gameResult = currGameObj.playerStats.win ? "won" : "lost";
-  const resultClass = currGameObj.playerStats.win ? "WinningTeamText" : "LosingTeamText";
-  const conditionalText = currGameObj.playerStats.win ? "! There" : " but there";
+  const resultClass = currGameObj.playerStats.win
+    ? "WinningTeamText"
+    : "LosingTeamText";
+  const conditionalText = currGameObj.playerStats.win
+    ? "! There"
+    : " but there";
 
-  const turningPointsSummaryType = isMobile ? "TurningPointsSummaryMobile" : "TurningPointsSummary";
+  const turningPointsSummaryType = isMobile
+    ? "TurningPointsSummaryMobile"
+    : "TurningPointsSummary";
 
-  return(
+  return (
     <div className="TurningPointsSummaryCard">
-        <div className={turningPointsSummaryType}>
-          You <span className={resultClass}>{gameResult}</span>{conditionalText} were <span className="TurningPointsText">{`${numTurningPoints} turning points.`}</span>
-        </div>
+      <div className={turningPointsSummaryType}>
+        You <span className={resultClass}>{gameResult}</span>
+        {conditionalText} were{" "}
+        <span className="TurningPointsText">{`${numTurningPoints} turning points.`}</span>
+      </div>
     </div>
   );
 }
@@ -69,7 +77,10 @@ function TurningPointSplash(props) {
 
   // console.log(currGameObj.timelineData);
 
-  const currTimelineObj = DataUtil.getTimelineObjFromGameObj(currGameObj, goldSwingData);
+  const currTimelineObj = DataUtil.getTimelineObjFromGameObj(
+    currGameObj,
+    goldSwingData
+  );
 
   const playerTeamObj = DataUtil.getPlayerTeamObjFromCurrGameObj(currGameObj);
 
@@ -79,7 +90,7 @@ function TurningPointSplash(props) {
 
   // console.log("playerTeamId:");
   // console.log(playerTeamId);
-  
+
   const startingMinute = goldSwingData.startingMinute;
 
   const champKillsArr = currTimelineObj.CHAMPION_KILL;
@@ -92,48 +103,79 @@ function TurningPointSplash(props) {
   // console.log(objectiveKillsArr);
   // console.log(buildingKillsArr);
 
-  const numKillsObj = getNumKillsFromEachTeamByMinute(champKillsArr, playerTeamObj);
+  const numKillsObj = getNumKillsFromEachTeamByMinute(
+    champKillsArr,
+    playerTeamObj
+  );
 
   // console.log(numKillsObj);
 
-  const champion = getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwingTeamId);
+  const champion = getChampionForMVPOnGoldSwingTeam(
+    champKillsArr,
+    playerTeamObj,
+    goldSwingTeamId
+  );
 
   const statsCardStyle = {
-    backgroundImage: `url(${ImgHostURL}/splash/${champion}_0.jpg)`,
+    backgroundImage: `url(${ImgHostSplashURL}/champion/splash/${champion}_0.jpg)`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
 
   // team that had the favorable gold swing
-  const goldSwingWinTeam = goldSwingTeamId === playerTeamId ? "your team" : "the enemy team";
-  const teamTextType = goldSwingTeamId === playerTeamId ? "AllyTeamText" : "EnemyTeamText";
+  const goldSwingWinTeam =
+    goldSwingTeamId === playerTeamId ? "your team" : "the enemy team";
+  const teamTextType =
+    goldSwingTeamId === playerTeamId ? "AllyTeamText" : "EnemyTeamText";
 
   let killOutputString = "";
 
-  if(numKillsObj[goldSwingTeamId] !== 0) {
-    if(numKillsObj[goldSwingTeamId] === 1) {
+  if (numKillsObj[goldSwingTeamId] !== 0) {
+    if (numKillsObj[goldSwingTeamId] === 1) {
       killOutputString = `killed ${numKillsObj[goldSwingTeamId]} champion`;
     } else {
       killOutputString = `killed ${numKillsObj[goldSwingTeamId]} champions`;
     }
   }
 
-  const numObjectivesObj = getObjectivesTakenByMinute(objectiveKillsArr, playerTeamObj);
+  const numObjectivesObj = getObjectivesTakenByMinute(
+    objectiveKillsArr,
+    playerTeamObj
+  );
 
-  const objectivesTakenOutputString = createObjectivesTakenString(numObjectivesObj, goldSwingTeamId);
+  const objectivesTakenOutputString = createObjectivesTakenString(
+    numObjectivesObj,
+    goldSwingTeamId
+  );
 
-  const numBuildingKillsObj = getBuildingKillsByMinute(buildingKillsArr, playerTeamObj);
+  const numBuildingKillsObj = getBuildingKillsByMinute(
+    buildingKillsArr,
+    playerTeamObj
+  );
 
-  const buildingKillsOutputString = createBuildingKillsOutputString(numBuildingKillsObj, goldSwingTeamId);
+  const buildingKillsOutputString = createBuildingKillsOutputString(
+    numBuildingKillsObj,
+    goldSwingTeamId
+  );
 
-  const eventsSummary = formatStringsWithAnd([killOutputString, objectivesTakenOutputString, buildingKillsOutputString]);
+  const eventsSummary = formatStringsWithAnd([
+    killOutputString,
+    objectivesTakenOutputString,
+    buildingKillsOutputString,
+  ]);
 
   // mobile styling classes
-  const turningPointSplashContentType = isMobile ? "TurningPointSplashContentMobile" : "TurningPointSplashContent";
-  const turningPointSplashBodyType = isMobile ? "TurningPointSplashBodyMobile" : "TurningPointSplashBody";
-  const turningPointSplashType = isMobile ? "TurningPointSplashMobile" : "TurningPointSplash";
+  const turningPointSplashContentType = isMobile
+    ? "TurningPointSplashContentMobile"
+    : "TurningPointSplashContent";
+  const turningPointSplashBodyType = isMobile
+    ? "TurningPointSplashBodyMobile"
+    : "TurningPointSplashBody";
+  const turningPointSplashType = isMobile
+    ? "TurningPointSplashMobile"
+    : "TurningPointSplash";
 
-  return(
+  return (
     <div className="TurningPointSplashBackground" style={statsCardStyle}>
       <div className={turningPointSplashType}>
         <div className={turningPointSplashContentType}>
@@ -141,10 +183,12 @@ function TurningPointSplash(props) {
             Turning Point # {turningPointIndex + 1}
           </div>
           <div className={turningPointSplashBodyType}>
-            {`At ${startingMinute} min, ${goldSwingWinTeam} `} 
+            {`At ${startingMinute} min, ${goldSwingWinTeam} `}
             <span className={teamTextType}>{eventsSummary}</span>
-            {", jumping ahead "} 
-            <span className="TurningPointsText">{`${getGoldStringFromGoldSwingData(goldSwingData)} gold.`}</span>
+            {", jumping ahead "}
+            <span className="TurningPointsText">{`${getGoldStringFromGoldSwingData(
+              goldSwingData
+            )} gold.`}</span>
           </div>
         </div>
       </div>
@@ -167,13 +211,21 @@ function KillContributorsCard(props) {
 
   // console.log(playerTeamObj);
 
-  const currTimelineObj = DataUtil.getTimelineObjFromGameObj(currGameObj, goldSwingData);
+  const currTimelineObj = DataUtil.getTimelineObjFromGameObj(
+    currGameObj,
+    goldSwingData
+  );
 
   const champKillsArr = currTimelineObj.CHAMPION_KILL;
 
   // console.log(champKillsArr);
 
-  const contributorsDataObj = getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldSwingData);
+  const contributorsDataObj = getContributorsDataObj(
+    currGameObj,
+    champKillsArr,
+    playerTeamObj,
+    goldSwingData
+  );
 
   // console.log(contributorsDataObj);
 
@@ -182,64 +234,63 @@ function KillContributorsCard(props) {
   const enemyTeamContributors = contributorsDataObj[enemyTeamId];
   const allyTeamContributors = contributorsDataObj[playerTeamId];
 
-  const killContributorsCardType = isMobile ? "KillContributorsCardMobile" : "KillContributorsCard";
-  const contributorsCardContainerType = isMobile ? "ContributorsCardContainerMobile" : "ContributorsCardContainer";
-  const contributorsCardTitleType = isMobile ? "ContributorsCardTitleMobile" : "ContributorsCardTitle";
+  const killContributorsCardType = isMobile
+    ? "KillContributorsCardMobile"
+    : "KillContributorsCard";
+  const contributorsCardContainerType = isMobile
+    ? "ContributorsCardContainerMobile"
+    : "ContributorsCardContainer";
+  const contributorsCardTitleType = isMobile
+    ? "ContributorsCardTitleMobile"
+    : "ContributorsCardTitle";
 
-  if(Object.keys(enemyTeamContributors).length === 0 && Object.keys(allyTeamContributors).length === 0){
-    return(
-      <></>
-    );
+  if (
+    Object.keys(enemyTeamContributors).length === 0 &&
+    Object.keys(allyTeamContributors).length === 0
+  ) {
+    return <></>;
   }
 
-  return(
+  return (
     <div className={killContributorsCardType}>
       <div className={contributorsCardContainerType}>
-        <div className={contributorsCardTitleType}>
-          ENEMY CONTRIBUTORS
-        </div>
+        <div className={contributorsCardTitleType}>ENEMY CONTRIBUTORS</div>
         <div className="KillContributorContent">
-          {
-            Object.keys(enemyTeamContributors).map(participantId => {
-              const infoKey = `00${startingMinute}00${participantId}`;
+          {Object.keys(enemyTeamContributors).map((participantId) => {
+            const infoKey = `00${startingMinute}00${participantId}`;
 
-              return(
-                <KillContributorInfo 
+            return (
+              <KillContributorInfo
                 key={infoKey}
-                teamId={enemyTeamId} 
-                playerTeamObj={playerTeamObj} 
+                teamId={enemyTeamId}
+                playerTeamObj={playerTeamObj}
                 teamContributors={enemyTeamContributors}
                 participantId={participantId}
                 playerTeamId={playerTeamId}
                 isMobile={isMobile}
-                />
-              );
-            })
-          }
+              />
+            );
+          })}
         </div>
       </div>
       <div className={contributorsCardContainerType}>
-        <div className={contributorsCardTitleType}>
-          ALLY CONTRIBUTORS
-        </div>
+        <div className={contributorsCardTitleType}>ALLY CONTRIBUTORS</div>
         <div className="KillContributorContent">
-          {
-            Object.keys(allyTeamContributors).map(participantId => {
-              const infoKey = `00${startingMinute}00${participantId}`;
+          {Object.keys(allyTeamContributors).map((participantId) => {
+            const infoKey = `00${startingMinute}00${participantId}`;
 
-              return(
-                <KillContributorInfo 
+            return (
+              <KillContributorInfo
                 key={infoKey}
-                teamId={playerTeamId} 
-                playerTeamObj={playerTeamObj} 
+                teamId={playerTeamId}
+                playerTeamObj={playerTeamObj}
                 teamContributors={allyTeamContributors}
                 participantId={participantId}
                 playerTeamId={playerTeamId}
                 isMobile={isMobile}
-                />
-              );
-            })
-          }
+              />
+            );
+          })}
         </div>
       </div>
     </div>
@@ -247,7 +298,14 @@ function KillContributorsCard(props) {
 }
 
 function KillContributorInfo(props) {
-  const { teamId, playerTeamObj, teamContributors, participantId, playerTeamId, isMobile } = props;
+  const {
+    teamId,
+    playerTeamObj,
+    teamContributors,
+    participantId,
+    playerTeamId,
+    isMobile,
+  } = props;
 
   const playerDataObj = teamContributors[participantId];
 
@@ -257,26 +315,40 @@ function KillContributorInfo(props) {
 
   const survivedStatus = playerDataObj.survived ? "SURVIVED" : "DIED";
 
-  const survivedClassText = playerDataObj.survived ? "SurvivedPlayerText" : "KilledPlayerText";
+  const survivedClassText = playerDataObj.survived
+    ? "SurvivedPlayerText"
+    : "KilledPlayerText";
 
-  const championNameTextType = teamId === playerTeamId ? "AllyTeamText" : "EnemyTeamText";
+  const championNameTextType =
+    teamId === playerTeamId ? "AllyTeamText" : "EnemyTeamText";
 
   const champion = ChampKeys[championId];
 
   const champName = champion.match(/[A-Z][a-z]+/g).join(" ");
 
   // mobile classes
-  const contributorKillImgType = isMobile ? "ContributorKillImgMobile" : "ContributorKillImg";
-  const killContributorInfoType = isMobile ? "KillContributorInfoMobile" : "KillContributorInfo";
-  const contributorChampionNameType = isMobile ? "ContributorChampionNameMobile" : "ContributorChampionName";
+  const contributorKillImgType = isMobile
+    ? "ContributorKillImgMobile"
+    : "ContributorKillImg";
+  const killContributorInfoType = isMobile
+    ? "KillContributorInfoMobile"
+    : "KillContributorInfo";
+  const contributorChampionNameType = isMobile
+    ? "ContributorChampionNameMobile"
+    : "ContributorChampionName";
 
-  const championImg = showChampImgFromChampId(championId, contributorKillImgType);
+  const championImg = showChampImgFromChampId(
+    championId,
+    contributorKillImgType
+  );
 
-  return(
+  return (
     <div className={killContributorInfoType}>
       {championImg}
       <div className="ContributorDescription">
-        <div className={`${contributorChampionNameType} ${championNameTextType}`}>
+        <div
+          className={`${contributorChampionNameType} ${championNameTextType}`}
+        >
           {champName}
         </div>
         <div className="ContributorKillData">
@@ -293,7 +365,9 @@ function KillContributorInfo(props) {
             {playerDataObj.goldDelta}
           </div>
           <div className="ContributorXPData">
-            <span className="ContributorGoldXPDescription">Experience Gained: </span>
+            <span className="ContributorGoldXPDescription">
+              Experience Gained:{" "}
+            </span>
             {playerDataObj.xpDelta}
           </div>
         </div>
@@ -306,9 +380,15 @@ function KillContributorInfo(props) {
 function showChampImgFromChampId(championId, classType) {
   var champion = championId;
 
-  if(ChampKeys.hasOwnProperty(championId)) {
+  if (ChampKeys.hasOwnProperty(championId)) {
     champion = ChampKeys[championId];
-    return <img className={classType} src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
+    return (
+      <img
+        className={classType}
+        src={`${ImgHostURL}/champion/${champion}.png`}
+        alt={champion}
+      />
+    );
   }
 
   // shows if the champion cannot be found in ChampKeys
@@ -316,27 +396,31 @@ function showChampImgFromChampId(championId, classType) {
 }
 
 // extracting relevant contributor data for use in Kill Contributors Card
-function getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldSwingData){
-
+function getContributorsDataObj(
+  currGameObj,
+  champKillsArr,
+  playerTeamObj,
+  goldSwingData
+) {
   const contributorsDataObj = {
-    100: {
-    },
-    200: {
-    },
-  }
+    100: {},
+    200: {},
+  };
 
   // iterate through champKillsArr to add kill and death stats
-  for(let i = 0; i < champKillsArr.length; i++) {
+  for (let i = 0; i < champKillsArr.length; i++) {
     const champKillObj = champKillsArr[i];
 
     const { assistingParticipantIds, killerId, victimId } = champKillObj;
-    
-    for(let j = 0; j < assistingParticipantIds.length; j++) {
+
+    for (let j = 0; j < assistingParticipantIds.length; j++) {
       const assistPlayerId = assistingParticipantIds[j];
 
       const assistPlayerTeamId = playerTeamObj[assistPlayerId].teamId;
 
-      if(contributorsDataObj[assistPlayerTeamId].hasOwnProperty(assistPlayerId)) {
+      if (
+        contributorsDataObj[assistPlayerTeamId].hasOwnProperty(assistPlayerId)
+      ) {
         contributorsDataObj[assistPlayerTeamId][assistPlayerId].assists += 1;
       } else {
         contributorsDataObj[assistPlayerTeamId][assistPlayerId] = {
@@ -349,10 +433,10 @@ function getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldS
       }
     }
 
-    if(playerTeamObj.hasOwnProperty(killerId)) {
+    if (playerTeamObj.hasOwnProperty(killerId)) {
       const killerTeamId = playerTeamObj[killerId].teamId;
 
-      if(contributorsDataObj[killerTeamId].hasOwnProperty(killerId)) {
+      if (contributorsDataObj[killerTeamId].hasOwnProperty(killerId)) {
         contributorsDataObj[killerTeamId][killerId].kills += 1;
       } else {
         contributorsDataObj[killerTeamId][killerId] = {
@@ -367,7 +451,7 @@ function getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldS
 
     const victimTeamId = playerTeamObj[victimId].teamId;
 
-    if(contributorsDataObj[victimTeamId].hasOwnProperty(victimId)) {
+    if (contributorsDataObj[victimTeamId].hasOwnProperty(victimId)) {
       contributorsDataObj[victimTeamId][victimId].survived = false;
     } else {
       contributorsDataObj[victimTeamId][victimId] = {
@@ -383,11 +467,15 @@ function getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldS
   const startingMinute = goldSwingData.startingMinute;
 
   // adding gold and xp deltas of 1 min intervals to contributorsDataObj
-  for(const teamId in contributorsDataObj) {
+  for (const teamId in contributorsDataObj) {
     const teamObj = contributorsDataObj[teamId];
-    for(const participantId in teamObj) {
+    for (const participantId in teamObj) {
       // console.log(participantId);
-      const { xpDelta, goldDelta } = getGoldAndExpDiffForParticipantId(currGameObj, participantId, startingMinute);
+      const { xpDelta, goldDelta } = getGoldAndExpDiffForParticipantId(
+        currGameObj,
+        participantId,
+        startingMinute
+      );
 
       teamObj[participantId].xpDelta = xpDelta;
       teamObj[participantId].goldDelta = goldDelta;
@@ -397,31 +485,40 @@ function getContributorsDataObj(currGameObj, champKillsArr, playerTeamObj, goldS
   return contributorsDataObj;
 }
 
-function getGoldAndExpDiffForParticipantId(currGameObj, participantId, startingMinute) {
+function getGoldAndExpDiffForParticipantId(
+  currGameObj,
+  participantId,
+  startingMinute
+) {
   const timelineData = currGameObj.timelineData;
 
   const endingMinute = startingMinute + 1;
 
-  const startingFrame = getParticipantFrameObj(timelineData.frames[startingMinute].participantFrames, participantId);
-  const endingFrame = getParticipantFrameObj(timelineData.frames[endingMinute].participantFrames, participantId);
+  const startingFrame = getParticipantFrameObj(
+    timelineData.frames[startingMinute].participantFrames,
+    participantId
+  );
+  const endingFrame = getParticipantFrameObj(
+    timelineData.frames[endingMinute].participantFrames,
+    participantId
+  );
 
   return {
-    xpDelta: endingFrame.xp -startingFrame.xp,
+    xpDelta: endingFrame.xp - startingFrame.xp,
     goldDelta: endingFrame.totalGold - startingFrame.totalGold,
   };
 }
 
 // get participantFrameObj corresponding to participantId from participantFrames at particular minute
 function getParticipantFrameObj(participantFrames, participantId) {
-
   const frameKeys = Object.keys(participantFrames);
 
-  for(let frameIndex = 0; frameIndex < frameKeys.length; frameIndex++) {
+  for (let frameIndex = 0; frameIndex < frameKeys.length; frameIndex++) {
     const frameKey = frameKeys[frameIndex];
 
     const participantFrameObj = participantFrames[frameKey];
 
-    if(participantFrameObj.participantId === parseInt(participantId)) {
+    if (participantFrameObj.participantId === parseInt(participantId)) {
       return participantFrameObj;
     }
   }
@@ -430,15 +527,19 @@ function getParticipantFrameObj(participantFrames, participantId) {
 // gets champion name for player that killed most players on team that had the favorable gold swing
 // if no players are found, or if champKillsArr is empty, pick a random player on goldSwingTeam
 // TODO: Improve algorithm to take into account neutral objective kills and towers taken
-function getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwingTeamId) {
+function getChampionForMVPOnGoldSwingTeam(
+  champKillsArr,
+  playerTeamObj,
+  goldSwingTeamId
+) {
   const killerDict = {};
 
-  for(let i = 0; i < champKillsArr.length; i++) {
+  for (let i = 0; i < champKillsArr.length; i++) {
     const killerId = champKillsArr[i].killerId;
 
-    if(playerTeamObj.hasOwnProperty(killerId)) {
-      if(playerTeamObj[killerId].teamId === goldSwingTeamId) {
-        if(killerDict.hasOwnProperty(killerId)) {
+    if (playerTeamObj.hasOwnProperty(killerId)) {
+      if (playerTeamObj[killerId].teamId === goldSwingTeamId) {
+        if (killerDict.hasOwnProperty(killerId)) {
           killerDict[killerId] += 1;
         } else {
           killerDict[killerId] = 0;
@@ -449,9 +550,9 @@ function getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwin
 
   const killerArr = [];
 
-  if(Object.keys(killerDict).length > 0) {
-    for(const killerId in killerDict) {
-      killerArr.push([killerId, killerDict[killerId]])
+  if (Object.keys(killerDict).length > 0) {
+    for (const killerId in killerDict) {
+      killerArr.push([killerId, killerDict[killerId]]);
     }
 
     const mvpId = killerArr.sort(sortByValueDesc)[0][0];
@@ -463,33 +564,37 @@ function getChampionForMVPOnGoldSwingTeam(champKillsArr, playerTeamObj, goldSwin
     function sortByValueDesc(a, b) {
       return b[1] - a[1];
     }
+  } else {
+    // DON'T DO RANDOM INT BECAUSE IT WILL CHANGE THE PLAYER ON PAGE UPDATE
+
+    // player 1 and player 6 are lucky player random MVPS ¯\_(ツ)_/¯
+
+    const mvpId = goldSwingTeamId === 100 ? 1 : 6;
+
+    const mvpChampionId = playerTeamObj[mvpId].championId;
+
+    return ChampKeys[mvpChampionId];
   }
-
-  function getRandomIntInclusive(min, max) {
-    const roundedMin = Math.ceil(min);
-    const roundedMax = Math.floor(max);
-    return Math.floor(Math.random() * (roundedMax - roundedMin + 1)) + min;
-  }
-
-  const mvpId = goldSwingTeamId === 100 ? getRandomIntInclusive(1, 5) : getRandomIntInclusive(6, 10);
-
-  const mvpChampionId = playerTeamObj[mvpId].championId;
-
-  return ChampKeys[mvpChampionId];
 }
 
 // only supports strings with length 1-3
 function formatStringsWithAnd(stringArr) {
-  const filteredStringArr = stringArr.filter(string => string.length > 0);
+  const filteredStringArr = stringArr.filter((string) => string.length > 0);
 
   // console.log(filteredStringArr);
 
-  if(filteredStringArr.length === 1) {
+  if (filteredStringArr.length === 1) {
     return filteredStringArr[0];
-  } else if(filteredStringArr.length === 2) {
+  } else if (filteredStringArr.length === 2) {
     return filteredStringArr[0] + " and " + filteredStringArr[1];
-  } else if(filteredStringArr.length === 3) {
-    return filteredStringArr[0] + ", " + filteredStringArr[1] + ", and " + filteredStringArr[2];
+  } else if (filteredStringArr.length === 3) {
+    return (
+      filteredStringArr[0] +
+      ", " +
+      filteredStringArr[1] +
+      ", and " +
+      filteredStringArr[2]
+    );
   }
 
   return "";
@@ -498,21 +603,21 @@ function formatStringsWithAnd(stringArr) {
 function createObjectivesTakenString(numObjectivesObj, killerTeamId) {
   const objectivesArr = [];
 
-  if(numObjectivesObj[killerTeamId].total === 0) {
+  if (numObjectivesObj[killerTeamId].total === 0) {
     return "";
   }
 
-  if(numObjectivesObj[killerTeamId].RIFTHERALD === 1) {
+  if (numObjectivesObj[killerTeamId].RIFTHERALD === 1) {
     objectivesArr.push("Rift Herald");
   }
 
-  if(numObjectivesObj[killerTeamId].DRAGON === 1) {
+  if (numObjectivesObj[killerTeamId].DRAGON === 1) {
     objectivesArr.push("Dragon");
   }
 
-  if(numObjectivesObj[killerTeamId].BARON_NASHOR === 1) {
+  if (numObjectivesObj[killerTeamId].BARON_NASHOR === 1) {
     objectivesArr.push("Baron Nashor");
-  };
+  }
 
   const outputString = "took " + formatStringsWithAnd(objectivesArr);
 
@@ -524,37 +629,42 @@ function createBuildingKillsOutputString(numBuildingKillsObj, goldSwingTeamId) {
 
   const teamBuildingKillsObj = numBuildingKillsObj[goldSwingTeamId];
 
-  if(teamBuildingKillsObj.TOWER_BUILDING !== 0 || 
-    teamBuildingKillsObj.INHIBITOR_BUILDING !== 0) {
-      let towerOutputString;
-      if(teamBuildingKillsObj.TOWER_BUILDING === 0) {
-        towerOutputString = "";
-      } else if(teamBuildingKillsObj.TOWER_BUILDING === 1) {
-        towerOutputString = `${teamBuildingKillsObj.TOWER_BUILDING} tower`;
-      } else {
-        towerOutputString = `${teamBuildingKillsObj.TOWER_BUILDING} towers`;
-      }
+  if (
+    teamBuildingKillsObj.TOWER_BUILDING !== 0 ||
+    teamBuildingKillsObj.INHIBITOR_BUILDING !== 0
+  ) {
+    let towerOutputString;
+    if (teamBuildingKillsObj.TOWER_BUILDING === 0) {
+      towerOutputString = "";
+    } else if (teamBuildingKillsObj.TOWER_BUILDING === 1) {
+      towerOutputString = `${teamBuildingKillsObj.TOWER_BUILDING} tower`;
+    } else {
+      towerOutputString = `${teamBuildingKillsObj.TOWER_BUILDING} towers`;
+    }
 
-      let inhibitorOutputString;
+    let inhibitorOutputString;
 
-      if(teamBuildingKillsObj.INHIBITOR_BUILDING === 0) {
-        inhibitorOutputString = "";
-      } else if(teamBuildingKillsObj.INHIBITOR_BUILDING === 1) {
-        inhibitorOutputString = `${teamBuildingKillsObj.INHIBITOR_BUILDING} inhibitor`;
-      } else {
-        inhibitorOutputString = `${teamBuildingKillsObj.INHIBITOR_BUILDING} inhibitors`;
-      }
+    if (teamBuildingKillsObj.INHIBITOR_BUILDING === 0) {
+      inhibitorOutputString = "";
+    } else if (teamBuildingKillsObj.INHIBITOR_BUILDING === 1) {
+      inhibitorOutputString = `${teamBuildingKillsObj.INHIBITOR_BUILDING} inhibitor`;
+    } else {
+      inhibitorOutputString = `${teamBuildingKillsObj.INHIBITOR_BUILDING} inhibitors`;
+    }
 
-      const gameObjectiveString = formatStringsWithAnd([towerOutputString, inhibitorOutputString]);
-      
-      buildingKillsOutputString = `destroyed ${gameObjectiveString}`;
+    const gameObjectiveString = formatStringsWithAnd([
+      towerOutputString,
+      inhibitorOutputString,
+    ]);
+
+    buildingKillsOutputString = `destroyed ${gameObjectiveString}`;
   }
 
   return buildingKillsOutputString;
 }
 
 function getBuildingKillsByMinute(buildingKillsArr, playerTeamObj) {
-  const numBuildingKillsObj ={
+  const numBuildingKillsObj = {
     100: {
       TOWER_BUILDING: 0,
       INHIBITOR_BUILDING: 0,
@@ -563,9 +673,9 @@ function getBuildingKillsByMinute(buildingKillsArr, playerTeamObj) {
       TOWER_BUILDING: 0,
       INHIBITOR_BUILDING: 0,
     },
-  }
+  };
 
-  for(let i = 0; i < buildingKillsArr.length; i++) {
+  for (let i = 0; i < buildingKillsArr.length; i++) {
     const buildingKillObj = buildingKillsArr[i];
 
     const killerTeamId = buildingKillObj.teamId === 100 ? 200 : 100;
@@ -584,25 +694,25 @@ function getObjectivesTakenByMinute(objectiveKillsArr, playerTeamObj) {
       total: 0,
       RIFTHERALD: 0,
       DRAGON: 0,
-      BARON_NASHOR: 0
+      BARON_NASHOR: 0,
     },
     200: {
       total: 0,
       RIFTHERALD: 0,
       DRAGON: 0,
-      BARON_NASHOR: 0
+      BARON_NASHOR: 0,
     },
-  }
+  };
 
-  for(let i = 0; i < objectiveKillsArr.length; i++) {
+  for (let i = 0; i < objectiveKillsArr.length; i++) {
     const objectiveKill = objectiveKillsArr[i];
 
     const killerId = objectiveKill.killerId;
 
-    if(killerId !== 0) {
+    if (killerId !== 0) {
       const killerTeamId = playerTeamObj[killerId].teamId;
 
-      if(numObjectivesObj.hasOwnProperty(killerTeamId)) {
+      if (numObjectivesObj.hasOwnProperty(killerTeamId)) {
         numObjectivesObj[killerTeamId].total += 1;
         numObjectivesObj[killerTeamId][objectiveKill.monsterType] += 1;
       }
@@ -610,7 +720,6 @@ function getObjectivesTakenByMinute(objectiveKillsArr, playerTeamObj) {
   }
 
   return numObjectivesObj;
-
 }
 
 function getNumKillsFromEachTeamByMinute(champKillsArr, playerTeamObj) {
@@ -621,10 +730,10 @@ function getNumKillsFromEachTeamByMinute(champKillsArr, playerTeamObj) {
 
   // console.log(champKillsArr);
 
-  for(let i = 0; i < champKillsArr.length; i++) {
+  for (let i = 0; i < champKillsArr.length; i++) {
     const killerId = champKillsArr[i].killerId;
 
-    if(playerTeamObj.hasOwnProperty(killerId)) {
+    if (playerTeamObj.hasOwnProperty(killerId)) {
       const killerTeamId = playerTeamObj[killerId].teamId;
       numKillsObj[killerTeamId] += 1;
     }
@@ -634,9 +743,9 @@ function getNumKillsFromEachTeamByMinute(champKillsArr, playerTeamObj) {
 }
 
 function getGoldStringFromGoldSwingData(goldSwingData) {
-  const goldNumString = (Math.round(Math.abs(goldSwingData.goldDiffDelta) / 100) / 10) + "k";
+  const goldNumString =
+    Math.round(Math.abs(goldSwingData.goldDiffDelta) / 100) / 10 + "k";
   return goldNumString;
 }
-
 
 export default GameAnalysisSection;

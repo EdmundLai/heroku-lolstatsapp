@@ -1,6 +1,6 @@
-import React from 'react';
-import ImgHostURL from '../../resources/ImgHostUrl';
-import './ChampionBar.css';
+import React from "react";
+import { ImgHostURL } from "../../resources/ImgHostUrl";
+import "./ChampionBar.css";
 
 class ChampionBar extends React.Component {
   render() {
@@ -8,9 +8,15 @@ class ChampionBar extends React.Component {
     // console.log(champion);
     let champName = champion;
     let champImg = <></>;
-    if(typeof champion === "string") {
+    if (typeof champion === "string") {
       champName = champion.match(/[A-Z][a-z]+/g).join(" ");
-      champImg = <img id="ChampionImg" src={`${ImgHostURL}/champion/${champion}.png`} alt={champion} />;
+      champImg = (
+        <img
+          id="ChampionImg"
+          src={`${ImgHostURL}/champion/${champion}.png`}
+          alt={champion}
+        />
+      );
     }
 
     return (

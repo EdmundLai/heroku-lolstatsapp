@@ -1,8 +1,8 @@
-import React from 'react';
-import DynamicStatsContent from '../DynamicStatsContent/DynamicStatsContent';
-import ImgHostURL from '../../resources/ImgHostUrl';
+import React from "react";
+import DynamicStatsContent from "../DynamicStatsContent/DynamicStatsContent";
+import { ImgHostURL } from "../../resources/ImgHostUrl";
 
-import './GamesPage.css';
+import "./GamesPage.css";
 
 class GamesPage extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class GamesPage extends React.Component {
 
   handleWindowResize() {
     this.setState({
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
     });
   }
 
@@ -35,13 +35,13 @@ class GamesPage extends React.Component {
       420: 0,
       440: 1,
       430: 2,
-      400: 3
+      400: 3,
     };
 
     const dataState = this.props.dataState;
     const queueStatsArray = dataState.statsArrayByQueue;
 
-    if(queueStatsArray.length === 0) {
+    if (queueStatsArray.length === 0) {
       return <></>;
     }
 
@@ -49,16 +49,20 @@ class GamesPage extends React.Component {
 
     let isMobile = this.state.windowWidth < 500 ? true : false;
 
-    return(
+    return (
       <div className="GamesPage">
-        <SummonerTopBar dataState={dataState} isMobile={isMobile}/>
-        <SelectSection queueType={dataState.queueType} handleSelectChange={this.props.handleSelectChange} isMobile={isMobile}/>
-        <DynamicStatsContent 
-        queueType={dataState.queueType} 
-        statsObj={statsObj} 
-        handleGameIDChange={this.props.handleGameIDChange}
-        currGameID={this.props.currGameID}
-        isMobile={isMobile}
+        <SummonerTopBar dataState={dataState} isMobile={isMobile} />
+        <SelectSection
+          queueType={dataState.queueType}
+          handleSelectChange={this.props.handleSelectChange}
+          isMobile={isMobile}
+        />
+        <DynamicStatsContent
+          queueType={dataState.queueType}
+          statsObj={statsObj}
+          handleGameIDChange={this.props.handleGameIDChange}
+          currGameID={this.props.currGameID}
+          isMobile={isMobile}
         />
       </div>
     );
@@ -70,11 +74,11 @@ function SelectSection(props) {
 
   let selectSectionType = "SelectSection";
 
-  if(isMobile) {
+  if (isMobile) {
     selectSectionType = "SelectSectionMobile";
   }
 
-  return(
+  return (
     <div className={selectSectionType}>
       <div className="SelectDescription">Queue Type: </div>
       <select value={props.queueType} onChange={props.handleSelectChange}>
@@ -91,8 +95,8 @@ function SummonerTopBar(props) {
   const dataState = props.dataState;
   const isMobile = props.isMobile;
 
-  if(isMobile) {
-    return(
+  if (isMobile) {
+    return (
       <div className="SummonerTopBar">
         <div className="SummonerText">
           <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
@@ -102,9 +106,13 @@ function SummonerTopBar(props) {
     );
   }
 
-  return(
+  return (
     <div className="SummonerTopBar">
-      <img className="ProfileIconImg" src={`${ImgHostURL}/profileicon/${dataState.profileIconId}.png`} alt="Profile Icon" />
+      <img
+        className="ProfileIconImg"
+        src={`${ImgHostURL}/profileicon/${dataState.profileIconId}.png`}
+        alt="Profile Icon"
+      />
       <div className="SummonerText">
         <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
         <div className="SummonerHeading">{dataState.summName}</div>
