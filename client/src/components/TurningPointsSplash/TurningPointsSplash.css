@@ -1,0 +1,55 @@
+.TurningPointSplashTitle {
+  font-size: 1rem;
+}
+
+.TurningPointSplash {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    #000000 40.3%,
+    rgba(0, 0, 0, 0) 77.6%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.TurningPointSplashMobile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    #000000 40.3%,
+    rgba(0, 0, 0, 0.3) 85%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.TurningPointSplashContent {
+  max-width: 40vw;
+  text-align: start;
+  margin: 3rem 0 17rem 5rem;
+}
+
+.TurningPointSplashContentMobile {
+  max-width: 80vw;
+  text-align: start;
+  margin: 2rem 0 6rem 2rem;
+}
+
+.TurningPointSplashBody {
+  margin-top: 12.5rem;
+  font-size: 3.5rem;
+}
+
+.TurningPointSplashBodyMobile {
+  margin-top: 6rem;
+  font-size: 2rem;
+}
+
+.TurningPointsGoldText {
+  color: #d9bd81;
+}

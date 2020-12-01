@@ -4,15 +4,13 @@ import "./EndMessageCard.css";
 function EndMessageCard(props) {
   const isMobile = props.isMobile;
 
-  let endMessageCardType = "EndMessageCard";
-  let encouragementMessageType = "EncouragementMessage";
-  let redirectTopType = "RedirectTop";
-
-  if (isMobile) {
-    endMessageCardType = "EndMessageCardMobile";
-    encouragementMessageType = "EncouragementMessageMobile";
-    redirectTopType = "RedirectTopMobile";
-  }
+  const endMessageCardType = isMobile
+    ? "EndMessageCardMobile"
+    : "EndMessageCard";
+  const encouragementMessageType = isMobile
+    ? "EncouragementMessageMobile"
+    : "EncouragementMessage";
+  const redirectTopType = isMobile ? "RedirectTopMobile" : "RedirectTop";
 
   return (
     <div className={endMessageCardType}>

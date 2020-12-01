@@ -1,0 +1,103 @@
+.KillContributorsCard {
+  background-color: #111b1f;
+  padding: 3rem 0 3rem 0;
+}
+
+.KillContributorsCardMobile {
+  background-color: #111b1f;
+  padding: 1.5rem 0 1.5rem 1rem;
+}
+
+.ContributorsCardContainer {
+  padding: 2rem 0 2rem 2rem;
+}
+
+.ContributorsCardContainerMobile {
+  padding: 1rem 0;
+}
+
+.ContributorsCardTitle {
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.ContributorsCardTitleMobile {
+  font-size: 1rem;
+  text-align: left;
+}
+
+.ContributorChampionName {
+  font-size: 1.5rem;
+}
+
+.ContributorChampionNameMobile {
+  font-size: 1.25rem;
+}
+
+.ContributorKillImg {
+  width: 120px;
+  height: 120px;
+  border-radius: 100px;
+  margin-right: 2rem;
+}
+
+.ContributorKillImgMobile {
+  width: 90px;
+  height: 90px;
+  border-radius: 60px;
+  margin-right: 1rem;
+}
+
+.KillContributorInfo {
+  display: flex;
+  margin-right: 3rem;
+  margin-top: 2rem;
+}
+
+.KillContributorInfoMobile {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.KillContributorContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ContributorDescription {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.ContributorKillData {
+  display: flex;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.ContributorKillsAssists {
+  margin-right: 0.75rem;
+}
+
+.ContributorGoldXPData {
+  font-size: 0.75rem;
+}
+
+.ContributorGoldData,
+.ContributorXPData {
+  margin-top: 0.5rem;
+}
+
+.SurvivedPlayerText {
+  color: #45da43;
+}
+
+.KilledPlayerText {
+  color: #e24242;
+}
+
+.ContributorGoldXPDescription {
+  color: #585f62;
+}

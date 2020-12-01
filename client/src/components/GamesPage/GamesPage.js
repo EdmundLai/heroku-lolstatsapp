@@ -95,28 +95,27 @@ function SummonerTopBar(props) {
   const dataState = props.dataState;
   const isMobile = props.isMobile;
 
-  if (isMobile) {
-    return (
-      <div className="SummonerTopBar">
-        <div className="SummonerText">
-          <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
-          <div className="SummonerHeading">{dataState.summName}</div>
-        </div>
-      </div>
-    );
-  }
+  const SummonerText = (
+    <div className="SummonerText">
+      <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
+      <div className="SummonerHeading">{dataState.summName}</div>
+    </div>
+  );
+
+  const ProfileImg = isMobile ? (
+    <></>
+  ) : (
+    <img
+      className="ProfileIconImg"
+      src={`${ImgHostURL}/profileicon/${dataState.profileIconId}.png`}
+      alt="Profile Icon"
+    />
+  );
 
   return (
     <div className="SummonerTopBar">
-      <img
-        className="ProfileIconImg"
-        src={`${ImgHostURL}/profileicon/${dataState.profileIconId}.png`}
-        alt="Profile Icon"
-      />
-      <div className="SummonerText">
-        <div className="SummonerSubHeading">{`LEVEL ${dataState.summonerLevel}`}</div>
-        <div className="SummonerHeading">{dataState.summName}</div>
-      </div>
+      {ProfileImg}
+      {SummonerText}
     </div>
   );
 }

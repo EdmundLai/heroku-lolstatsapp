@@ -1,0 +1,21 @@
+.TurningPointsSummaryCard {
+  background-color: #111b1f;
+}
+
+.TurningPointsSummary {
+  font-size: 3.5rem;
+  width: 30vw;
+  padding: 12.5rem 0;
+  margin: 0 auto;
+}
+
+.TurningPointsSummaryMobile {
+  font-size: 2.5rem;
+  width: 90vw;
+  padding: 6rem 0;
+  margin: 0 auto;
+}
+
+.TurningPointsSummaryText {
+  color: #d9bd81;
+}
