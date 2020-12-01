@@ -5,15 +5,15 @@ import StatsCard from "../StatsCard/StatsCard";
 import EndMessageCard from "../EndMessageCard/EndMessageCard";
 import GraphContainer from "../GraphContainer/GraphContainer";
 import GameAnalysisSection from "../GameAnalysisSection/GameAnalysisSection";
-//import TipsCard from "../TipsCard/TipsCard";
+import TipsCard from "../TipsCard/TipsCard";
 
 // TipsCard is still in development
 
 const QueueDict = {
-  "430": "Normal Blind",
-  "420": "Ranked Solo",
-  "400": "Normal Draft",
-  "440": "Ranked Flex",
+  430: "Normal Blind",
+  420: "Ranked Solo",
+  400: "Normal Draft",
+  440: "Ranked Flex",
 };
 
 class DynamicStatsContent extends React.Component {
@@ -59,7 +59,7 @@ class DynamicStatsContent extends React.Component {
           <StatsCard currGameObj={currGameObj} isMobile={isMobile} />
           <GraphContainer statsObj={currGameObj} isMobile={isMobile} />
           <GameAnalysisSection currGameObj={currGameObj} isMobile={isMobile} />
-          {/* <TipsCard currGameObj={currGameObj} /> */}
+          <TipsCard currGameObj={currGameObj} />
           <EndMessageCard isMobile={isMobile} />
         </>
       );

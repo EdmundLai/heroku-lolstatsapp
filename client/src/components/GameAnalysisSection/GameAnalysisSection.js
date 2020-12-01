@@ -324,7 +324,11 @@ function KillContributorInfo(props) {
 
   const champion = ChampKeys[championId];
 
-  const champName = champion.match(/[A-Z][a-z]+/g).join(" ");
+  var champName = "Not found";
+
+  if (champion !== undefined) {
+    champName = champion.match(/[A-Z][a-z]+/g).join(" ");
+  }
 
   // mobile classes
   const contributorKillImgType = isMobile

@@ -1,5 +1,5 @@
 .App-header {
-  background-color: #09161C;
+  background-color: #09161c;
   display: flex;
   font-size: calc(10px + 2vmin);
   color: white;
@@ -16,6 +16,11 @@
 .HeaderTitle {
   font-size: 2rem;
   margin-right: 4vw;
+}
+
+.HeaderMobile {
+  font-size: 1.25rem;
+  margin-right: 12vw;
 }
 
 .HeaderTitle a {

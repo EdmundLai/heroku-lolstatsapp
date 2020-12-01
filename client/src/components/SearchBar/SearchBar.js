@@ -1,9 +1,9 @@
-import React from 'react';
-import RequestHandler from '../RequestHandler/RequestHandler';
-import SearchIcon from '../../resources/search-icon.svg';
-import LoadingAnimation from '../LoadingAnimation/LoadingAnimation';
-import { Redirect, withRouter } from 'react-router-dom';
-import './SearchBar.css';
+import React from "react";
+import RequestHandler from "../RequestHandler/RequestHandler";
+import SearchIcon from "../../resources/search-icon.svg";
+import LoadingAnimation from "../LoadingAnimation/LoadingAnimation";
+import { Redirect, withRouter } from "react-router-dom";
+import "./SearchBar.css";
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -34,13 +34,13 @@ class SearchBar extends React.Component {
     let value = target.value;
 
     this.setState({
-      summName: value
+      summName: value,
     });
   }
 
   handleWindowResize() {
     this.setState({
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
     });
   }
 
@@ -48,28 +48,28 @@ class SearchBar extends React.Component {
     // console.log(this.state);
 
     RequestHandler.handleRequest(this.state)
-    .then(data => {
-      // console.log("inside then of handleSubmit");
-      // console.log(data);
-      if(data.hasOwnProperty("summonerName")) {
-        this.props.updateAppState(200, data);
-      } else {
-        this.props.updateAppState(data.responseCode, data);
-      }
-    })
-    .catch(err => {
-      console.log("inside catch of handleSubmit");
-      console.log(err);
-    })
-    .finally(() => {
-      this.setState({
-        loading: false,
-        goToStats: true,
+      .then((data) => {
+        // console.log("inside then of handleSubmit");
+        // console.log(data);
+        if (data.hasOwnProperty("summonerName")) {
+          this.props.updateAppState(200, data);
+        } else {
+          this.props.updateAppState(data.responseCode, data);
+        }
+      })
+      .catch((err) => {
+        console.log("inside catch of handleSubmit");
+        console.log(err);
+      })
+      .finally(() => {
+        this.setState({
+          loading: false,
+          goToStats: true,
+        });
       });
-    });
 
     this.setState({
-      loading: true
+      loading: true,
     });
 
     event.preventDefault();
@@ -81,46 +81,58 @@ class SearchBar extends React.Component {
 
     let isMobile = this.state.windowWidth < 500 ? true : false;
 
-    let currentPageIsStats = (currentPathName === "/stats");
-    
-    let SearchBarContent = <></>
+    let currentPageIsStats = currentPathName === "/stats";
 
-    if(this.state.loading) {
+    let SearchBarContent = <></>;
+
+    let inputClassType = isMobile
+      ? "SearchBarInput InputMobile"
+      : "SearchBarInput";
+
+    const IconSection = (
+      <div className="SearchBarIconContainer">
+        <img className="SearchIconMobile" src={SearchIcon} alt="Search Icon" />
+      </div>
+    );
+
+    const SearchForm = (
+      <form className="SearchForm" onSubmit={this.handleSubmit}>
+        <input
+          className={inputClassType}
+          type="text"
+          value={this.state.summName}
+          onChange={this.handleChange}
+          placeholder="Username..."
+          required
+        />
+        <input className="SearchSubmit" type="submit" value="Go!" />
+      </form>
+    );
+
+    if (this.state.loading) {
       SearchBarContent = <LoadingAnimation />;
     } else {
-      let headerType = inHeader ? "SearchBarMobileHeader" : "SearchBarMobileNoHeader";
-      if(isMobile) {
-        SearchBarContent = 
-        <div className={`SearchBarMobile ${headerType}`}>
-          <form className="SearchForm" onSubmit={this.handleSubmit}>
-            <input className="SearchBarInput InputMobile" type="text" value={this.state.summName} onChange={this.handleChange} placeholder="Username..." required/>
-            <input className="SearchSubmit" type="submit" value="Go!"/>
-          </form> 
-        </div>;
-      } else {
-        SearchBarContent = 
-        <>
-          <div className="SearchBar">
-            <img className="SearchIcon" src={SearchIcon} alt="Search Icon"/>
-            <form className="SearchForm" onSubmit={this.handleSubmit}>
-              <input className="SearchBarInput" type="text" value={this.state.summName} onChange={this.handleChange} placeholder="Summoner name..." required/>
-              <input className="SearchSubmit" type="submit" value="Go!"/>
-            </form> 
-          </div>
-        </>
-      }
-      
-    }
-    if(this.state.goToStats && !currentPageIsStats) {
-      return (
-        <Redirect to="/stats" />
+      const headerType = inHeader
+        ? "SearchBarMobileHeader"
+        : "SearchBarMobileNoHeader";
+
+      const IconSectionMobile = isMobile && inHeader ? <></> : IconSection;
+
+      const searchBarClassName = isMobile
+        ? `SearchBarMobile ${headerType}`
+        : "SearchBar";
+
+      SearchBarContent = (
+        <div className={searchBarClassName}>
+          {IconSectionMobile}
+          {SearchForm}
+        </div>
       );
     }
-    return (
-      <>
-        {SearchBarContent}
-      </>
-    );
+    if (this.state.goToStats && !currentPageIsStats) {
+      return <Redirect to="/stats" />;
+    }
+    return <>{SearchBarContent}</>;
   }
 }
 

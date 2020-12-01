@@ -4,426 +4,445 @@ const RateLimiter = require("limiter").RateLimiter;
 // class that all calls to League of Legends APIs are made through
 // DONE: Convert all axios requests to na1.api.riotgames.com to use RateLimiter
 class RequestMaker {
-    constructor(apiToken) {
-        this.limiter1 = new RateLimiter(90, 120000);
-        this.limiter2 = new RateLimiter(18, 1000);
-        this.apiToken = apiToken;
-        this.gameType = {
-            400: "Draft Pick",
-            420: "Ranked Solo/Duo",
-            430: "Blind Pick",
-            440: "Ranked Flex",
-            450: "ARAM",
-            460: "Twisted Treeline 3v3",
+  constructor(apiToken) {
+    this.limiter1 = new RateLimiter(90, 120000);
+    this.limiter2 = new RateLimiter(18, 1000);
+    this.apiToken = apiToken;
+    this.gameType = {
+      400: "Draft Pick",
+      420: "Ranked Solo/Duo",
+      430: "Blind Pick",
+      440: "Ranked Flex",
+      450: "ARAM",
+      460: "Twisted Treeline 3v3",
+    };
+    this.errorLog = {
+      responseCode: undefined,
+      method: "",
+    };
+  }
+
+  // removing tokens from first limiter to adhere to 100 requests per 2 minutes
+  removeTokenLimiter1() {
+    return new Promise((resolve) => {
+      this.limiter1.removeTokens(1, resolve);
+    });
+  }
+
+  // removing tokens from second limiter to adhere to 20 requests per second
+  removeTokenLimiter2() {
+    return new Promise((resolve) => {
+      this.limiter2.removeTokens(1, resolve);
+    });
+  }
+
+  // combining removeTokenLimiter calls to make sure each request adheres to both rate limits
+  removeToken() {
+    return Promise.all([
+      this.removeTokenLimiter1(),
+      this.removeTokenLimiter2(),
+    ]);
+  }
+
+  // called directly from lolAPIcontroller.js
+  // must return errorLog directly when in catch block
+  getLOLSummonerData(summonerName) {
+    return this.removeToken()
+      .then(() => {
+        return axios({
+          url: `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`,
+          method: "get",
+          headers: {
+            "X-Riot-Token": this.apiToken,
+          },
+        });
+      })
+      .then((res) => {
+        const data = res.data;
+        const dataObj = {
+          summonerLevel: data.summonerLevel,
+          profileIconId: data.profileIconId,
+          name: data.name,
         };
-        this.errorLog = {
-            responseCode: undefined,
-            method: "",
+
+        return dataObj;
+      })
+      .catch((err) => {
+        // console.log(err);
+        console.log("error in getLOLSummonerData");
+        this.errorLog.responseCode = err.response.status;
+        this.errorLog.method = "getLOLSummonerData";
+        return this.errorLog;
+      });
+  }
+
+  getLOLAccountNameAndID(summonerName) {
+    return this.removeToken()
+      .then(() => {
+        return axios({
+          url: `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`,
+          method: "get",
+          headers: {
+            "X-Riot-Token": this.apiToken,
+          },
+        });
+      })
+      .then((res) => {
+        const data = res.data;
+        const accountID = data.accountId;
+        const summName = data.name;
+        const dataObj = {
+          accountID,
+          summName,
         };
+        return dataObj;
+      })
+      .catch((err) => {
+        // console.log(err);
+        console.log("error in getLOLAccountNameAndID");
+        this.errorLog.responseCode = err.response.status;
+        this.errorLog.method = "getLOLAccountNameAndID";
+
+        // console.log(err.response.status);
+        throw err;
+      });
+  }
+
+  // common queue types:
+  // 400: Draft Pick
+  // 420: Ranked Solo/Duo
+  // 430: Blind Pick
+  // 440: Ranked Flex
+  // 450: ARAM
+  // 460: Twisted Treeline 3v3
+
+  getMatchList(summonerID, queueTypes) {
+    let requestURL = null;
+    requestURL = `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${summonerID}`;
+
+    if (queueTypes !== undefined) {
+      if (typeof queueTypes === "number") {
+        requestURL += `?queue=${queueTypes}`;
+      } else if (typeof queueTypes === "object") {
+        for (let i = 0; i < queueTypes.length; i++) {
+          const queueType = queueTypes[i];
+          if (Number.isNaN(queueType)) {
+            console.log("queueType is not a number.");
+            return null;
+          }
+          if (i === 0) {
+            requestURL += `?queue=${queueType}`;
+          } else {
+            requestURL += `&queue=${queueType}`;
+          }
+        }
+      } else {
+        return null;
+      }
     }
 
-    // removing tokens from first limiter to adhere to 100 requests per 2 minutes
-    removeTokenLimiter1() {
-        return new Promise((resolve) => {
-            this.limiter1.removeTokens(1, resolve);
+    return this.removeToken()
+      .then(() => {
+        return axios({
+          url: requestURL,
+          method: "get",
+          headers: {
+            "X-Riot-Token": this.apiToken,
+          },
         });
-    }
+      })
+      .then((res) => {
+        const data = res.data.matches;
+        // console.log(data);
+        return data;
+      })
+      .catch((err) => {
+        console.log("error in getMatchList");
+        this.errorLog.responseCode = err.response.status;
+        this.errorLog.method = "getMatchList";
+        // console.log(err);
+        // if(err.response) {
+        //     console.log(err.response);
+        // }
+        throw err;
+      });
+  }
 
-    // removing tokens from second limiter to adhere to 20 requests per second
-    removeTokenLimiter2() {
-        return new Promise((resolve) => {
-            this.limiter2.removeTokens(1, resolve);
+  // tested and works!
+  getTimelineData(gameID, participantId) {
+    return this.removeToken()
+      .then(() => {
+        return axios({
+          url: `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameID}`,
+          method: "get",
+          headers: {
+            "X-Riot-Token": this.apiToken,
+          },
         });
-    }
+      })
+      .then((res) => {
+        const data = res.data;
+        // console.log(data);
+        const dataframes = data.frames;
 
-    // combining removeTokenLimiter calls to make sure each request adheres to both rate limits
-    removeToken() {
-        return Promise.all([this.removeTokenLimiter1(), this.removeTokenLimiter2()]);
-    }
+        const totalFrames = Object.keys(dataframes).length;
 
-    // called directly from lolAPIcontroller.js
-    // must return errorLog directly when in catch block
-    getLOLSummonerData(summonerName) {
-        return this.removeToken()
-        .then(() => {
-            return axios({
-                url: `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`,
-                method: "get",
-                headers: {
-                    "X-Riot-Token": this.apiToken,
-                },
-            });
-        })
-        .then(res => {
-            const data = res.data;
-            const dataObj = {
-                summonerLevel: data.summonerLevel,
-                profileIconId: data.profileIconId,
-                name: data.name,
-            };
+        let correctPlayerIndex = null;
 
-            return dataObj;
-        })
-        .catch(err => {
-            // console.log(err);
-            console.log("error in getLOLSummonerData");
-            this.errorLog.responseCode = err.response.status;
-            this.errorLog.method = "getLOLSummonerData";
-            return this.errorLog;
-        });
-    }
+        const playerTimelineData = {};
 
-    getLOLAccountNameAndID(summonerName) {
-        return this.removeToken()
-        .then(() => {
-            return axios({
-                url: `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`,
-                method: "get",
-                headers: {
-                    "X-Riot-Token": this.apiToken,
-                },
-            });
-        })
-        .then(res => {
-            const data = res.data;
-            const accountID = data.accountId;
-            const summName = data.name;
-            const dataObj = {
-                accountID,
-                summName,
-            };
-            return dataObj;
-        })
-        .catch(err => {
-            // console.log(err);
-            console.log("error in getLOLAccountNameAndID");
-            this.errorLog.responseCode = err.response.status;
-            this.errorLog.method = "getLOLAccountNameAndID";
+        for (let currFrame = 0; currFrame < totalFrames; currFrame++) {
+          const frameObj = dataframes[currFrame];
 
-            // console.log(err.response.status);
-            throw err;
-        });
-    }
+          // frameObj also contains the property "events", which is an array of game events
+          // such as purchasing/selling item, objective taken, or champion killed in the
+          // last minute of play
 
-    // common queue types:
-    // 400: Draft Pick
-    // 420: Ranked Solo/Duo
-    // 430: Blind Pick
-    // 440: Ranked Flex
-    // 450: ARAM
-    // 460: Twisted Treeline 3v3
+          // using participantFrames for now
+          const participantFrames = frameObj.participantFrames;
 
-    getMatchList(summonerID, queueTypes) {
-        let requestURL = null;
-        requestURL = `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${summonerID}`;
-
-        if (queueTypes !== undefined) {
-            if (typeof (queueTypes) === "number") {
-                requestURL += `?queue=${queueTypes}`;
-            } else if (typeof (queueTypes) === "object") {
-                for (let i = 0; i < queueTypes.length; i++) {
-                    const queueType = queueTypes[i];
-                    if (isNaN(queueType)) {
-                        console.log("queueType is not a number.");
-                        return null;
-                    }
-                    if (i === 0) {
-                        requestURL += `?queue=${queueType}`;
-                    } else {
-                        requestURL += `&queue=${queueType}`;
-                    }
-                }
-            } else {
-                return null;
+          if (correctPlayerIndex === null) {
+            for (let index = 1; index <= 10; index++) {
+              if (participantFrames[index].participantId === participantId) {
+                // break out of loop if participantId is found
+                correctPlayerIndex = index;
+                break;
+              }
             }
+          }
+
+          playerTimelineData[currFrame] = participantFrames[correctPlayerIndex];
+          // playerTimelineData[currFrame].events = frameObj.events;
         }
 
-        return this.removeToken()
+        const allTimelineData = data;
+
+        allTimelineData.playerTimelineData = playerTimelineData;
+
+        return allTimelineData;
+      })
+      .catch((err) => {
+        console.log("error in getTimelineData");
+        this.errorLog.responseCode = err.response.status;
+        this.errorLog.method = "getTimelineData";
+        // console.log(err);
+        // console.log(err.response.status);
+        throw err;
+      });
+  }
+
+  getStatsByGame(gameID, championID) {
+    return (
+      this.removeToken()
         .then(() => {
-            return axios({
-                url: requestURL,
-                method: "get",
-                headers: {
-                    "X-Riot-Token": this.apiToken,
-                },
-            });
+          return axios({
+            url: `https://na1.api.riotgames.com/lol/match/v4/matches/${gameID}`,
+            method: "get",
+            headers: {
+              "X-Riot-Token": this.apiToken,
+            },
+          });
         })
-        .then(res => {
-            const data = res.data.matches;
-            // console.log(data);
-            return data;
-        })
-        .catch(err => {
-            console.log("error in getMatchList");
-            this.errorLog.responseCode = err.response.status;
-            this.errorLog.method = "getMatchList";
-            // console.log(err);
-            // if(err.response) {
-            //     console.log(err.response);
-            // }
-            throw err;
-        });
-    }
+        .then((res) => {
+          const data = res.data;
+          const gameTime = data.gameCreation;
+          const playerDataArr = data.participants;
+          const gameLength = data.gameDuration;
+          const queueId = data.queueId;
+          let startingGold;
 
-    // tested and works!
-    getTimelineData(gameID, participantId) {
-        return this.removeToken()
-        .then(() => {
-            return axios({
-                url: `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameID}`,
-                method: "get",
-                headers: {
-                    "X-Riot-Token": this.apiToken,
-                },
-            });
-        })
-        .then(res => {
-            const data = res.data;
-            // console.log(data);
-            const dataframes = data.frames;
+          // startingGold values based on map
+          if (queueId === 450) {
+            startingGold = 1400;
+          } else if (queueId === 460 || queueId === 470) {
+            startingGold = 850;
+          } else {
+            startingGold = 500;
+          }
 
-            const totalFrames = Object.keys(dataframes).length;
+          // console.log(startingGold);
 
-            let correctPlayerIndex = null;
-
-            const playerTimelineData = {};
-
-            for (let currFrame = 0; currFrame < totalFrames; currFrame++) {
-                const frameObj = dataframes[currFrame];
-
-                // frameObj also contains the property "events", which is an array of game events
-                // such as purchasing/selling item, objective taken, or champion killed in the
-                // last minute of play
-
-                // using participantFrames for now
-                const participantFrames = frameObj.participantFrames;
-
-                if (correctPlayerIndex === null) {
-                    for (let index = 1; index <= 10; index++) {
-                        if (participantFrames[index].participantId == participantId) {
-                            // break out of loop if participantId is found
-                            correctPlayerIndex = index;
-                            break;
-                        }
-                    }
-                }
-
-                playerTimelineData[currFrame] = participantFrames[correctPlayerIndex];
-                // playerTimelineData[currFrame].events = frameObj.events;
+          function getPlayerStats() {
+            for (let i = 0; i < playerDataArr.length; i++) {
+              const playerData = playerDataArr[i];
+              if (playerData.championId === championID) {
+                return playerData.stats;
+              }
             }
 
-            const allTimelineData = data;
+            // should never happen
+            console.log("Champion ID not found!");
+            return null;
+          }
 
-            allTimelineData.playerTimelineData = playerTimelineData;
+          const fullStats = getPlayerStats();
 
-            return allTimelineData;
-        })
-        .catch(err => {
-            console.log("error in getTimelineData");
-            this.errorLog.responseCode = err.response.status;
-            this.errorLog.method = "getTimelineData";
-            // console.log(err);
-            // console.log(err.response.status);
-            throw err;
-        });
-    }
-
-    getStatsByGame(gameID, championID) {
-        return this.removeToken()
-        .then(() => {
-            return axios({
-                url: `https://na1.api.riotgames.com/lol/match/v4/matches/${gameID}`,
-                method: "get",
-                headers: {
-                    "X-Riot-Token": this.apiToken,
-                },
-            });
-        })
-        .then(res => {
-            const data = res.data;
-            const gameTime = data.gameCreation;
-            const playerDataArr = data.participants;
-            const gameLength = data.gameDuration;
-            const queueId = data.queueId;
-            let startingGold;
-
-            // startingGold values based on map
-            if (queueId === 450) {
-                startingGold = 1400;
-            } else if (queueId === 460 || queueId === 470) {
-                startingGold = 850;
-            } else {
-                startingGold = 500;
-            }
-
-            // console.log(startingGold);
-
-            function getPlayerStats() {
-                for (let i = 0; i < playerDataArr.length; i++) {
-                    const playerData = playerDataArr[i];
-                    if (playerData.championId === championID) {
-                        return playerData.stats;
-                    }
-                }
-
-                // should never happen
-                console.log("Champion ID not found!");
-                return null;
-            }
-
-            const fullStats = getPlayerStats();
-
-            function processStats({
-                participantId, win, kills, assists, deaths, visionScore, totalMinionsKilled,
-                totalDamageDealt, totalDamageDealtToChampions, goldEarned, timeCCingOthers,
-                damageDealtToObjectives,
-            }) {
-                return {
-                    participantId,
-                    win,
-                    kills,
-                    assists,
-                    deaths,
-                    visionScore,
-                    totalMinionsKilled,
-                    totalDamageDealt,
-                    totalDamageDealtToChampions,
-                    goldEarned,
-                    timeCCingOthers,
-                    damageDealtToObjectives,
-                };
-            }
-
-            const playerStats = processStats(fullStats);
-
-            function calculateExtraStats(stats, gameLen) {
-                const gameLenInMin = gameLen / 60;
-                let csPerMin = stats.totalMinionsKilled / gameLenInMin;
-                let goldPerMin = (stats.goldEarned - startingGold) / gameLenInMin;
-
-                csPerMin = parseFloat(csPerMin.toFixed(1));
-                goldPerMin = parseFloat(goldPerMin.toFixed(1));
-
-                return {
-                    csPerMin, goldPerMin,
-                };
-            }
-
-            const extraStats = calculateExtraStats(playerStats, gameLength);
-
-            playerStats.csPerMin = extraStats.csPerMin;
-            playerStats.goldPerMin = extraStats.goldPerMin;
-
-            const gameStats = data;
-
-            const gameInfo = {
-                gameID,
-                championID,
-                gameLength,
-                gameTime,
-                gameStats,
-                playerStats,
+          function processStats({
+            participantId,
+            win,
+            kills,
+            assists,
+            deaths,
+            visionScore,
+            totalMinionsKilled,
+            totalDamageDealt,
+            totalDamageDealtToChampions,
+            goldEarned,
+            timeCCingOthers,
+            damageDealtToObjectives,
+          }) {
+            return {
+              participantId,
+              win,
+              kills,
+              assists,
+              deaths,
+              visionScore,
+              totalMinionsKilled,
+              totalDamageDealt,
+              totalDamageDealtToChampions,
+              goldEarned,
+              timeCCingOthers,
+              damageDealtToObjectives,
             };
-            return gameInfo;
+          }
+
+          const playerStats = processStats(fullStats);
+
+          function calculateExtraStats(stats, gameLen) {
+            const gameLenInMin = gameLen / 60;
+            let csPerMin = stats.totalMinionsKilled / gameLenInMin;
+            let goldPerMin = (stats.goldEarned - startingGold) / gameLenInMin;
+
+            csPerMin = parseFloat(csPerMin.toFixed(1));
+            goldPerMin = parseFloat(goldPerMin.toFixed(1));
+
+            return {
+              csPerMin,
+              goldPerMin,
+            };
+          }
+
+          const extraStats = calculateExtraStats(playerStats, gameLength);
+
+          playerStats.csPerMin = extraStats.csPerMin;
+          playerStats.goldPerMin = extraStats.goldPerMin;
+
+          const gameStats = data;
+
+          const gameInfo = {
+            gameID,
+            championID,
+            gameLength,
+            gameTime,
+            gameStats,
+            playerStats,
+          };
+          return gameInfo;
         })
         // .then(data => {
         //     console.log(data);
         // })
-        .catch(err => {
-            console.log("error in getStatsByGame");
-            this.errorLog.responseCode = err.response.status;
-            this.errorLog.method = "getStatsByGame";
-            // console.log(err);
-            // console.log(err.response.status);
-            throw err;
-        });
+        .catch((err) => {
+          console.log("error in getStatsByGame");
+          this.errorLog.responseCode = err.response.status;
+          this.errorLog.method = "getStatsByGame";
+          // console.log(err);
+          // console.log(err.response.status);
+          throw err;
+        })
+    );
+  }
+
+  // returns array of stats per game if call is successful
+  // returns http status code if any calls failed along the way
+  getStats(summonerName, queueType, numGames) {
+    if (Number.isNaN(numGames)) {
+      console.log("Please request a numeric value for numGames.");
+      return null;
     }
+    if (numGames < 1) {
+      console.log("Please request numGames of at least 1.");
+      return null;
+    }
+    const maxNumGames = 20;
+    let numGamesRetrieved = numGames > maxNumGames ? maxNumGames : numGames;
+    console.log(`numGamesRetrieved: ${numGamesRetrieved}`);
+    return this.getLOLAccountNameAndID(summonerName)
+      .then((dataObj) => {
+        // console.log(id);
+        const id = dataObj.accountID;
+        const summName = dataObj.summName;
+        return this.getMatchList(id, queueType)
+          .then((matchList) => {
+            // uses object destructuring
+            const gameInfoArr = matchList.map(({ gameId, champion }) => {
+              return { gameId, champion };
+            });
+            // for debugging purposes
+            // console.log(gameInfoArr);
+            return gameInfoArr;
+          })
+          .then((gameInfoArr) => {
+            if (numGamesRetrieved > gameInfoArr.length) {
+              numGamesRetrieved = gameInfoArr.length;
+            }
 
-    // returns array of stats per game if call is successful
-    // returns http status code if any calls failed along the way
-    getStats(summonerName, queueType, numGames) {
-        if (isNaN(numGames)) {
-            console.log("Please request a numeric value for numGames.");
-            return null;
-        }
-        if (numGames < 1) {
-            console.log("Please request numGames of at least 1.");
-            return null;
-        }
-        const maxNumGames = 20;
-        let numGamesRetrieved = numGames > maxNumGames ? maxNumGames : numGames;
-        console.log(`numGamesRetrieved: ${numGamesRetrieved}`);
-        return this.getLOLAccountNameAndID(summonerName)
-        .then(dataObj => {
-            // console.log(id);
-            const id = dataObj.accountID;
-            const summName = dataObj.summName;
-            return this.getMatchList(id, queueType)
-            .then(matchList => {
-                // uses object destructuring
-                const gameInfoArr = matchList.map(({ gameId, champion }) => {
-                    return { gameId, champion };
-                });
-                // for debugging purposes
-                // console.log(gameInfoArr);
-                return gameInfoArr;
-            })
-            .then(gameInfoArr => {
-                if (numGamesRetrieved > gameInfoArr.length) {
-                    numGamesRetrieved = gameInfoArr.length;
-                }
+            const gamesRetrieved = gameInfoArr.slice(0, numGamesRetrieved);
 
-                const gamesRetrieved = gameInfoArr.slice(0, numGamesRetrieved);
+            return (
+              Promise.all(
+                gamesRetrieved.map((gameInfo) => {
+                  return this.getStatsByGame(gameInfo.gameId, gameInfo.champion)
+                    .then((gameData) => {
+                      const stats = gameData.playerStats;
+                      const participantId = stats.participantId;
+                      const gameID = gameData.gameID;
 
-                return Promise.all(gamesRetrieved.map(gameInfo => {
-                    return this.getStatsByGame(gameInfo.gameId, gameInfo.champion)
-                    .then(gameData => {
-                        const stats = gameData.playerStats;
-                        const participantId = stats.participantId;
-                        const gameID = gameData.gameID;
-
-                        return this.getTimelineData(gameID, participantId)
-                        .then(timelineData => {
-                            gameData.timelineData = timelineData;
-                            return gameData;
+                      return this.getTimelineData(gameID, participantId)
+                        .then((timelineData) => {
+                          gameData.timelineData = timelineData;
+                          return gameData;
                         })
-                        .catch(err => {
-                            throw err;
+                        .catch((err) => {
+                          throw err;
                         });
                     })
-                    .catch(err => {
-                        throw err;
+                    .catch((err) => {
+                      throw err;
                     });
-                }))
+                })
+              )
                 // used for debugging
                 // .then(data => {
                 //     console.log(data);
                 // })
-                .catch(err => {
-                    console.log("some error occurred in promise all");
-                    throw err;
-                });
-            })
-            .then(statsArray => {
-                const statsObj = {
-                    summonerName: summName,
-                    queueType,
-                    statsArray,
-                };
+                .catch((err) => {
+                  console.log("some error occurred in promise all");
+                  throw err;
+                })
+            );
+          })
+          .then((statsArray) => {
+            const statsObj = {
+              summonerName: summName,
+              queueType,
+              statsArray,
+            };
 
-                return statsObj;
-            })
-            .catch(err => {
-                throw err;
-            });
-        })
-        .catch(err => {
-            console.log("error message from RequestMaker");
-            console.log(`error response code: ${this.errorLog.responseCode}`);
-            // console.log(`error occurred in method: ${this.errorLog.method}`);
-            return this.errorLog;
-        });
-    }
+            return statsObj;
+          })
+          .catch((err) => {
+            throw err;
+          });
+      })
+      .catch(() => {
+        console.log("error message from RequestMaker");
+        console.log(`error response code: ${this.errorLog.responseCode}`);
+        // console.log(`error occurred in method: ${this.errorLog.method}`);
+        return this.errorLog;
+      });
+  }
 }
 
 // getting champion data from latest patch

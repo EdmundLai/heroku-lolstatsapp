@@ -9,8 +9,12 @@ class GamesTabSelector extends React.Component {
     const statsObj = this.props.statsObj;
     const isMobile = this.props.isMobile;
 
+    const GamesTabSelector = isMobile
+      ? "GamesTabSelectorMobile"
+      : "GamesTabSelector";
+
     return (
-      <div className="GamesTabSelector">
+      <div className={GamesTabSelector}>
         {statsObj.statsArray.map((gameData) => {
           return (
             <GameTab

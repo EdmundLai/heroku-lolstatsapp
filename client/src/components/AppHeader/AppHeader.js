@@ -1,15 +1,15 @@
-import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import SearchBar from '../SearchBar/SearchBar';
-import './AppHeader.css';
+import React from "react";
+import { withRouter, Link } from "react-router-dom";
+import SearchBar from "../SearchBar/SearchBar";
+import "./AppHeader.css";
 
 class AppHeader extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      windowWidth: window.innerWidth
-    }
+      windowWidth: window.innerWidth,
+    };
 
     this.handleWindowResize = this.handleWindowResize.bind(this);
   }
@@ -24,7 +24,7 @@ class AppHeader extends React.Component {
 
   handleWindowResize() {
     this.setState({
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
     });
   }
 
@@ -34,46 +34,35 @@ class AppHeader extends React.Component {
 
     let isMobile = this.state.windowWidth < 500 ? true : false;
 
-    if(currentPathName === "/") {
-      return(
+    if (currentPathName === "/") {
+      return (
         <header className="App-header header-home">
           <NavMenu />
         </header>
       );
     }
 
-    if(isMobile) {
-      return(
-        <header className="App-header header-other">
-          <div className="HeaderLeftSection">
-            <h1 className="HeaderTitle" id="top">
-              <Link to="/">
-                LolSA.gg
-              </Link>
-            </h1>
-            <SearchBar updateAppState={this.props.updateAppState} inHeader />
-          </div>
-        </header>
-      );
-    }
-    return(
+    const headerTitleClass = isMobile
+      ? "HeaderTitle HeaderMobile"
+      : "HeaderTitle";
+
+    const headerId = isMobile ? "top" : "";
+
+    return (
       <header className="App-header header-other">
         <div className="HeaderLeftSection">
-          <h1 className="HeaderTitle">
-            <Link to="/">
-              LolSA.gg
-            </Link>
+          <h1 className={headerTitleClass} id={headerId}>
+            <Link to="/">LolSA.gg</Link>
           </h1>
           <SearchBar updateAppState={this.props.updateAppState} inHeader />
         </div>
-        <NavMenu />
       </header>
-    );    
+    );
   }
 }
 
 function NavMenu() {
-  return(
+  return (
     <nav>
       <ul>
         <li>
@@ -86,6 +75,5 @@ function NavMenu() {
     </nav>
   );
 }
-  
 
 export default withRouter(AppHeader);

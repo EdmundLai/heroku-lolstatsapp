@@ -2,6 +2,7 @@
   background-color: white;
   width: 45vw;
   height: 6vh;
+  min-height: 29px;
   border-radius: 4rem;
   display: flex;
   padding-left: 1.5rem;
@@ -12,19 +13,26 @@
 .SearchBarMobile {
   background-color: white;
   height: 6vh;
+  min-height: 29px;
   border-radius: 4rem;
   display: flex;
-  padding-left: 1.5rem;
+  padding-left: 0.75rem;
   margin-right: 2vw;
   justify-content: center;
 }
 
+.SearchBarIconContainer {
+  display: flex;
+}
+
 .SearchBarMobileHeader {
   width: 40vw;
+  height: 28px;
 }
 
 .SearchBarMobileNoHeader {
   width: 70vw;
+  height: 28px;
 }
 
 .SearchForm {
@@ -36,16 +44,21 @@
   padding-right: 1rem;
 }
 
+.SearchIconMobile {
+  padding-right: 0.5rem;
+}
+
 .SearchBarInput {
   flex: 1.5;
   border: none;
-  color:rgba(1, 8, 12, 0.4);
+  color: rgba(1, 8, 12, 0.4);
   font-size: 1rem;
-  max-width: 30vw;
+  max-width: 40vw;
 }
 
 .InputMobile {
   border-radius: 60px 0 0 60px;
+  max-width: none;
 }
 
 .SearchBarInput:focus {
@@ -56,10 +69,10 @@
   border-radius: 0 4rem 4rem 0;
   flex-basis: 10%;
   border: none;
-  background-color: #D9BD81;
+  background-color: #d9bd81;
   font-family: inherit;
   color: white;
   font-size: 1.25rem;
   margin-left: auto;
+  cursor: pointer;
 }
-

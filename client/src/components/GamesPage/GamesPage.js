@@ -47,7 +47,7 @@ class GamesPage extends React.Component {
 
     const statsObj = queueStatsArray[queueTypeDict[dataState.queueType]];
 
-    let isMobile = this.state.windowWidth < 500 ? true : false;
+    let isMobile = this.state.windowWidth < 1100 ? true : false;
 
     return (
       <div className="GamesPage">
