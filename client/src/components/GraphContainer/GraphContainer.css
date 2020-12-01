@@ -3,7 +3,8 @@
   background-color: #010101;
 }
 
-.TabList ul, .TabListMobile ul {
+.TabList ul,
+.TabListMobile ul {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -30,7 +31,8 @@
   outline: none;
 }
 
-.TabList ul li a:hover, .TabListMobile ul li a:hover {
+.TabList ul li a:hover,
+.TabListMobile ul li a:hover {
   text-decoration: none;
   color: #282c34;
   animation-duration: 1s;

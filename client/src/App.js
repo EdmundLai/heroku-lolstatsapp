@@ -1,14 +1,14 @@
-import React from 'react';
-import AppHeader from './components/AppHeader/AppHeader';
-import AppFooter from './components/AppFooter/AppFooter';
-import HomePage from './components/HomePage/HomePage';
-import AboutPage from './components/AboutPage/AboutPage';
-import LeagueStats from './components/LeagueStats/LeagueStats';
+import React from "react";
+import AppHeader from "./components/AppHeader/AppHeader";
+import AppFooter from "./components/AppFooter/AppFooter";
+import HomePage from "./components/HomePage/HomePage";
+import AboutPage from "./components/AboutPage/AboutPage";
+import LeagueStats from "./components/LeagueStats/LeagueStats";
 // import InDepthStats from './components/InDepthStats/InDepthStats';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // import LoadingAnimation from './components/LoadingAnimation/LoadingAnimation';
 
-import './App.css';
+import "./App.css";
 
 class App extends React.Component {
   constructor(props) {
@@ -31,12 +31,12 @@ class App extends React.Component {
   // changed to handle errors as well as valid data
   updateState(httpCode, data) {
     // console.log(data);
-    if(httpCode === 200) {
+    if (httpCode === 200) {
       let statsObj = data;
       let newGameID = null;
 
       // handling case where RequestMaker cannot get data from default queue type
-      if(typeof statsObj.statsArrayByQueue[0].statsArray !== undefined) {
+      if (typeof statsObj.statsArrayByQueue[0].statsArray !== undefined) {
         newGameID = statsObj.statsArrayByQueue[0].statsArray[0].gameID;
       }
       this.setState({
@@ -52,10 +52,9 @@ class App extends React.Component {
       // console.log(`httpCode from updateState: ${httpCode}`);
       this.setState({
         httpCode: httpCode,
-        errorLog: data
+        errorLog: data,
       });
     }
-    
   }
 
   handleSelectChange(event) {
@@ -64,7 +63,7 @@ class App extends React.Component {
       420: 0,
       440: 1,
       430: 2,
-      400: 3
+      400: 3,
     };
 
     const queueIndex = queueTypeDict[event.target.value];
@@ -74,8 +73,9 @@ class App extends React.Component {
 
     const statsArray = this.state.statsArrayByQueue[queueIndex].statsArray;
 
-    if(typeof statsArray !== "undefined") {
-      const queueDefaultGameID = this.state.statsArrayByQueue[queueIndex].statsArray[0].gameID;
+    if (typeof statsArray !== "undefined") {
+      const queueDefaultGameID = this.state.statsArrayByQueue[queueIndex]
+        .statsArray[0].gameID;
 
       this.handleGameIDChange(queueDefaultGameID);
     }
@@ -83,10 +83,9 @@ class App extends React.Component {
 
   handleGameIDChange(gameID) {
     this.setState({
-      currGameID: gameID
+      currGameID: gameID,
     });
   }
-
 
   render() {
     return (
@@ -95,26 +94,36 @@ class App extends React.Component {
           <AppHeader updateAppState={this.updateState} />
           <div className="App-body">
             <Switch>
-              <Route path="/stats" render={(props) => <LeagueStats {...props} 
-                dataState={this.state} 
-                updateAppState={this.updateState}
-                handleGameIDChange={this.handleGameIDChange}
-                handleSelectChange={this.handleSelectChange}
-              />} />
-              <Route path="/about"><AboutPage/></Route>
-              <Route exact path="/" render={(props) => <HomePage {...props} 
-                updateAppState={this.updateState}
-              />} />
+              <Route
+                path="/stats"
+                render={(props) => (
+                  <LeagueStats
+                    {...props}
+                    dataState={this.state}
+                    updateAppState={this.updateState}
+                    handleGameIDChange={this.handleGameIDChange}
+                    handleSelectChange={this.handleSelectChange}
+                  />
+                )}
+              />
+              <Route path="/about">
+                <AboutPage />
+              </Route>
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <HomePage {...props} updateAppState={this.updateState} />
+                )}
+              />
               {/* <Route path="/stats_indepth" render={(props) => <InDepthStats {...props} dataState={this.state} />} /> */}
             </Switch>
-
           </div>
           <AppFooter />
         </div>
       </Router>
     );
   }
-  
 }
 
 export default App;

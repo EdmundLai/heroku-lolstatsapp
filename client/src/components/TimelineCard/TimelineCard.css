@@ -4,10 +4,11 @@
   align-items: center;
   padding-top: 4rem;
   padding-bottom: 2rem;
-  background-color: #111B1F;
+  background-color: #111b1f;
 }
 
-.ChampionKillCardContainer, .ObjectiveKillCardContainer {
+.ChampionKillCardContainer,
+.ObjectiveKillCardContainer {
   display: flex;
   align-items: center;
 }
@@ -25,11 +26,21 @@
 }
 
 .BlueTeamKill {
-  background: linear-gradient(90deg, rgb(95, 66, 226) 0%, rgb(95, 66, 226) 50.52%, rgba(226, 66, 66, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgb(95, 66, 226) 0%,
+    rgb(95, 66, 226) 50.52%,
+    rgba(226, 66, 66, 0) 100%
+  );
 }
 
 .RedTeamKill {
-  background: linear-gradient(90deg, #E24242 0%, #E24242 50.52%, rgba(226, 66, 66, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    #e24242 0%,
+    #e24242 50.52%,
+    rgba(226, 66, 66, 0) 100%
+  );
 }
 
 .TimestampLabel {

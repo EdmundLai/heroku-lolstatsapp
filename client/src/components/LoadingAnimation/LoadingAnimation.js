@@ -1,8 +1,8 @@
-import React from 'react';
-import './LoadingAnimation.css';
+import React from "react";
+import "./LoadingAnimation.css";
 
 function LoadingAnimation() {
-  return(
+  return (
     <div className="LoadingAnimation">
       <div className="bubble"></div>
       <div className="bubble"></div>

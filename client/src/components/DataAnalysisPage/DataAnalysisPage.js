@@ -1,10 +1,10 @@
-import React from 'react';
-import TimeUtil from '../../utils/time';
-import ArrayUtil from '../../utils/array';
-import { Line, Scatter } from 'react-chartjs-2';
-import GoldDiffContainer from '../GoldDiffContainer/GoldDiffContainer';
+import React from "react";
+import TimeUtil from "../../utils/time";
+import ArrayUtil from "../../utils/array";
+import { Line, Scatter } from "react-chartjs-2";
+import GoldDiffContainer from "../GoldDiffContainer/GoldDiffContainer";
 
-import './DataAnalysisPage.css';
+import "./DataAnalysisPage.css";
 
 // currently not in use (experimental page used for testing new features)
 // currently broken due to changes in data state configuration in App.js
@@ -19,41 +19,41 @@ class DataAnalysisPage extends React.Component {
     let scatterContainer = <></>;
     let goldDiffContainer = <></>;
 
-    if(statsArray.length !== 0) {
+    if (statsArray.length !== 0) {
       const lineGraph = createCSLineGraph(statsArray);
 
-      lineGraphContainer = 
+      lineGraphContainer = (
         <div className="CSLineGraph">
           <h2>CS Per Minute Average for last 5 games</h2>
           {lineGraph}
-        </div>;
+        </div>
+      );
     }
 
     // testing for analyzeTimelineData
-    if(statsArray.length !== 0) {
+    if (statsArray.length !== 0) {
       const firstGameData = statsArray[0];
 
       const killScatterPlot = createKillMap(firstGameData);
 
-      scatterContainer = 
+      scatterContainer = (
         <div className="ScatterContainer">
           <h2>Kill Map</h2>
-          <div className="ScatterPlotContainer">
-            {killScatterPlot}
-          </div>
-        </div>;
+          <div className="ScatterPlotContainer">{killScatterPlot}</div>
+        </div>
+      );
     }
 
-    if(statsArray.length !== 0) {
+    if (statsArray.length !== 0) {
       const firstGameData = statsArray[0];
 
       // const teamsData = getTeamsData(firstGameData);
       // console.log(teamsData);
 
-      goldDiffContainer = <GoldDiffContainer gameData={firstGameData}/>
+      goldDiffContainer = <GoldDiffContainer gameData={firstGameData} />;
     }
 
-    return(
+    return (
       <div className="DataAnalysisPage">
         {lineGraphContainer}
         {scatterContainer}
@@ -66,7 +66,7 @@ class DataAnalysisPage extends React.Component {
 function getDataFromArray(statsArray) {
   let csPerMinArr = [];
   let gameDateArr = [];
-  statsArray.forEach(gameData => {
+  statsArray.forEach((gameData) => {
     let csPerMin = gameData.playerStats.csPerMin;
     let gameDate = TimeUtil.convertGameDate(gameData.gameTime);
     csPerMinArr.push(csPerMin);
@@ -74,7 +74,7 @@ function getDataFromArray(statsArray) {
   });
   return {
     gameDateArr,
-    csPerMinArr
+    csPerMinArr,
   };
 }
 
@@ -85,13 +85,13 @@ function analyzeTimelineData(gameStats) {
   // console.log(timelineData);
   let gameKillEvents = [];
 
-  for(let i = 0; i < timelineData.length; i++) {
+  for (let i = 0; i < timelineData.length; i++) {
     let frameObj = timelineData[i];
     let gameEvents = frameObj.events;
     let lastMinKills = [];
-    for(let j = 0; j < gameEvents.length; j++) {
+    for (let j = 0; j < gameEvents.length; j++) {
       let gameEvent = gameEvents[j];
-      if(gameEvent.type === "CHAMPION_KILL") {
+      if (gameEvent.type === "CHAMPION_KILL") {
         lastMinKills.push(gameEvent);
       }
     }
@@ -103,41 +103,45 @@ function analyzeTimelineData(gameStats) {
 
 function createCSLineGraph(statsArray) {
   let csPerMinData = getDataFromArray(statsArray);
-    
+
   let avgCSPerMin = ArrayUtil.calculateAvgFromArray(csPerMinData.csPerMinArr);
   // console.log(avgCSPerMin);
 
-  let avgCSArr = ArrayUtil.fillArray(csPerMinData.csPerMinArr.length, avgCSPerMin);
+  let avgCSArr = ArrayUtil.fillArray(
+    csPerMinData.csPerMinArr.length,
+    avgCSPerMin
+  );
   // console.log(avgCSArr);
   // console.log(csPerMinData);
 
   let csPerMinGraphData = {
     labels: csPerMinData.gameDateArr,
-    datasets: [{
-      label: "CS per Min Avg by Game",
-      fill: false,
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
-      data: csPerMinData.csPerMinArr
-    },
-    {
-      label: "CS Per Min Average of Last 5 games",
-      fill: false,
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(0, 191, 255)',
-      data: avgCSArr,
-      borderDash: [10,5],
-      pointRadius: 0,
-      pointHitRadius: 0,
-    }
-  ]
-  }
+    datasets: [
+      {
+        label: "CS per Min Avg by Game",
+        fill: false,
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgb(255, 99, 132)",
+        data: csPerMinData.csPerMinArr,
+      },
+      {
+        label: "CS Per Min Average of Last 5 games",
+        fill: false,
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgb(0, 191, 255)",
+        data: avgCSArr,
+        borderDash: [10, 5],
+        pointRadius: 0,
+        pointHitRadius: 0,
+      },
+    ],
+  };
 
   let chartOptions = {
     hover: {
-      mode: 'nearest'
-    }
-  }
+      mode: "nearest",
+    },
+  };
 
   return <Line data={csPerMinGraphData} options={chartOptions} />;
 }
@@ -154,10 +158,10 @@ function createKillMap(gameData) {
         data: killPositionsArray,
         pointRadius: 10,
         pointHoverRadius: 15,
-        pointBackgroundColor: 'rgb(0, 191, 255)',
-      }
-    ]
-  }
+        pointBackgroundColor: "rgb(0, 191, 255)",
+      },
+    ],
+  };
 
   const scatterOptions = {
     responsive: true,
@@ -166,12 +170,16 @@ function createKillMap(gameData) {
       display: false,
     },
     scales: {
-      xAxes: [{
-        display: false
-      }],
-      yAxes: [{
-        display: false
-      }],
+      xAxes: [
+        {
+          display: false,
+        },
+      ],
+      yAxes: [
+        {
+          display: false,
+        },
+      ],
     },
   };
 
@@ -185,7 +193,7 @@ function make1DArrayFrom2DArray(array2D) {
 }
 
 function getPositionDataFromFlatEventArray(eventArray) {
-  return eventArray.map(event => event.position);
+  return eventArray.map((event) => event.position);
 }
 
 export default DataAnalysisPage;

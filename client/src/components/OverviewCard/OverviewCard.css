@@ -1,7 +1,7 @@
 .OverviewCard {
   display: flex;
   width: 100%;
-  background-color: #111B1F;
+  background-color: #111b1f;
   border-radius: 32px 32px 0 0;
   flex-direction: column;
   align-items: center;
@@ -11,7 +11,7 @@
 .OverviewCardMobile {
   display: flex;
   width: 100%;
-  background-color: #111B1F;
+  background-color: #111b1f;
   flex-direction: column;
   align-items: center;
   padding-bottom: 3rem;
@@ -40,20 +40,25 @@
   margin-left: 2rem;
 }
 
-
-.AllyKills, .AllyHeading, .GoodResult {
-  color: #1E9BD0;
+.AllyKills,
+.AllyHeading,
+.GoodResult {
+  color: #1e9bd0;
 }
 
-.EnemyKills, .EnemyHeading, .BadResult {
-  color: #E24242;
+.EnemyKills,
+.EnemyHeading,
+.BadResult {
+  color: #e24242;
 }
 
-.AllyHeading, .EnemyHeading {
+.AllyHeading,
+.EnemyHeading {
   font-size: 1.5rem;
 }
 
-.AllyTeamStats, .TeamStatsMobile {
+.AllyTeamStats,
+.TeamStatsMobile {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -89,7 +94,6 @@
 .PlayerStatsDetails {
   display: flex;
   flex-direction: column;
-  
 }
 
 .AllyContainer {
@@ -108,7 +112,7 @@
   align-items: flex-end;
 }
 
-.AllyImage  {
+.AllyImage {
   margin-right: 1rem;
 }
 
@@ -117,7 +121,7 @@
 }
 
 .CurrentPlayerImg {
-  box-shadow: 0px 0px 16px #1E9BD0;
+  box-shadow: 0px 0px 16px #1e9bd0;
 }
 
 .StatsImage {
@@ -156,25 +160,25 @@
 }
 
 .AllyDamageBar {
-  background-color: #1E9BD0;
+  background-color: #1e9bd0;
   text-align: left;
   padding-left: 0.5rem;
 }
 
 .EnemyDamageBar {
-  background-color: #E24242;
+  background-color: #e24242;
   text-align: right;
   padding-right: 0.5rem;
 }
 
 .EnemyMobileDamageBar {
-  background-color: #E24242;
+  background-color: #e24242;
   text-align: left;
   padding-left: 0.5rem;
 }
 
 .AllyDamageDescription {
-  margin-right: 0.5rem; 
+  margin-right: 0.5rem;
 }
 
 .EnemyDamageDescription {

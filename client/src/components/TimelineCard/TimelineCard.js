@@ -186,7 +186,7 @@ function ObjectiveKillCardContainer(props) {
     }
   }
 
-  let objectiveImg = (
+  const objectiveImg = (
     <img
       className={championKillImgType}
       src={`${OldImgHostURL}/neutral-monsters/${monsterImgName}Square.png`}

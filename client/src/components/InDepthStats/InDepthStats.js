@@ -1,6 +1,6 @@
-import React from 'react';
-import DataAnalysisPage from '../DataAnalysisPage/DataAnalysisPage';
-import ErrorPage from '../ErrorPage/ErrorPage';
+import React from "react";
+import DataAnalysisPage from "../DataAnalysisPage/DataAnalysisPage";
+import ErrorPage from "../ErrorPage/ErrorPage";
 
 class InDepthStats extends React.Component {
   render() {
@@ -8,20 +8,16 @@ class InDepthStats extends React.Component {
     let responseCode = dataState.httpCode;
     let StatsContent = <></>;
 
-    if(responseCode === 200) {
-      StatsContent = <DataAnalysisPage dataState={dataState}/>
+    if (responseCode === 200) {
+      StatsContent = <DataAnalysisPage dataState={dataState} />;
     } else {
-      StatsContent = <ErrorPage code={responseCode} errorLog={dataState.errorLog} />
+      StatsContent = (
+        <ErrorPage code={responseCode} errorLog={dataState.errorLog} />
+      );
     }
 
-    return(
-      <div className="InDepthStats">
-        {StatsContent}
-      </div>
-    );
+    return <div className="InDepthStats">{StatsContent}</div>;
   }
 }
-
-
 
 export default InDepthStats;

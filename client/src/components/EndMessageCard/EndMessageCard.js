@@ -1,5 +1,5 @@
-import React from 'react';
-import './EndMessageCard.css';
+import React from "react";
+import "./EndMessageCard.css";
 
 function EndMessageCard(props) {
   const isMobile = props.isMobile;
@@ -8,21 +8,19 @@ function EndMessageCard(props) {
   let encouragementMessageType = "EncouragementMessage";
   let redirectTopType = "RedirectTop";
 
-  if(isMobile) {
+  if (isMobile) {
     endMessageCardType = "EndMessageCardMobile";
     encouragementMessageType = "EncouragementMessageMobile";
     redirectTopType = "RedirectTopMobile";
   }
 
-  return(
+  return (
     <div className={endMessageCardType}>
       <div className={encouragementMessageType}>
         Good luck on your next game!
       </div>
       <div className={redirectTopType}>
-        <a href="#top">
-          BACK TO TOP
-        </a>
+        <a href="#top">BACK TO TOP</a>
       </div>
     </div>
   );

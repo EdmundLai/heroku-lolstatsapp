@@ -79,9 +79,9 @@ class SearchBar extends React.Component {
     const inHeader = this.props.inHeader;
     const currentPathName = this.props.location.pathname;
 
-    let isMobile = this.state.windowWidth < 500 ? true : false;
+    const isMobile = this.state.windowWidth < 500 ? true : false;
 
-    let currentPageIsStats = currentPathName === "/stats";
+    const currentPageIsStats = currentPathName === "/stats";
 
     let SearchBarContent = <></>;
 
@@ -132,7 +132,7 @@ class SearchBar extends React.Component {
     if (this.state.goToStats && !currentPageIsStats) {
       return <Redirect to="/stats" />;
     }
-    return <>{SearchBarContent}</>;
+    return SearchBarContent;
   }
 }
 

@@ -1,22 +1,24 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import ArrayUtil from '../../utils/array';
-import DataUtil from '../../utils/data';
-import GraphUtil from '../../utils/graph';
-import './StatsGraph.css';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import ArrayUtil from "../../utils/array";
+import DataUtil from "../../utils/data";
+import GraphUtil from "../../utils/graph";
+import "./StatsGraph.css";
 
 class StatsGraph extends React.Component {
-
   render() {
-
-    const playerTimelineData = this.props.statsObj.timelineData.playerTimelineData;
+    const playerTimelineData = this.props.statsObj.timelineData
+      .playerTimelineData;
     // console.log(this.props.statsObj.timelineData);
     // console.log(timeline);
     const gameStats = this.props.statsObj.playerStats;
     const gameLength = this.props.statsObj.gameLength;
-    const dataForGraphs = DataUtil.processTimelineData(playerTimelineData);    
+    const dataForGraphs = DataUtil.processTimelineData(playerTimelineData);
 
-    const avgXpPerMin = DataUtil.calculateAvgXpPerMin(playerTimelineData, gameLength);
+    const avgXpPerMin = DataUtil.calculateAvgXpPerMin(
+      playerTimelineData,
+      gameLength
+    );
 
     const deltasData = DataUtil.calculateDeltasPerMin(dataForGraphs);
 
@@ -42,41 +44,56 @@ class StatsGraph extends React.Component {
     //   }]
     // }
 
-    const gpmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, gameStats.goldPerMin);
-    const xppmAvgArray = ArrayUtil.fillArray(deltasData.timeDeltas.length, avgXpPerMin);
+    const gpmAvgArray = ArrayUtil.fillArray(
+      deltasData.timeDeltas.length,
+      gameStats.goldPerMin
+    );
+    const xppmAvgArray = ArrayUtil.fillArray(
+      deltasData.timeDeltas.length,
+      avgXpPerMin
+    );
 
-    const xpDeltaData = {
-      labels: deltasData.timeDeltas,
-      datasets: [
-        GraphUtil.createNormalDataSet("Experience Per Min", deltasData.xpDeltas),
-        GraphUtil.createAverageDataSet("Experience Per Minute Average", xppmAvgArray)
-      ],
+    function createDataObject(
+      normalDataTitle,
+      normalData,
+      averageDataTitle,
+      averageData
+    ) {
+      return {
+        labels: deltasData.timeDeltas,
+        datasets: [
+          GraphUtil.createNormalDataSet(normalDataTitle, normalData),
+          GraphUtil.createAverageDataSet(averageDataTitle, averageData),
+        ],
+      };
     }
 
-    const goldDeltaData = {
-      labels: deltasData.timeDeltas,
-      datasets: [
-        GraphUtil.createNormalDataSet("Gold Per Min", deltasData.goldDeltas),
-        GraphUtil.createAverageDataSet("Gold Per Minute Average",gpmAvgArray)
-      ],
-    }
+    const xpDeltaData = createDataObject(
+      "Experience Per Min",
+      deltasData.xpDeltas,
+      "Experience Per Minute Average",
+      xppmAvgArray
+    );
+
+    const goldDeltaData = createDataObject(
+      "Gold Per Min",
+      deltasData.goldDeltas,
+      "Gold Per Minute Average",
+      gpmAvgArray
+    );
 
     const goldChartOptions = GraphUtil.createChartOptions("Gold Per Min");
     const expChartOptions = GraphUtil.createChartOptions("EXP Per Min");
 
     let displayedGraph;
 
-    if(this.props.type === "gold") {
-      displayedGraph = <Line data={goldDeltaData} options={goldChartOptions}/>
+    if (this.props.type === "gold") {
+      displayedGraph = <Line data={goldDeltaData} options={goldChartOptions} />;
     } else {
-      displayedGraph = <Line data={xpDeltaData} options={expChartOptions}/>
+      displayedGraph = <Line data={xpDeltaData} options={expChartOptions} />;
     }
-    
-    return(
-      <div className="StatsGraph">
-        {displayedGraph}
-      </div>
-    );
+
+    return <div className="StatsGraph">{displayedGraph}</div>;
   }
 }
 

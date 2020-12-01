@@ -1,6 +1,6 @@
-import React from 'react';
-import GamesPage from '../GamesPage/GamesPage';
-import ErrorPage from '../ErrorPage/ErrorPage';
+import React from "react";
+import GamesPage from "../GamesPage/GamesPage";
+import ErrorPage from "../ErrorPage/ErrorPage";
 // import LoadingAnimation from '../LoadingAnimation/LoadingAnimation';
 
 class LeagueStats extends React.Component {
@@ -10,22 +10,22 @@ class LeagueStats extends React.Component {
     const responseCode = dataState.httpCode;
     let StatsContent = <></>;
 
-    if(responseCode === 200) {
-      StatsContent = <GamesPage 
-        dataState={dataState} 
-        currGameID={currGameID}
-        handleGameIDChange={this.props.handleGameIDChange}
-        handleSelectChange={this.props.handleSelectChange} 
-      />
+    if (responseCode === 200) {
+      StatsContent = (
+        <GamesPage
+          dataState={dataState}
+          currGameID={currGameID}
+          handleGameIDChange={this.props.handleGameIDChange}
+          handleSelectChange={this.props.handleSelectChange}
+        />
+      );
     } else {
-      StatsContent = <ErrorPage code={responseCode} errorLog={dataState.errorLog} />
+      StatsContent = (
+        <ErrorPage code={responseCode} errorLog={dataState.errorLog} />
+      );
     }
 
-    return(
-      <>
-        {StatsContent}
-      </>
-    );
+    return <>{StatsContent}</>;
   }
 }
 

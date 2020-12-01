@@ -1,23 +1,23 @@
-const express = require('express');
-const path = require('path');
-require('dotenv').config();
+const express = require("express");
+const path = require("path");
+require("dotenv").config();
 
 const app = express();
 
-const cors = require('cors');
+const cors = require("cors");
 
 app.use(cors());
 
-const rootDir = path.join(__dirname, '../');
+const rootDir = path.join(__dirname, "../");
 
-app.use(express.static(path.join(rootDir, 'client/build')));
+app.use(express.static(path.join(rootDir, "client/build")));
 
-const apiRouter = require('./routes/api');
+const apiRouter = require("./routes/api");
 
-app.use('/api', apiRouter);
+app.use("/api", apiRouter);
 
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(rootDir, 'client/build', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(rootDir, "client/build", "index.html"));
 });
 
 const port = process.env.PORT || 5000;

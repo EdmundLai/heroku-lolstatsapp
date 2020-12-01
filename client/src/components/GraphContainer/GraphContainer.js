@@ -1,6 +1,6 @@
-import React from 'react';
-import StatsGraph from '../StatsGraph/StatsGraph';
-import './GraphContainer.css';
+import React from "react";
+import StatsGraph from "../StatsGraph/StatsGraph";
+import "./GraphContainer.css";
 
 class GraphContainer extends React.Component {
   constructor(props) {
@@ -8,27 +8,26 @@ class GraphContainer extends React.Component {
 
     this.state = {
       activeTab: "gold",
-    }
+    };
 
     this.setTabToGold = this.setTabToGold.bind(this);
     this.setTabToExp = this.setTabToExp.bind(this);
   }
 
   setTabToGold(event) {
-    if(this.state.activeTab !== "gold") {
+    if (this.state.activeTab !== "gold") {
       this.setState({
-        activeTab: "gold"
+        activeTab: "gold",
       });
     }
 
     event.preventDefault();
-
   }
 
   setTabToExp(event) {
-    if(this.state.activeTab !== "exp") {
+    if (this.state.activeTab !== "exp") {
       this.setState({
-        activeTab: "exp"
+        activeTab: "exp",
       });
     }
 
@@ -43,19 +42,30 @@ class GraphContainer extends React.Component {
 
     const tabListType = isMobile ? "TabListMobile" : "TabList";
 
-    return(
+    return (
       <div className="GraphContainer">
         <div className={tabListType}>
           <ul>
             <li>
-              <a className={GoldTabActive} href="/#" onClick={this.setTabToGold}>Gold Graph</a>
+              <a
+                className={GoldTabActive}
+                href="/#"
+                onClick={this.setTabToGold}
+              >
+                Gold Graph
+              </a>
             </li>
             <li>
-              <a className={ExpTabActive} href="/#" onClick={this.setTabToExp}>Experience Graph</a>
+              <a className={ExpTabActive} href="/#" onClick={this.setTabToExp}>
+                Experience Graph
+              </a>
             </li>
           </ul>
         </div>
-        <StatsGraph statsObj={this.props.statsObj} type={this.state.activeTab}/>
+        <StatsGraph
+          statsObj={this.props.statsObj}
+          type={this.state.activeTab}
+        />
       </div>
     );
   }

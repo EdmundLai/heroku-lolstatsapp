@@ -5,7 +5,8 @@
   max-width: 90vw;
 }
 
-.InfoCard ul,.InfoBarMobile ul {
+.InfoCard ul,
+.InfoBarMobile ul {
   list-style-type: none;
   padding-left: 0;
 }
@@ -31,4 +32,3 @@
   margin: 1em 1em 1em 1em;
   padding: 1rem;
 }
-
