@@ -36,7 +36,10 @@ class App extends React.Component {
       let newGameID = null;
 
       // handling case where RequestMaker cannot get data from default queue type
-      if (typeof statsObj.statsArrayByQueue[0].statsArray !== undefined) {
+      if (
+        typeof statsObj.statsArrayByQueue[0].statsArray !== "undefined" ||
+        typeof statsObj.statsArrayByQueue[0].statsArray[0] !== "undefined"
+      ) {
         newGameID = statsObj.statsArrayByQueue[0].statsArray[0].gameID;
       }
       this.setState({
@@ -74,8 +77,8 @@ class App extends React.Component {
     const statsArray = this.state.statsArrayByQueue[queueIndex].statsArray;
 
     if (typeof statsArray !== "undefined") {
-      const queueDefaultGameID = this.state.statsArrayByQueue[queueIndex]
-        .statsArray[0].gameID;
+      const queueDefaultGameID =
+        this.state.statsArrayByQueue[queueIndex].statsArray[0].gameID;
 
       this.handleGameIDChange(queueDefaultGameID);
     }

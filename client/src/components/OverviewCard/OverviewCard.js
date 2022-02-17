@@ -232,19 +232,16 @@ function getOverviewObj(currGameObj) {
 
     const participantId = participantObj.participantId;
     const teamId = participantObj.teamId;
-    const stats = participantObj.stats;
 
-    const currIdentityObj = gameStats.participantIdentities.filter(
-      (identityObj) => identityObj.participantId === participantId
-    )[0];
-    const summonerName = currIdentityObj.player.summonerName;
+    const summonerName = participantObj.summonerName;
 
     const championId = participantObj.championId;
 
-    const kills = stats.kills;
-    const deaths = stats.deaths;
-    const assists = stats.assists;
-    const totalDamageDealtToChampions = stats.totalDamageDealtToChampions;
+    const kills = participantObj.kills;
+    const deaths = participantObj.deaths;
+    const assists = participantObj.assists;
+    const totalDamageDealtToChampions =
+      participantObj.totalDamageDealtToChampions;
 
     if (totalDamageDealtToChampions > maxDamageToChampions) {
       maxDamageToChampions = totalDamageDealtToChampions;

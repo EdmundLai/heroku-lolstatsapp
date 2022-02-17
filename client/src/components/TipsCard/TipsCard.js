@@ -46,9 +46,8 @@ class TipsCard extends React.Component {
 
     participantArr.forEach((participantObj) => {
       //console.log(participantObj);
-      const timeline = participantObj.timeline;
 
-      const participantRole = this.checkPlayerRoleFromTimeline(timeline);
+      const participantRole = this.checkPlayerRoleFromDataObj(participantObj);
 
       allPlayersInfo[participantObj.participantId] = {
         participantObj: participantObj,
@@ -83,21 +82,21 @@ class TipsCard extends React.Component {
     // console.log(typeof playerObj);
     // console.log(playerObj);
 
-    const timeline = playerObj.timeline;
+    console.log(playerObj);
 
-    return this.checkPlayerRoleFromTimeline(timeline);
+    return this.checkPlayerRoleFromDataObj(playerObj);
   }
 
-  checkPlayerRoleFromTimeline(timeline) {
-    if (timeline.role === "SOLO" && timeline.lane === "TOP") {
+  checkPlayerRoleFromDataObj(dataObj) {
+    if (dataObj.role === "SOLO" && dataObj.lane === "TOP") {
       return "top";
-    } else if (timeline.lane === "JUNGLE") {
+    } else if (dataObj.lane === "JUNGLE") {
       return "jungle";
-    } else if (timeline.role === "SOLO" && timeline.lane === "MIDDLE") {
+    } else if (dataObj.role === "SOLO" && dataObj.lane === "MIDDLE") {
       return "middle";
-    } else if (timeline.role === "DUO_CARRY") {
+    } else if (dataObj.role === "DUO_CARRY") {
       return "adc";
-    } else if (timeline.role === "DUO_SUPPORT") {
+    } else if (dataObj.role === "DUO_SUPPORT") {
       return "support";
     }
 

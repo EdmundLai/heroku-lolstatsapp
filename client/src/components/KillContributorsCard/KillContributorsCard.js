@@ -227,23 +227,25 @@ function getContributorsDataObj(
 
     const { assistingParticipantIds, killerId, victimId } = champKillObj;
 
-    for (let j = 0; j < assistingParticipantIds.length; j++) {
-      const assistPlayerId = assistingParticipantIds[j];
+    if (typeof assistingParticipantIds != "undefined") {
+      for (let j = 0; j < assistingParticipantIds.length; j++) {
+        const assistPlayerId = assistingParticipantIds[j];
 
-      const assistPlayerTeamId = playerTeamObj[assistPlayerId].teamId;
+        const assistPlayerTeamId = playerTeamObj[assistPlayerId].teamId;
 
-      if (
-        contributorsDataObj[assistPlayerTeamId].hasOwnProperty(assistPlayerId)
-      ) {
-        contributorsDataObj[assistPlayerTeamId][assistPlayerId].assists += 1;
-      } else {
-        contributorsDataObj[assistPlayerTeamId][assistPlayerId] = {
-          kills: 0,
-          assists: 1,
-          survived: true,
-          goldDelta: 0,
-          xpDelta: 0,
-        };
+        if (
+          contributorsDataObj[assistPlayerTeamId].hasOwnProperty(assistPlayerId)
+        ) {
+          contributorsDataObj[assistPlayerTeamId][assistPlayerId].assists += 1;
+        } else {
+          contributorsDataObj[assistPlayerTeamId][assistPlayerId] = {
+            kills: 0,
+            assists: 1,
+            survived: true,
+            goldDelta: 0,
+            xpDelta: 0,
+          };
+        }
       }
     }
 
