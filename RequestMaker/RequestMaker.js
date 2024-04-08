@@ -47,18 +47,24 @@ class RequestMaker {
     ]);
   }
 
+  axiosHelper(url) {
+    return axios({
+      url: url,
+      method: "get",
+      headers: {
+        "X-Riot-Token": this.apiToken,
+      },
+    });
+  }
+
   // called directly from lolAPIcontroller.js
   // must return errorLog directly when in catch block
   getLOLSummonerData(summonerName) {
     return this.removeToken()
       .then(() => {
-        return axios({
-          url: `https://na1.api.riotgames.com/lol/summoner/v${summonerAPIVersion}/summoners/by-name/${summonerName}`,
-          method: "get",
-          headers: {
-            "X-Riot-Token": this.apiToken,
-          },
-        });
+        return this.axiosHelper(
+          `https://na1.api.riotgames.com/lol/summoner/v${summonerAPIVersion}/summoners/by-name/${summonerName}`
+        );
       })
       .then((res) => {
         const data = res.data;
@@ -73,6 +79,7 @@ class RequestMaker {
       .catch((err) => {
         //console.log(err);
         console.log("error in getLOLSummonerData");
+        console.log(err);
         this.errorLog.responseCode = err.response.status;
         this.errorLog.method = "getLOLSummonerData";
         return this.errorLog;
@@ -155,6 +162,8 @@ class RequestMaker {
         });
       })
       .then((res) => {
+        // console.log("getMatchList response");
+        // console.log(res);
         const data = res.data;
         // console.log(data);
         return data;
@@ -247,6 +256,11 @@ class RequestMaker {
           });
         })
         .then((res) => {
+          if (res.status != 200) {
+            console.log(res);
+            throw Error(`Response invalid, response status ${res.statusCode}`);
+          }
+
           const data = res.data.info;
           //console.log(data);
 
@@ -351,7 +365,8 @@ class RequestMaker {
         //     console.log(data);
         // })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
+          console.log(`Match request response status: ${err.response.status}`);
           console.log("error in getStatsByGame");
           //this.errorLog.responseCode = err.response.status;
           this.errorLog.method = "getStatsByGame";
@@ -418,12 +433,12 @@ class RequestMaker {
                             return gameData;
                           })
                           .catch((err) => {
-                            console.log("err0");
+                            console.log("error from getTimelineData");
                             throw err;
                           });
                       })
                       .catch((err) => {
-                        console.log("err1");
+                        console.log("error from getStatsByGame");
                         throw err;
                       });
                   })
@@ -448,13 +463,13 @@ class RequestMaker {
               return statsObj;
             })
             .catch((err) => {
-              console.log("err2");
+              console.log("Error from stats array handler");
               throw err;
             })
         );
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         console.log("error message from RequestMaker");
         console.log(`error response code: ${this.errorLog.responseCode}`);
         // console.log(`error occurred in method: ${this.errorLog.method}`);
