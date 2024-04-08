@@ -1,0 +1,49 @@
+qwert@LAPTOP-63FBUPU2 MINGW64 ~/Documents/web_dev/heroku_testing/heroku-lolstatsapp (master)
+$ npm start
+
+> lolstatsapp@1.0.0 start
+> node backend/index.js
+
+App listening on 5000!
+Error: ENOENT: no such file or directory, stat 'C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\client\build\index.html'
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 3)
+(node:7444) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 6)
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 9)
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 12)
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 15)
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 18)
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 21)
+error in getLOLSummonerData
+(node:7444) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'status' of undefined
+    at C:\Users\qwert\Documents\web_dev\heroku_testing\heroku-lolstatsapp\RequestMaker\RequestMaker.js:76:51
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+(node:7444) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 24)
