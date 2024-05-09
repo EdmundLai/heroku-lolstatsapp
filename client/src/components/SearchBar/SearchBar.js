@@ -45,7 +45,7 @@ class SearchBar extends React.Component {
   }
 
   handleSubmit(event) {
-    // console.log(this.state);
+    console.log(this.state);
 
     RequestHandler.handleRequest(this.state)
       .then((data) => {

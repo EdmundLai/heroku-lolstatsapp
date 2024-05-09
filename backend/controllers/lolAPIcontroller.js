@@ -4,12 +4,7 @@ const API_TOKEN = process.env.API_TOKEN;
 
 class LoLAPIcontroller {
   constructor() {
-    if (typeof API_TOKEN === "undefined") {
-      const devToken = "RGAPI-c7a43a8e-2204-4a0d-95a9-6bcd722dacb9";
-      this.requestMaker = new RequestMaker(devToken);
-    } else {
-      this.requestMaker = new RequestMaker(API_TOKEN);
-    }
+    this.requestMaker = new RequestMaker(API_TOKEN);
   }
 
   getStats(req, res) {
