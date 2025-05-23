@@ -11,6 +11,7 @@ class LoLAPIcontroller {
     const playerTag = req.query.summonerName;
     const gameTypes = req.query.gameTypes;
     const numGames = req.query.numRequested;
+    const tagLine = req.query.tagLine;
 
     // console.log(`tag: ${playerTag}`);
     // console.log(`types: ${gameTypes}`);
@@ -18,16 +19,19 @@ class LoLAPIcontroller {
 
     // need to get query parameters from request and use them in
     // requestMaker call
-    this.requestMaker.getStats(playerTag, gameTypes, numGames).then((data) => {
-      // console.log(data);
-      res.send(data);
-    });
+    this.requestMaker
+      .getStats(playerTag, tagLine, gameTypes, numGames)
+      .then((data) => {
+        // console.log(data);
+        res.send(data);
+      });
   }
 
   getSummonerData(req, res) {
     const playerTag = req.query.summonerName;
+    const tagLine = req.query.tagLine;
 
-    this.requestMaker.getLOLSummonerData(playerTag).then((data) => {
+    this.requestMaker.getLOLSummonerData(playerTag, tagLine).then((data) => {
       res.send(data);
     });
   }

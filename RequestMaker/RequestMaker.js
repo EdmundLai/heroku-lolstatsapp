@@ -1,8 +1,12 @@
+/* eslint-disable comma-dangle */
 const axios = require("axios");
 const RateLimiter = require("limiter").RateLimiter;
 
 const matchAPIVersion = "5";
 const summonerAPIVersion = "4";
+const accountAPIVersion = "1";
+const naPrefix = "https://na1.api.riotgames.com";
+const americasPrefix = "https://americas.api.riotgames.com";
 
 // class that all calls to League of Legends APIs are made through
 // DONE: Convert all axios requests to americas.api.riotgames.com to use RateLimiter
@@ -49,41 +53,46 @@ class RequestMaker {
 
   // called directly from lolAPIcontroller.js
   // must return errorLog directly when in catch block
-  getLOLSummonerData(summonerName) {
-    return this.removeToken()
-      .then(() => {
-        return axios({
-          url: `https://na1.api.riotgames.com/lol/summoner/v${summonerAPIVersion}/summoners/by-name/${summonerName}`,
-          method: "get",
-          headers: {
-            "X-Riot-Token": this.apiToken,
-          },
-        });
-      })
-      .then((res) => {
-        const data = res.data;
-        const dataObj = {
-          summonerLevel: data.summonerLevel,
-          profileIconId: data.profileIconId,
-          name: data.name,
-        };
+  getLOLSummonerData(gameName, tagLine) {
+    console.log(gameName);
+    console.log(tagLine);
+    return this.getLOLAccountNameAndID(gameName, tagLine).then((data) => {
+      const puuid = data.puuid;
+      return this.removeToken()
+        .then(() => {
+          return axios({
+            url: `${naPrefix}/lol/summoner/v${summonerAPIVersion}/summoners/by-puuid/${puuid}`,
+            method: "get",
+            headers: {
+              "X-Riot-Token": this.apiToken,
+            },
+          });
+        })
+        .then((res1) => {
+          const data1 = res1.data;
+          const dataObj = {
+            summonerLevel: data1.summonerLevel,
+            profileIconId: data1.profileIconId,
+            name: gameName,
+          };
 
-        return dataObj;
-      })
-      .catch((err) => {
-        //console.log(err);
-        console.log("error in getLOLSummonerData");
-        this.errorLog.responseCode = err.response.status;
-        this.errorLog.method = "getLOLSummonerData";
-        return this.errorLog;
-      });
+          return dataObj;
+        })
+        .catch((err) => {
+          // console.log(err);
+          console.log("error in getLOLSummonerData");
+          this.errorLog.responseCode = err.response.status;
+          this.errorLog.method = "getLOLSummonerData";
+          return this.errorLog;
+        });
+    });
   }
 
-  getLOLAccountNameAndID(summonerName) {
+  getLOLAccountNameAndID(gameName, tagLine) {
     return this.removeToken()
       .then(() => {
         return axios({
-          url: `https://na1.api.riotgames.com/lol/summoner/v${summonerAPIVersion}/summoners/by-name/${summonerName}`,
+          url: `${americasPrefix}/riot/account/v${accountAPIVersion}/accounts/by-riot-id/${gameName}/${tagLine}`,
           method: "get",
           headers: {
             "X-Riot-Token": this.apiToken,
@@ -93,11 +102,12 @@ class RequestMaker {
       .then((res) => {
         const data = res.data;
         const puuid = data.puuid;
-        const summName = data.name;
+        const summName = data.gameName;
         const dataObj = {
           puuid,
           summName,
         };
+        console.log(dataObj);
         return dataObj;
       })
       .catch((err) => {
@@ -163,7 +173,7 @@ class RequestMaker {
         console.log("error in getMatchList");
         this.errorLog.responseCode = err.response.status;
         this.errorLog.method = "getMatchList";
-        //console.log(err);
+        // console.log(err);
         // if(err.response) {
         //     console.log(err.response);
         // }
@@ -185,7 +195,7 @@ class RequestMaker {
       })
       .then((res) => {
         const data = res.data.info;
-        //console.log(data);
+        // console.log(data);
         const dataframes = data.frames;
 
         const totalFrames = Object.keys(dataframes).length;
@@ -226,7 +236,7 @@ class RequestMaker {
       })
       .catch((err) => {
         console.log("error in getTimelineData");
-        //this.errorLog.responseCode = err.response.status;
+        // this.errorLog.responseCode = err.response.status;
         this.errorLog.method = "getTimelineData";
         console.log(err);
         // console.log(err.response.status);
@@ -248,7 +258,7 @@ class RequestMaker {
         })
         .then((res) => {
           const data = res.data.info;
-          //console.log(data);
+          // console.log(data);
 
           const gameTime = data.gameCreation;
           const playerDataArr = data.participants;
@@ -353,7 +363,7 @@ class RequestMaker {
         .catch((err) => {
           console.log(err);
           console.log("error in getStatsByGame");
-          //this.errorLog.responseCode = err.response.status;
+          // this.errorLog.responseCode = err.response.status;
           this.errorLog.method = "getStatsByGame";
           // console.log(err);
           // console.log(err.response.status);
@@ -364,7 +374,7 @@ class RequestMaker {
 
   // returns array of stats per game if call is successful
   // returns http status code if any calls failed along the way
-  getStats(summonerName, queueType, numGames) {
+  getStats(summonerName, tagLine, queueType, numGames) {
     if (Number.isNaN(numGames)) {
       console.log("Please request a numeric value for numGames.");
       return null;
@@ -376,7 +386,7 @@ class RequestMaker {
     const maxNumGames = 20;
     let numGamesRetrieved = numGames > maxNumGames ? maxNumGames : numGames;
     console.log(`numGamesRetrieved: ${numGamesRetrieved}`);
-    return this.getLOLAccountNameAndID(summonerName)
+    return this.getLOLAccountNameAndID(summonerName, tagLine)
       .then((dataObj) => {
         // console.log(id);
         const id = dataObj.puuid;
@@ -395,7 +405,7 @@ class RequestMaker {
             //   return gameInfoArr;
             // })
             .then((gameInfoArr) => {
-              //console.log("hello2");
+              // console.log("hello2");
               console.log(gameInfoArr);
               if (numGamesRetrieved > gameInfoArr.length) {
                 numGamesRetrieved = gameInfoArr.length;

@@ -8,12 +8,21 @@ const queueTypeDict = {
 };
 
 function handleRequest(reqObj) {
-  let summName = reqObj.summName;
+  const summNameAndTag = reqObj.summName;
+  const summNameParts = summNameAndTag.split("#");
+
+  let tagLine = "NA1";
+  let summName = summNameAndTag;
+
+  if (summNameParts.length !== 1) {
+    summName = summNameParts[0];
+    tagLine = summNameParts[1];
+  }
 
   let statsArrayByQueue = [];
   let returnedStatsObj = {};
 
-  return makeSummDataRequest(summName).then((data) => {
+  return makeSummDataRequest(summName, tagLine).then((data) => {
     // handling summoner not found case
     if (data.hasOwnProperty("responseCode")) {
       return data;
@@ -29,18 +38,24 @@ function handleRequest(reqObj) {
       profileIconId,
     };
 
-    return makeStatsRequest(summName, [queueTypeDict["rankedSolo"]])
+    return makeStatsRequest(summName, tagLine, [queueTypeDict["rankedSolo"]])
       .then((data) => {
         statsArrayByQueue.push(data);
-        return makeStatsRequest(summName, [queueTypeDict["rankedFlex"]]);
+        return makeStatsRequest(summName, tagLine, [
+          queueTypeDict["rankedFlex"],
+        ]);
       })
       .then((data) => {
         statsArrayByQueue.push(data);
-        return makeStatsRequest(summName, [queueTypeDict["normalBlind"]]);
+        return makeStatsRequest(summName, tagLine, [
+          queueTypeDict["normalBlind"],
+        ]);
       })
       .then((data) => {
         statsArrayByQueue.push(data);
-        return makeStatsRequest(summName, [queueTypeDict["normalDraft"]]);
+        return makeStatsRequest(summName, tagLine, [
+          queueTypeDict["normalDraft"],
+        ]);
       })
       .then((data) => {
         statsArrayByQueue.push(data);
@@ -53,11 +68,12 @@ function handleRequest(reqObj) {
 }
 
 // default number of games requested will be 5
-function makeStatsRequest(playerTag, gameTypeArr) {
+function makeStatsRequest(playerTag, tagLine, gameTypeArr) {
   return axios
     .get("api/stats", {
       params: {
         summonerName: playerTag,
+        tagLine: tagLine,
         gameTypes: gameTypeArr,
         numRequested: 5,
       },
@@ -67,11 +83,12 @@ function makeStatsRequest(playerTag, gameTypeArr) {
     });
 }
 
-function makeSummDataRequest(playerTag) {
+function makeSummDataRequest(playerTag, tagLine) {
   return axios
     .get("api/getSummData", {
       params: {
         summonerName: playerTag,
+        tagLine: tagLine,
       },
     })
     .then((res) => {
